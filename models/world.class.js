@@ -25,6 +25,8 @@ class World {
     this.addToMap(this.character);
     this.addObjectsToMap(this.enemies);
 
+    this.clouds.forEach(cloud => cloud.move());
+
     // Draw() wird immer wieder aufgerufen
     self = this;
     requestAnimationFrame(function () {
