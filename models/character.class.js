@@ -4,20 +4,33 @@ class Character extends MovableObject {
   width = 120;
   height = 260;
 
+  IMAGES_IDLE = [
+    "asssets/img/2_character_pepe/1_idle/idle/I-1.png",
+    "asssets/img/2_character_pepe/1_idle/idle/I-2.png",
+    "asssets/img/2_character_pepe/1_idle/idle/I-3.png",
+    "asssets/img/2_character_pepe/1_idle/idle/I-4.png",
+    "asssets/img/2_character_pepe/1_idle/idle/I-5.png",
+    "asssets/img/2_character_pepe/1_idle/idle/I-6.png",
+    "asssets/img/2_character_pepe/1_idle/idle/I-7.png",
+    "asssets/img/2_character_pepe/1_idle/idle/I-8.png",
+    "asssets/img/2_character_pepe/1_idle/idle/I-9.png",
+    "asssets/img/2_character_pepe/1_idle/idle/I-10.png",
+  ];
+
   constructor() {
     super().loadImage("asssets/img/2_character_pepe/1_idle/idle/I-1.png");
-    this.loadImages([
-      "asssets/img/2_character_pepe/1_idle/idle/I-1.png",
-      "asssets/img/2_character_pepe/1_idle/idle/I-2.png",
-      "asssets/img/2_character_pepe/1_idle/idle/I-3.png",
-      "asssets/img/2_character_pepe/1_idle/idle/I-4.png",
-      "asssets/img/2_character_pepe/1_idle/idle/I-5.png",
-      "asssets/img/2_character_pepe/1_idle/idle/I-6.png",
-      "asssets/img/2_character_pepe/1_idle/idle/I-7.png",
-      "asssets/img/2_character_pepe/1_idle/idle/I-8.png",
-      "asssets/img/2_character_pepe/1_idle/idle/I-9.png",
-      "asssets/img/2_character_pepe/1_idle/idle/I-10.png",
-    ]);
+    this.loadImages(this.IMAGES_IDLE);
+
+    this.animate();
+  }
+
+  animate() {
+    setInterval(() => {
+      let i = this.currentImage % this.IMAGES_IDLE.length;
+      let path = this.IMAGES_IDLE[i];
+      this.img = this.imageCache[path];
+      this.currentImage++;
+    }, 175);
   }
 
   jump() {}
