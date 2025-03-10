@@ -1,5 +1,5 @@
 class Character extends MovableObject {
-  x = 60;
+  x = 0;
   y = 165;
   width = 120;
   height = 260;
@@ -49,10 +49,12 @@ class Character extends MovableObject {
       if (this.world.keyboard.moveRight) {
         this.x += this.speed;
         this.otherDirection = false;
+        this.world.camera_x = -this.x;
       }
       if (this.world.keyboard.moveLeft) {
         this.x -= this.speed;
         this.otherDirection = true;
+        this.world.camera_x = -this.x;
       }
     }, 1000 / 60);
 
