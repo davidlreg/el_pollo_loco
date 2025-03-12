@@ -3,7 +3,7 @@ class Character extends MovableObject {
   y = 165;
   width = 120;
   height = 260;
-  speed = 3.5;
+  speed = 20; // Default 3.5
 
   IMAGES_IDLE = [
     "asssets/img/2_character_pepe/1_idle/idle/I-1.png",
@@ -46,25 +46,21 @@ class Character extends MovableObject {
     }, 175);
 
     setInterval(() => {
-      if (this.world.keyboard.moveRight) {
+      if (this.world.keyboard.moveRight && this.x < this.world.level.level_end_x) {
         this.x += this.speed;
         this.otherDirection = false;
-        this.world.camera_x = -this.x;
       }
-      if (this.world.keyboard.moveLeft) {
+      if (this.world.keyboard.moveLeft && this.x > -60) {
         this.x -= this.speed;
         this.otherDirection = true;
-        this.world.camera_x = -this.x;
       }
+      this.world.camera_x = -this.x + 60;
     }, 1000 / 60);
 
     setInterval(() => {
       if (this.world.keyboard.moveRight || this.world.keyboard.moveLeft) {
         // Walk animation
-        let i = this.currentImage % this.IMAGES_MOVE_RIGHT.length;
-        let path = this.IMAGES_MOVE_RIGHT[i];
-        this.img = this.imageCache[path];
-        this.currentImage++;
+        this.playAnimation(this.IMAGES_MOVE_RIGHT);
       }
     }, 175);
   }
