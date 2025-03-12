@@ -13,6 +13,7 @@ class Cloud extends MovableObject {
     this.x -= this.speed; // Bewege die Wolke nach links
 
     // Wenn die Wolke aus dem Bild verschwindet, setze sie wieder nach rechts
+    // TODO Wolken werden nicht angezeigt wenn Spieler weiter als 720 px nach rechts gelaufen ist!!!
     if (this.x + this.width < 0) {
       this.x = 720;
     }

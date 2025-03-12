@@ -8,6 +8,8 @@ class MovableObject {
   currentImage = 0;
   speed = 0.15; // Geschwindigkeit der Bewegung
   otherDirection = false;
+  speedY = 0;
+  acceleration = 1;
 
   loadImage(path) {
     this.img = new Image(); // this.img = document.getElementById('img')  --> <img id="img" src"")>
@@ -33,5 +35,9 @@ class MovableObject {
     setInterval(() => {
       this.x -= this.speed;
     }, 1000 / 60);
+  }
+
+  jump() {
+    this.speedY = 16.5;
   }
 }
