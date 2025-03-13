@@ -1,13 +1,20 @@
-class Coin {
+class Coin extends MovableObject {
   y = 170;
   width = 120;
   height = 120;
+
+  offset = {
+    top: 40,
+    left: 40,
+    right: 40,
+    bottom: 40,
+  };
 
   COIN_IMAGE_1 = ["asssets/img/8_coin/coin_1.png"];
   COIN_IMAGE_2 = ["asssets/img/8_coin/coin_2.png"];
 
   constructor() {
-    this.loadImage(this.COIN_IMAGE_1);
+    super().loadImage(this.COIN_IMAGE_1);
     // this.loadImage(this.COIN_IMAGE_2);
 
     this.x = 300 + Math.random() * 2100;

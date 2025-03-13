@@ -6,6 +6,13 @@ class Character extends MovableObject {
   height = 260;
   speedX = 4; // Default 4
 
+  offset = {
+    top: 120,
+    left: 30,
+    right: 40,
+    bottom: 10,
+  };
+
   IMAGES_IDLE = [
     "asssets/img/2_character_pepe/1_idle/idle/I-1.png",
     "asssets/img/2_character_pepe/1_idle/idle/I-2.png",
@@ -40,11 +47,25 @@ class Character extends MovableObject {
     "asssets/img/2_character_pepe/3_jump/J-39.png",
   ];
 
+  IMAGES_HURT = ["asssets/img/2_character_pepe/4_hurt/H-41.png", "asssets/img/2_character_pepe/4_hurt/H-42.png", "asssets/img/2_character_pepe/4_hurt/H-43.png"];
+
+  IMAGES_DEAD = [
+    "asssets/img/2_character_pepe/5_dead/D-51.png",
+    "asssets/img/2_character_pepe/5_dead/D-52.png",
+    "asssets/img/2_character_pepe/5_dead/D-53.png",
+    "asssets/img/2_character_pepe/5_dead/D-54.png",
+    "asssets/img/2_character_pepe/5_dead/D-55.png",
+    "asssets/img/2_character_pepe/5_dead/D-56.png",
+    "asssets/img/2_character_pepe/5_dead/D-57.png",
+  ];
+
   constructor() {
     super().loadImage("asssets/img/2_character_pepe/1_idle/idle/I-1.png");
     this.loadImages(this.IMAGES_IDLE);
     this.loadImages(this.IMAGES_MOVE);
     this.loadImages(this.IMAGES_JUMPING);
+    this.loadImages(this.IMAGES_HURT);
+    this.loadImages(this.IMAGES_DEAD);
     this.applyGravity();
     this.animate();
   }
@@ -87,7 +108,11 @@ class Character extends MovableObject {
 
     // Animates the Jumping- and Moving-Animation
     setInterval(() => {
-      if (this.isCharacterAboveGround()) {
+      if (this.isDead()) {
+        this.playAnimation(this.IMAGES_DEAD);
+      } else if (this.isHurt()) {
+        this.playAnimation(this.IMAGES_HURT);
+      } else if (this.isCharacterAboveGround()) {
         // Jump Animation
         this.playAnimation(this.IMAGES_JUMPING);
       } else {
