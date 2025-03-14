@@ -82,7 +82,7 @@ class MovableObject extends DrawableObject {
    * @param {CanvasRenderingContext2D} ctx - The rendering context
    */
   drawHitbox(ctx) {
-    if (this instanceof Character || this instanceof Chicken || this instanceof Coin || this instanceof Endboss) {
+    if (this instanceof Character || this instanceof Chicken || this instanceof Coin || this instanceof SalsaBottle || this instanceof Endboss) {
       ctx.beginPath();
       ctx.lineWidth = "4";
       ctx.strokeStyle = "blue";
@@ -126,7 +126,7 @@ class MovableObject extends DrawableObject {
 
     // Stelle sicher, dass `statusBarHealth` gesetzt wurde
     if (this.statusBarHealth) {
-      this.statusBarHealth.updateHealthBar(this.energy);  // Aktualisiere den Gesundheitsbalken
+      this.statusBarHealth.updateHealthBar(this.energy); // Aktualisiere den Gesundheitsbalken
     }
   }
 

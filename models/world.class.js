@@ -63,6 +63,7 @@ class World {
     this.addObjectsToMap(this.level.coins);
     this.addToMap(this.character);
     this.addObjectsToMap(this.level.enemies);
+    this.addObjectsToMap(this.level.salsaBottles);
     this.level.clouds.forEach((cloud) => cloud.move());
     this.ctx.translate(-this.camera_x, 0);
     
