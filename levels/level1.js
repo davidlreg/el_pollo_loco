@@ -1,3 +1,13 @@
+/**
+ * Creates a new game level with the specified elements.
+ *
+ * @constructor
+ * @param {Array<Chicken|Endboss>} enemies - Collection of enemy characters in the level
+ * @param {Array<Cloud>} clouds - Collection of cloud objects in the level
+ * @param {Array<Coin>} coins - Collection of collectable coins in the level
+ * @param {Array<BackgroundObject>} backgroundObjects - Collection of background layers with positioning
+ * @returns {Level} New Level instance with the specified game elements
+ */
 const level1 = new Level(
   [new Chicken(), new Chicken(), new Chicken(), new Chicken(), new Chicken(), new Chicken(), new Chicken(), new Endboss()],
   [new Cloud()],

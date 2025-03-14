@@ -1,11 +1,46 @@
+/**
+ * Represents a playable character in the game that extends MovableObject
+ *
+ * @class
+ * @extends MovableObject
+ */
 class Character extends MovableObject {
+  /**
+   * Reference to the game world
+   *
+   */
   world;
+  /**
+   * Horizontal position of the character
+   *
+   */
   x = 0;
-  y = 165; // Default 165
+  /**
+   * Vertical position of the character (Default: 165)
+   *
+   */
+  y = 165;
+  /**
+   * Width of the character sprite
+   *
+   */
   width = 120;
+  /**
+   * Height of the character sprite
+   *
+   */
   height = 260;
-  speedX = 4; // Default 4
+  /**
+   * Horizontal movement speed (Default: 4)
+   *
+   */
+  speedX = 4;
 
+  /**
+   * Collision offset values for the character
+   *
+   * @type {Object}
+   */
   offset = {
     top: 120,
     left: 30,
@@ -13,6 +48,10 @@ class Character extends MovableObject {
     bottom: 10,
   };
 
+  /**
+   * Array of image paths for idle animation
+   *
+   */
   IMAGES_IDLE = [
     "asssets/img/2_character_pepe/1_idle/idle/I-1.png",
     "asssets/img/2_character_pepe/1_idle/idle/I-2.png",
@@ -26,6 +65,10 @@ class Character extends MovableObject {
     "asssets/img/2_character_pepe/1_idle/idle/I-10.png",
   ];
 
+  /**
+   * Array of image paths for walking animation
+   *
+   */
   IMAGES_MOVE = [
     "asssets/img/2_character_pepe/2_walk/W-21.png",
     "asssets/img/2_character_pepe/2_walk/W-22.png",
@@ -35,6 +78,10 @@ class Character extends MovableObject {
     "asssets/img/2_character_pepe/2_walk/W-26.png",
   ];
 
+  /**
+   * Array of image paths for jumping animation
+   *
+   */
   IMAGES_JUMPING = [
     "asssets/img/2_character_pepe/3_jump/J-31.png",
     "asssets/img/2_character_pepe/3_jump/J-32.png",
@@ -47,8 +94,16 @@ class Character extends MovableObject {
     "asssets/img/2_character_pepe/3_jump/J-39.png",
   ];
 
+  /**
+   * Array of image paths for hurt animation
+   *
+   */
   IMAGES_HURT = ["asssets/img/2_character_pepe/4_hurt/H-41.png", "asssets/img/2_character_pepe/4_hurt/H-42.png", "asssets/img/2_character_pepe/4_hurt/H-43.png"];
 
+  /**
+   * Array of image paths for death animation
+   *
+   */
   IMAGES_DEAD = [
     "asssets/img/2_character_pepe/5_dead/D-51.png",
     "asssets/img/2_character_pepe/5_dead/D-52.png",
@@ -59,6 +114,11 @@ class Character extends MovableObject {
     "asssets/img/2_character_pepe/5_dead/D-57.png",
   ];
 
+  /**
+   * Creates a new Character instance, loads images and sets up animations
+   *
+   * @constructor
+   */
   constructor() {
     super().loadImage("asssets/img/2_character_pepe/1_idle/idle/I-1.png");
     this.loadImages(this.IMAGES_IDLE);
@@ -70,29 +130,37 @@ class Character extends MovableObject {
     this.animate();
   }
 
+  /**
+   * Moves the character to the left
+   *
+   */
   characterMoveLeft() {
     this.x -= this.speedX;
     this.otherDirection = true;
   }
 
+  /**
+   * Moves the character to the right
+   *
+   */
   characterMoveRight() {
     this.x += this.speedX;
     this.otherDirection = false;
   }
 
-  applyGravity() {
-    setInterval(() => {
-      if (this.isCharacterAboveGround() || this.speedY > 0) {
-        this.y -= this.speedY;
-        this.speedY -= this.acceleration;
-      }
-    }, 1000 / 60);
-  }
-
+  /**
+   * Checks if the character is currently above ground level
+   *
+   * @returns {boolean} True if character is above ground
+   */
   isCharacterAboveGround() {
     return this.y < 165;
   }
 
+  /**
+   * Plays the idle animation for the character
+   *
+   */
   playIdleAnimation() {
     let i = this.currentImage % this.IMAGES_IDLE.length;
     let path = this.IMAGES_IDLE[i];
@@ -100,6 +168,10 @@ class Character extends MovableObject {
     this.currentImage++;
   }
 
+  /**
+   * Sets up animation intervals for character movements and states
+   *
+   */
   animate() {
     // Animates the Idle-Animation
     setInterval(() => {

@@ -1,3 +1,7 @@
+/**
+ * Represents the game world.
+ *
+ */
 class World {
   character = new Character();
   level = level1;
@@ -6,6 +10,12 @@ class World {
   keyboard;
   camera_x = 0;
 
+  /**
+   * Creates an instance of World.
+   *
+   * @param {HTMLCanvasElement} canvas - The game canvas.
+   * @param {Object} keyboard - The keyboard input handler.
+   */
   constructor(canvas, keyboard) {
     this.ctx = canvas.getContext("2d");
     this.canvas = canvas;
@@ -15,10 +25,18 @@ class World {
     this.checkCollisions();
   }
 
+  /**
+   * Assigns this world instance to the character.
+   *
+   */
   setWorld() {
     this.character.world = this;
   }
 
+  /**
+   * Checks for collisions between the character and enemies at intervals.
+   *
+   */
   checkCollisions() {
     setInterval(() => {
       this.level.enemies.forEach((enemy) => {
@@ -29,6 +47,10 @@ class World {
     }, 200);
   }
 
+  /**
+   * Clears the canvas and redraws all game objects.
+   *
+   */
   draw() {
     this.clearCanvas();
     this.ctx.translate(this.camera_x, 0);
@@ -39,19 +61,27 @@ class World {
     this.addObjectsToMap(this.level.enemies);
     this.level.clouds.forEach((cloud) => cloud.move());
     this.ctx.translate(-this.camera_x, 0);
-    // Draw() wird immer wieder aufgerufen
-    self = this;
-    requestAnimationFrame(function () {
-      self.draw();
-    });
+
+    // Recursively call draw() for continuous rendering
+    requestAnimationFrame(() => this.draw());
   }
 
+  /**
+   * Adds multiple objects to the canvas.
+   *
+   * @param {Array} objects - The objects to be added.
+   */
   addObjectsToMap(objects) {
     objects.forEach((o) => {
       this.addToMap(o);
     });
   }
 
+  /**
+   * Adds a single object to the canvas.
+   *
+   * @param {Object} mo - The movable object to be added.
+   */
   addToMap(mo) {
     if (mo.otherDirection) {
       this.drawAssetsOtherDirection(mo);
@@ -63,10 +93,19 @@ class World {
     }
   }
 
+  /**
+   * Clears the entire canvas.
+   *
+   */
   clearCanvas() {
-    this.ctx.clearRect(0, 0, canvas.width, canvas.height);
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
   }
 
+  /**
+   * Flips an object horizontally before drawing.
+   *
+   * @param {Object} mo - The object to be flipped.
+   */
   drawAssetsOtherDirection(mo) {
     this.ctx.save();
     this.ctx.translate(mo.width, 0);
@@ -74,23 +113,13 @@ class World {
     mo.x = mo.x * -1;
   }
 
+  /**
+   * Restores an object's original direction after being drawn flipped.
+   *
+   * @param {Object} mo - The object to restore.
+   */
   restoreAssetFacingDirection(mo) {
     this.ctx.restore();
     mo.x = mo.x * -1;
   }
 }
-
-/*
-if (character.x + character.widht > chicken.x &&
-    character.y + character.height > chicken.y &&
-    character.x < chicken.x &&
-    character.y < chicken.y + chicken.height
-)
-
-isColliding(mo) {
-  return this.x + this.width > mo.x &&
-      this.y + this-height > mo.y &&
-      this.x < mo.x &&
-      this.y < mo.y + mo.height
-}
-*/

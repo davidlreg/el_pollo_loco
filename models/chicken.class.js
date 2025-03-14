@@ -1,21 +1,63 @@
+/**
+ * Represents a chicken enemy that extends MovableObject.
+ *
+ * @class
+ * @extends MovableObject
+ */
 class Chicken extends MovableObject {
+  /**
+   * Vertical position of the chicken.
+   *
+   * @type {number}
+   */
   y = 350;
-  width = 60; // Standart 60
-  height = 70; // Standart 70
 
+  /**
+   * Width of the chicken sprite.
+   *
+   * @type {number}
+   */
+  width = 60;
+
+  /**
+   * Height of the chicken sprite.
+   *
+   * @type {number}
+   */
+  height = 70;
+
+  /**
+   * Collision offset values for the chicken.
+   *
+   * @type {Object}
+   * @property {number} top - Top offset
+   * @property {number} left - Left offset
+   * @property {number} right - Right offset
+   * @property {number} bottom - Bottom offset
+   */
   offset = {
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
+    top: 20,
+    left: 10,
+    right: 10,
+    bottom: 10,
   };
 
+  /**
+   * Walking animation image paths.
+   *
+   * @type {string[]}
+   */
   IMAGES_WALKING = [
     "asssets/img/3_enemies_chicken/chicken_normal/1_walk/1_w.png",
     "asssets/img/3_enemies_chicken/chicken_normal/1_walk/2_w.png",
     "asssets/img/3_enemies_chicken/chicken_normal/1_walk/3_w.png",
   ];
 
+  /**
+   * Creates a new Chicken instance with random position and speed.
+   *
+   * @constructor
+   */
   constructor() {
     super().loadImage("asssets/img/3_enemies_chicken/chicken_normal/1_walk/1_w.png");
     this.loadImages(this.IMAGES_WALKING);
@@ -25,6 +67,10 @@ class Chicken extends MovableObject {
     this.animate();
   }
 
+  /**
+   * Handles chicken movement and animation.
+   *
+   */
   animate() {
     this.moveLeft();
 

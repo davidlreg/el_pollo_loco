@@ -1,31 +1,43 @@
-class MovableObject {
-  x = 120;
-  y = 280;
-  img;
-  width = 100;
-  height = 150;
-  imageCache = {};
-  currentImage = 0;
-  speed = 0.15; // Geschwindigkeit der Bewegung
+/**
+ * Represents a movable object that extends a drawable object.
+ *
+ */
+class MovableObject extends DrawableObject {
+  /**
+   * @type {number} Movement speed
+   */
+  speed = 0.15;
+
+  /**
+   * @type {boolean} Indicates if the object is facing the opposite direction
+   */
   otherDirection = false;
+
+  /**
+   * @type {number} Vertical speed
+   */
   speedY = 0;
+
+  /**
+   * @type {number} Acceleration due to gravity
+   */
   acceleration = 1;
+
+  /**
+   * @type {number} Object's energy level
+   */
   energy = 100;
+
+  /**
+   * @type {number} Timestamp of the last hit *
+   */
   lastHit = 0;
 
-  loadImage(path) {
-    this.img = new Image(); // this.img = document.getElementById('img')  --> <img id="img" src"")>
-    this.img.src = path;
-  }
-
-  loadImages(arr) {
-    arr.forEach((path) => {
-      let img = new Image();
-      img.src = path;
-      this.imageCache[path] = img;
-    });
-  }
-
+  /**
+   * Plays an animation by cycling through a set of images.
+   *
+   * @param {string[]} images - Array of image paths
+   */
   playAnimation(images) {
     let i = this.currentImage % images.length;
     let path = images[i];
@@ -33,45 +45,58 @@ class MovableObject {
     this.currentImage++;
   }
 
+  /**
+   * Moves the object to the left.
+   *
+   */
   moveLeft() {
     setInterval(() => {
       this.x -= this.speed;
     }, 1000 / 60);
   }
 
+  /**
+   * Makes the object jump by setting its vertical speed.
+   *
+   */
   jump() {
     this.speedY = 16.5;
   }
 
-  draw(ctx) {
-    ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
+  /**
+   * Applies gravity to the object, making it fall if not on the ground.
+   *
+   */
+  applyGravity() {
+    setInterval(() => {
+      if (this.isCharacterAboveGround() || this.speedY > 0) {
+        this.y -= this.speedY;
+        this.speedY -= this.acceleration;
+      }
+    }, 1000 / 60);
   }
 
+  /**
+   * Draws the object's hitbox for debugging purposes.
+   *
+   * @param {CanvasRenderingContext2D} ctx - The rendering context
+   */
   drawHitbox(ctx) {
     if (this instanceof Character || this instanceof Chicken || this instanceof Coin || this instanceof Endboss) {
       ctx.beginPath();
       ctx.lineWidth = "4";
       ctx.strokeStyle = "blue";
-      ctx.rect(
-        this.x + this.offset.left, // X-Position nach rechts verschieben
-        this.y + this.offset.top, // Y-Position nach unten verschieben
-        this.width - this.offset.left - this.offset.right, // Breite reduzieren (links und rechts)
-        this.height - this.offset.top - this.offset.bottom // Höhe reduzieren (oben und unten)
-      );
+      ctx.rect(this.x + this.offset.left, this.y + this.offset.top, this.width - this.offset.left - this.offset.right, this.height - this.offset.top - this.offset.bottom);
       ctx.stroke();
     }
   }
 
-  /*
-
-if (character.x + character.widht > chicken.x &&
-    character.y + character.height > chicken.y &&
-    character.x < chicken.x &&
-    character.y < chicken.y + chicken.height
-)
-
-*/
-
+  /**
+   * Checks if this object is colliding with another movable object.
+   *
+   * @param {MovableObject} mo - Another movable object
+   * @returns {boolean} True if colliding, otherwise false
+   */
   isColliding(mo) {
     return (
       this.x + this.width - this.offset.right > mo.x + mo.offset.left &&
@@ -81,21 +106,34 @@ if (character.x + character.widht > chicken.x &&
     );
   }
 
+  /**
+   * Reduces the object's energy when hit.
+   *
+   */
   hit() {
     this.energy -= 5;
     if (this.energy < 0) {
-        this.energy = 0;
+      this.energy = 0;
     }
     this.lastHit = new Date().getTime();
-}
-
-  isHurt() {
-    let timePassed = new Date().getTime() - this.lastHit;
-    timePassed = timePassed / 1000; // Differenz in Sek
-    return timePassed < 0.8;
   }
 
+  /**
+   * Checks if the object has been recently hurt.
+   *
+   * @returns {boolean} True if hurt within the last 0.8 seconds
+   */
+  isHurt() {
+    let timePassed = new Date().getTime() - this.lastHit;
+    return timePassed / 1000 < 0.8;
+  }
+
+  /**
+   * Checks if the object is dead.
+   *
+   * @returns {boolean} True if energy is 0
+   */
   isDead() {
-    return this.energy == 0;
+    return this.energy === 0;
   }
 }
