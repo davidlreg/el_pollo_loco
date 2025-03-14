@@ -40,19 +40,12 @@ class Coin extends MovableObject {
   COIN_IMAGE_1 = ["asssets/img/8_coin/coin_1.png"];
 
   /**
-   * @type {string[]} Path to the second coin image
-   */
-  COIN_IMAGE_2 = ["asssets/img/8_coin/coin_2.png"];
-
-  /**
    * Creates a new Coin instance.
    * Loads the image and sets random x position.
    *
    */
   constructor() {
     super().loadImage(this.COIN_IMAGE_1);
-    // this.loadImage(this.COIN_IMAGE_2);
-
     this.x = 300 + Math.random() * 2100;
 
     // this.animate();

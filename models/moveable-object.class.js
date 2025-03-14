@@ -111,11 +111,23 @@ class MovableObject extends DrawableObject {
    *
    */
   hit() {
-    this.energy -= 5;
-    if (this.energy < 0) {
+    if (this.isHurt()) {
+      // Der Charakter kann in den nächsten 0,8 Sekunden nicht getroffen werden.
+      return;
+    }
+
+    this.energy -= 20;
+    if (this.energy <= 0) {
       this.energy = 0;
     }
     this.lastHit = new Date().getTime();
+
+    console.log("Energy after hit: " + this.energy);
+
+    // Stelle sicher, dass `statusBarHealth` gesetzt wurde
+    if (this.statusBarHealth) {
+      this.statusBarHealth.updateHealthBar(this.energy);  // Aktualisiere den Gesundheitsbalken
+    }
   }
 
   /**
@@ -126,6 +138,11 @@ class MovableObject extends DrawableObject {
   isHurt() {
     let timePassed = new Date().getTime() - this.lastHit;
     return timePassed / 1000 < 0.8;
+  }
+
+  // Setze den Statusbalken der Gesundheit basierend auf der Energie
+  updateHealthBarStatus(statusBarHealth) {
+    statusBarHealth.updateHealthBar(this.energy);
   }
 
   /**

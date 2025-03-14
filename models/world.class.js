@@ -4,6 +4,9 @@
  */
 class World {
   character = new Character();
+  status_bar_salsa = new StatusBarSalsa();
+  status_bar_health = new StatusBarHealth();
+  status_bar_coins = new StatusBarCoins();
   level = level1;
   canvas;
   ctx;
@@ -31,6 +34,7 @@ class World {
    */
   setWorld() {
     this.character.world = this;
+    this.character.statusBarHealth = this.status_bar_health;  // Hier übergibst du die Referenz
   }
 
   /**
@@ -44,7 +48,7 @@ class World {
           this.character.hit();
         }
       });
-    }, 200);
+    }, 75);
   }
 
   /**
@@ -61,6 +65,11 @@ class World {
     this.addObjectsToMap(this.level.enemies);
     this.level.clouds.forEach((cloud) => cloud.move());
     this.ctx.translate(-this.camera_x, 0);
+    
+    this.ctx.restore(); // Kamera zurücksetzen
+
+    // Zeichne StatusBars unabhängig von der Kamera
+    this.addStatusBarToMap(this.status_bar_salsa, this.status_bar_health, this.status_bar_coins);
 
     // Recursively call draw() for continuous rendering
     requestAnimationFrame(() => this.draw());
@@ -88,9 +97,21 @@ class World {
     }
     mo.draw(this.ctx);
     mo.drawHitbox(this.ctx);
+
     if (mo.otherDirection) {
       this.restoreAssetFacingDirection(mo);
     }
+  }
+
+  /**
+   * Adds multiple status bar elements to the canvas.
+   *
+   * @param {...Object} statusBars - The status bar elements to be drawn.
+   */
+  addStatusBarToMap(...statusBars) {
+    statusBars.forEach((element) => {
+      element.draw(this.ctx);
+    });
   }
 
   /**
