@@ -7,6 +7,7 @@ class World {
   status_bar_salsa = new StatusBarSalsa();
   status_bar_health = new StatusBarHealth();
   status_bar_coins = new StatusBarCoins();
+  throwable_object = new ThrowableObject();
   level = level1;
   canvas;
   ctx;
@@ -34,7 +35,7 @@ class World {
    */
   setWorld() {
     this.character.world = this;
-    this.character.statusBarHealth = this.status_bar_health;  // Hier übergibst du die Referenz
+    this.character.statusBarHealth = this.status_bar_health; // Hier übergibst du die Referenz
   }
 
   /**
@@ -46,6 +47,22 @@ class World {
       this.level.enemies.forEach((enemy) => {
         if (this.character.isColliding(enemy)) {
           this.character.hit();
+        }
+      });
+    }, 75);
+    setInterval(() => {
+      this.level.salsaBottles.forEach((salsaBottle) => {
+        if (this.character.isColliding(salsaBottle)) {
+          this.status_bar_salsa.salsaBottles += 1;
+          // TODO remove Salsa Bottle which collides with Character
+        }
+      });
+    }, 75);
+    setInterval(() => {
+      this.level.coins.forEach((coin) => {
+        if (this.character.isColliding(coin)) {
+          this.status_bar_coins.coins += 1;
+          // TODO remove Coin which collides with Character
         }
       });
     }, 75);
@@ -66,11 +83,15 @@ class World {
     this.addObjectsToMap(this.level.salsaBottles);
     this.level.clouds.forEach((cloud) => cloud.move());
     this.ctx.translate(-this.camera_x, 0);
-    
+
     this.ctx.restore(); // Kamera zurücksetzen
 
     // Zeichne StatusBars unabhängig von der Kamera
-    this.addStatusBarToMap(this.status_bar_salsa, this.status_bar_health, this.status_bar_coins);
+    this.addStatusBarToMap(
+      this.status_bar_salsa,
+      this.status_bar_health,
+      this.status_bar_coins
+    );
 
     // Recursively call draw() for continuous rendering
     requestAnimationFrame(() => this.draw());

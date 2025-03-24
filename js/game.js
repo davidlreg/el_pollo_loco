@@ -42,7 +42,7 @@ window.addEventListener("keydown", (event) => {
     event.preventDefault();
     keyboard.jump = true;
   }
-  if (event.key === "f") {
+  if (event.key === "b") {
     event.preventDefault();
     keyboard.throwBottle = true;
   }
