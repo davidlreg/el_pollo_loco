@@ -66,7 +66,7 @@ window.addEventListener("keyup", (event) => {
     event.preventDefault();
     keyboard.jump = false;
   }
-  if (event.key === "f") {
+  if (event.key === "b") {
     event.preventDefault();
     keyboard.throwBottle = false;
   }

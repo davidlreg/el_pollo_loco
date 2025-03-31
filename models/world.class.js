@@ -7,7 +7,7 @@ class World {
   status_bar_salsa = new StatusBarSalsa();
   status_bar_health = new StatusBarHealth();
   status_bar_coins = new StatusBarCoins();
-  throwable_object = new ThrowableObject();
+  throwable_objects = [];
   level = level1;
   canvas;
   ctx;
@@ -51,18 +51,20 @@ class World {
       });
     }, 75);
     setInterval(() => {
-      this.level.salsaBottles.forEach((salsaBottle) => {
+      this.level.salsaBottles.forEach((salsaBottle, index) => {
         if (this.character.isColliding(salsaBottle)) {
           this.status_bar_salsa.salsaBottles += 1;
-          // TODO remove Salsa Bottle which collides with Character
+          this.level.salsaBottles.splice(index, 1);
+          // TODO Add Sound when Salsa Bottle is collected
         }
       });
     }, 75);
     setInterval(() => {
-      this.level.coins.forEach((coin) => {
+      this.level.coins.forEach((coin, index) => {
         if (this.character.isColliding(coin)) {
           this.status_bar_coins.coins += 1;
-          // TODO remove Coin which collides with Character
+          this.level.coins.splice(index, 1);
+          // TODO Add Sound when Coin is collected
         }
       });
     }, 75);
@@ -92,6 +94,11 @@ class World {
       this.status_bar_health,
       this.status_bar_coins
     );
+
+    this.throwable_objects.forEach((bottle) => {
+      console.log("Drawing bottle at", bottle.x, bottle.y); // Debugging
+      bottle.draw(this.ctx);
+    });
 
     // Recursively call draw() for continuous rendering
     requestAnimationFrame(() => this.draw());

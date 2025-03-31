@@ -1,5 +1,5 @@
 class StatusBarCoins extends StatusBar {
-  IMAGE_COIN = ["asssets/img/7_statusbars/3_icons/icon_coin.png"];
+  IMAGE_COIN = ["assets/img/7_statusbars/3_icons/icon_coin.png"];
 
   constructor() {
     super().loadImage(this.IMAGE_COIN);

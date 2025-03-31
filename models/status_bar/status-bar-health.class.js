@@ -1,5 +1,5 @@
 class StatusBarHealth extends StatusBar {
-  IMAGE_HEALTH = ["asssets/img/7_statusbars/3_icons/icon_health.png"];
+  IMAGE_HEALTH = ["assets/img/7_statusbars/3_icons/icon_health.png"];
 
   constructor() {
     super().loadImage(this.IMAGE_HEALTH);

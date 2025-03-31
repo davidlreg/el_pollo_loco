@@ -37,7 +37,18 @@ class SalsaBottle extends MovableObject {
   /**
    * @type {string[]} Path to the first salsa bottle image
    */
-  SALSA_BOTTLE_IMAGE = ["asssets/img/6_salsa_bottle/1_salsa_bottle_on_ground.png"];
+  SALSA_BOTTLE_IMAGE = [
+    "assets/img/6_salsa_bottle/1_salsa_bottle_on_ground.png",
+  ];
+
+  IMAGES_BOTTLE_SPLASH = [
+    "assets/img/6_salsa_bottle/bottle_rotation/bottle_splash/1_bottle_splash.png",
+    "assets/img/6_salsa_bottle/bottle_rotation/bottle_splash/2_bottle_splash.png",
+    "assets/img/6_salsa_bottle/bottle_rotation/bottle_splash/3_bottle_splash.png",
+    "assets/img/6_salsa_bottle/bottle_rotation/bottle_splash/4_bottle_splash.png",
+    "assets/img/6_salsa_bottle/bottle_rotation/bottle_splash/5_bottle_splash.png",
+    "assets/img/6_salsa_bottle/bottle_rotation/bottle_splash/6_bottle_splash.png",
+  ];
 
   /**
    * Creates a new salsa bottle instance.
@@ -45,7 +56,9 @@ class SalsaBottle extends MovableObject {
    *
    */
   constructor() {
-    super().loadImage(this.SALSA_BOTTLE_IMAGE);
+    super().loadImage(
+      this.SALSA_BOTTLE_IMAGE
+    );
     this.x = 300 + Math.random() * 2100;
   }
 
@@ -54,8 +67,16 @@ class SalsaBottle extends MovableObject {
    *
    * @param {string} path - Path to the image file
    */
+  /*
   loadImage(path) {
     this.img = new Image(); // this.img = document.getElementById('img')  --> <img id="img" src"")>
+    this.img.srcd = path;
+  }
+    */
+  loadImage(path) {
+    this.img = new Image();
     this.img.src = path;
+    this.img.onerror = () =>
+      console.error("Fehler beim Laden des Bildes:", path);
   }
 }

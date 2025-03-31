@@ -37,7 +37,7 @@ class Coin extends MovableObject {
   /**
    * @type {string[]} Path to the first coin image
    */
-  COIN_IMAGE_1 = ["asssets/img/8_coin/coin_1.png"];
+  COIN_IMAGE_1 = ["assets/img/8_coin/coin_1.png"];
 
   /**
    * Creates a new Coin instance.
