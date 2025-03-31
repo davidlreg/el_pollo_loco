@@ -89,14 +89,9 @@ class World {
     this.ctx.restore(); // Kamera zurücksetzen
 
     // Zeichne StatusBars unabhängig von der Kamera
-    this.addStatusBarToMap(
-      this.status_bar_salsa,
-      this.status_bar_health,
-      this.status_bar_coins
-    );
+    this.addStatusBarToMap(this.status_bar_salsa, this.status_bar_health, this.status_bar_coins);
 
     this.throwable_objects.forEach((bottle) => {
-      console.log("Drawing bottle at", bottle.x, bottle.y); // Debugging
       bottle.draw(this.ctx);
     });
 

@@ -52,6 +52,8 @@ class DrawableObject {
    */
   currentImage = 0;
 
+  isLoaded = false; // Flag für Ladezustand
+
   /**
    * Creates a new DrawableObject.
    *
@@ -68,9 +70,8 @@ class DrawableObject {
     img.src = path;
     img.onload = () => {
       this.img = img;
-      console.log("Bild erfolgreich geladen:", path);
+      this.isLoaded = true;
     };
-    img.onerror = () => console.error("Fehler: Bild nicht gefunden!", path);
   }
 
   /**
@@ -82,7 +83,9 @@ class DrawableObject {
     arr.forEach((path) => {
       let img = new Image();
       img.src = path;
-      this.imageCache[path] = img;
+      img.onload = () => {
+        this.imageCache[path] = img;
+      };
     });
   }
 
@@ -94,8 +97,7 @@ class DrawableObject {
 
   draw(ctx) {
     if (!this.img) {
-      console.error("Fehler: Bild ist noch nicht geladen!", this.img);
-      return; // Zeichne nichts, wenn das Bild fehlt
+      return;
     }
     ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
   }
