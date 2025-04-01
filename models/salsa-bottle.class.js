@@ -23,7 +23,7 @@ class SalsaBottle extends MovableObject {
    */
   constructor() {
     super().loadImage(this.SALSA_BOTTLE_IMAGE);
-    this.x = 300 + Math.random() * 2100;
+    this.x = 300 + Math.random() * 1900;
   }
 
   /**
