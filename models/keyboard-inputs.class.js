@@ -1,6 +1,5 @@
 /**
  * Class representing keyboard inputs for a game.
- *
  */
 class KeyboardInputs {
   /**
@@ -9,13 +8,12 @@ class KeyboardInputs {
   moveRight = false;
 
   /**
-   *  @type {boolean} Indicates if the left movement key is pressed.
+   * @type {boolean} Indicates if the left movement key is pressed.
    */
   moveLeft = false;
 
   /**
    * @type {boolean} Indicates if the jump key is pressed.
-   *
    */
   jump = false;
 
@@ -26,7 +24,6 @@ class KeyboardInputs {
 
   /**
    * Creates an instance of KeyboardInputs.
-   *
    */
   constructor() {}
 }

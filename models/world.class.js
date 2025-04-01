@@ -1,6 +1,5 @@
 /**
  * Represents the game world.
- *
  */
 class World {
   character = new Character();
@@ -16,7 +15,6 @@ class World {
 
   /**
    * Creates an instance of World.
-   *
    * @param {HTMLCanvasElement} canvas - The game canvas.
    * @param {Object} keyboard - The keyboard input handler.
    */
@@ -31,16 +29,14 @@ class World {
 
   /**
    * Assigns this world instance to the character.
-   *
    */
   setWorld() {
     this.character.world = this;
-    this.character.statusBarHealth = this.status_bar_health; // Hier übergibst du die Referenz
+    this.character.statusBarHealth = this.status_bar_health;
   }
 
   /**
-   * Checks for collisions between the character and enemies at intervals.
-   *
+   * Checks for collisions between the character and game objects at intervals.
    */
   checkCollisions() {
     setInterval(() => {
@@ -72,7 +68,6 @@ class World {
 
   /**
    * Clears the canvas and redraws all game objects.
-   *
    */
   draw() {
     this.clearCanvas();
@@ -85,34 +80,22 @@ class World {
     this.addObjectsToMap(this.level.salsaBottles);
     this.level.clouds.forEach((cloud) => cloud.move());
     this.ctx.translate(-this.camera_x, 0);
-
-    this.ctx.restore(); // Kamera zurücksetzen
-
-    // Zeichne StatusBars unabhängig von der Kamera
+    this.ctx.restore();
     this.addStatusBarToMap(this.status_bar_salsa, this.status_bar_health, this.status_bar_coins);
-
-    this.throwable_objects.forEach((bottle) => {
-      bottle.draw(this.ctx);
-    });
-
-    // Recursively call draw() for continuous rendering
+    this.throwable_objects.forEach((bottle) => bottle.draw(this.ctx));
     requestAnimationFrame(() => this.draw());
   }
 
   /**
    * Adds multiple objects to the canvas.
-   *
    * @param {Array} objects - The objects to be added.
    */
   addObjectsToMap(objects) {
-    objects.forEach((o) => {
-      this.addToMap(o);
-    });
+    objects.forEach((o) => this.addToMap(o));
   }
 
   /**
    * Adds a single object to the canvas.
-   *
    * @param {Object} mo - The movable object to be added.
    */
   addToMap(mo) {
@@ -121,7 +104,6 @@ class World {
     }
     mo.draw(this.ctx);
     mo.drawHitbox(this.ctx);
-
     if (mo.otherDirection) {
       this.restoreAssetFacingDirection(mo);
     }
@@ -129,18 +111,14 @@ class World {
 
   /**
    * Adds multiple status bar elements to the canvas.
-   *
    * @param {...Object} statusBars - The status bar elements to be drawn.
    */
   addStatusBarToMap(...statusBars) {
-    statusBars.forEach((element) => {
-      element.draw(this.ctx);
-    });
+    statusBars.forEach((element) => element.draw(this.ctx));
   }
 
   /**
    * Clears the entire canvas.
-   *
    */
   clearCanvas() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -148,7 +126,6 @@ class World {
 
   /**
    * Flips an object horizontally before drawing.
-   *
    * @param {Object} mo - The object to be flipped.
    */
   drawAssetsOtherDirection(mo) {
@@ -160,7 +137,6 @@ class World {
 
   /**
    * Restores an object's original direction after being drawn flipped.
-   *
    * @param {Object} mo - The object to restore.
    */
   restoreAssetFacingDirection(mo) {

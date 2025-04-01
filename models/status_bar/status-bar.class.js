@@ -1,3 +1,7 @@
+/**
+ * StatusBar class extending DrawableObject to manage status information like salsa bottles, health, and coins.
+ * @class
+ */
 class StatusBar extends DrawableObject {
   salsaBottles = 69;
   health = 5;
@@ -16,19 +20,31 @@ class StatusBar extends DrawableObject {
    * @param {number} value - The value to display.
    */
   drawValue(ctx, value) {
-    ctx.font = "bold 28px 'Comic Sans MS'"; // Fettschrift + Comic Sans MS
-    ctx.fillStyle = "white"; // Farbe der Schrift
-    ctx.fillText(value, this.x + 65, this.y + 45); // Position neben dem Icon
+    ctx.font = "bold 28px 'Comic Sans MS'";
+    ctx.fillStyle = "white";
+    ctx.fillText(value, this.x + 65, this.y + 45);
   }
 
+  /**
+   * Sets the salsa bottle count.
+   * @param {number} value - The number of salsa bottles.
+   */
   setSalsaBottleCount(value) {
     this.salsaBottles = value;
   }
 
+  /**
+   * Sets the health value.
+   * @param {number} value - The health value.
+   */
   setHealth(value) {
     this.health = value;
   }
 
+  /**
+   * Sets the coin count.
+   * @param {number} value - The number of coins.
+   */
   setCoinCount(value) {
     this.coins = value;
   }

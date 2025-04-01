@@ -1,41 +1,16 @@
 /**
  * Represents a movable object that extends a drawable object.
- *
  */
 class MovableObject extends DrawableObject {
-  /**
-   * @type {number} Movement speed
-   */
   speed = 0.15;
-
-  /**
-   * @type {boolean} Indicates if the object is facing the opposite direction
-   */
   otherDirection = false;
-
-  /**
-   * @type {number} Vertical speed
-   */
   speedY = 0;
-
-  /**
-   * @type {number} Acceleration due to gravity
-   */
   acceleration = 1;
-
-  /**
-   * @type {number} Object's energy level
-   */
   energy = 100;
-
-  /**
-   * @type {number} Timestamp of the last hit *
-   */
   lastHit = 0;
 
   /**
    * Plays an animation by cycling through a set of images.
-   *
    * @param {string[]} images - Array of image paths
    */
   playAnimation(images) {
@@ -47,7 +22,6 @@ class MovableObject extends DrawableObject {
 
   /**
    * Moves the object to the left.
-   *
    */
   moveLeft() {
     setInterval(() => {
@@ -57,7 +31,6 @@ class MovableObject extends DrawableObject {
 
   /**
    * Makes the object jump by setting its vertical speed.
-   *
    */
   jump() {
     this.speedY = 16.5;
@@ -65,7 +38,6 @@ class MovableObject extends DrawableObject {
 
   /**
    * Applies gravity to the object, making it fall if not on the ground.
-   *
    */
   applyGravity() {
     setInterval(() => {
@@ -78,7 +50,6 @@ class MovableObject extends DrawableObject {
 
   /**
    * Draws the object's hitbox for debugging purposes.
-   *
    * @param {CanvasRenderingContext2D} ctx - The rendering context
    */
   drawHitbox(ctx) {
@@ -93,7 +64,6 @@ class MovableObject extends DrawableObject {
 
   /**
    * Checks if this object is colliding with another movable object.
-   *
    * @param {MovableObject} mo - Another movable object
    * @returns {boolean} True if colliding, otherwise false
    */
@@ -108,11 +78,10 @@ class MovableObject extends DrawableObject {
 
   /**
    * Reduces the object's energy when hit.
-   *
    */
   hit() {
     if (this.isHurt()) {
-      // Der Charakter kann in den nächsten 0,8 Sekunden nicht getroffen werden.
+      // TODO: Character cannot be hit for the next 0.8 seconds.
       return;
     }
 
@@ -124,15 +93,14 @@ class MovableObject extends DrawableObject {
 
     console.log("Energy after hit: " + this.energy);
 
-    // Stelle sicher, dass `statusBarHealth` gesetzt wurde
+    // TODO: Ensure that `statusBarHealth` is set
     if (this.statusBarHealth) {
-      this.statusBarHealth.updateHealthBar(this.energy); // Aktualisiere den Gesundheitsbalken
+      this.statusBarHealth.updateHealthBar(this.energy); // Update the health bar
     }
   }
 
   /**
    * Checks if the object has been recently hurt.
-   *
    * @returns {boolean} True if hurt within the last 0.8 seconds
    */
   isHurt() {
@@ -140,14 +108,16 @@ class MovableObject extends DrawableObject {
     return timePassed / 1000 < 0.8;
   }
 
-  // Setze den Statusbalken der Gesundheit basierend auf der Energie
+  /**
+   * Updates the health bar based on the energy level.
+   * @param {StatusBarHealth} statusBarHealth - The status bar health object
+   */
   updateHealthBarStatus(statusBarHealth) {
     statusBarHealth.updateHealthBar(this.energy);
   }
 
   /**
    * Checks if the object is dead.
-   *
    * @returns {boolean} True if energy is 0
    */
   isDead() {

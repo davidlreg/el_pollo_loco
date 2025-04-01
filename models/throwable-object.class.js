@@ -19,14 +19,21 @@ class ThrowableObject extends MovableObject {
     "assets/img/6_salsa_bottle/bottle_rotation/bottle_splash/5_bottle_splash.png",
     "assets/img/6_salsa_bottle/bottle_rotation/bottle_splash/6_bottle_splash.png",
   ];
-
+ 
+  /**
+   * Creates a throwable object.
+   * @param {number} x - The initial x-position.
+   * @param {number} y - The initial y-position.
+   * @param {object} world - The game world instance.
+   * @param {number} direction - The throw direction (-1 for left, 1 for right).
+   */
   constructor(x, y, world, direction) {
     super();
     this.x = x;
     this.y = y;
-    this.width = 80; // Breite setzen
-    this.height = 80; //Höhe setzen
-    this.speedX = 10 * direction; // Richtung berücksichtigen
+    this.width = 80;
+    this.height = 80;
+    this.speedX = 10 * direction;
     this.speedY = 15;
     this.loadImages(this.IMAGES_BOTTLE_ROTATION);
     this.loadImages(this.IMAGES_BOTTLE_SPLASH);
@@ -35,47 +42,55 @@ class ThrowableObject extends MovableObject {
     this.animateRotation();
   }
 
+  /**
+   * Moves the throwable object in an arc-like motion and triggers splash animation upon impact.
+   */
   throw() {
     let interval = setInterval(() => {
-      this.x += this.speedX; // Bewegt das Objekt nach vorne
-      this.y -= this.speedY; // Lässt die Flasche steigen
-      this.speedY -= 1; // Verringert die Steigung (Schwerkraft)
-
-      // Löscht das Objekt, wenn es aus dem Bildschirm fliegt
-      // Bedingung: Wenn die Flasche den Boden (z. B. y > 380) berührt
+      this.x += this.speedX;
+      this.y -= this.speedY;
+      this.speedY -= 1;
       if (this.y > 380) {
-        this.y = 360; // Setze die Flasche genau auf den Boden
-        clearInterval(interval); // Stoppe die Bewegung
+        this.y = 360;
+        clearInterval(interval);
         this.playSplashAnimation();
       }
     }, 50);
   }
 
+  /**
+   * Animates the bottle rotation while in the air.
+   */
   animateRotation() {
     let rotationInterval = setInterval(() => {
       if (!this.hasSplashed) {
         this.currentImage = (this.currentImage + 1) % this.IMAGES_BOTTLE_ROTATION.length;
         this.img = this.imageCache[this.IMAGES_BOTTLE_ROTATION[this.currentImage]];
       } else {
-        clearInterval(rotationInterval); // Stoppe die Rotation, wenn die Flasche zerschellt
+        clearInterval(rotationInterval);
       }
     }, 100);
   }
 
+  /**
+   * Plays the splash animation when the bottle hits the ground.
+   */
   playSplashAnimation() {
-    this.hasSplashed = true; // Setzt den Zustand auf "zerbrochen"
+    this.hasSplashed = true;
     let i = 0;
     let splashInterval = setInterval(() => {
       this.img = this.imageCache[this.IMAGES_BOTTLE_SPLASH[i]];
       i++;
-
       if (i >= this.IMAGES_BOTTLE_SPLASH.length) {
         clearInterval(splashInterval);
-        this.removeBottle(); // Flasche nach Animation löschen
+        this.removeBottle();
       }
     }, 100);
   }
 
+  /**
+   * Removes the bottle from the game world after the splash animation.
+   */
   removeBottle() {
     setTimeout(() => {
       this.world.throwable_objects = this.world.throwable_objects.filter((obj) => obj !== this);

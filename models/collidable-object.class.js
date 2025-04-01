@@ -1,13 +1,11 @@
 /**
  * Represents an object that can collide with other objects in the game.
- *
  * @class
  * @extends MovableObject
  */
 class CollidableObject extends MovableObject {
   /**
    * Collision offset values for fine-tuning collision detection.
-   *
    * @type {Object}
    * @property {number} top - Top edge offset
    * @property {number} left - Left edge offset

@@ -5,36 +5,10 @@
  * @extends MovableObject
  */
 class Chicken extends MovableObject {
-  /**
-   * Vertical position of the chicken.
-   *
-   * @type {number}
-   */
   y = 350;
-
-  /**
-   * Width of the chicken sprite.
-   *
-   * @type {number}
-   */
   width = 60;
-
-  /**
-   * Height of the chicken sprite.
-   *
-   * @type {number}
-   */
   height = 70;
 
-  /**
-   * Collision offset values for the chicken.
-   *
-   * @type {Object}
-   * @property {number} top - Top offset
-   * @property {number} left - Left offset
-   * @property {number} right - Right offset
-   * @property {number} bottom - Bottom offset
-   */
   offset = {
     top: 20,
     left: 10,
@@ -42,11 +16,6 @@ class Chicken extends MovableObject {
     bottom: 10,
   };
 
-  /**
-   * Walking animation image paths.
-   *
-   * @type {string[]}
-   */
   IMAGES_WALKING = [
     "assets/img/3_enemies_chicken/chicken_normal/1_walk/1_w.png",
     "assets/img/3_enemies_chicken/chicken_normal/1_walk/2_w.png",
@@ -70,6 +39,7 @@ class Chicken extends MovableObject {
   /**
    * Handles chicken movement and animation.
    *
+   * @TODO Implement custom movement logic
    */
   animate() {
     this.moveLeft();
