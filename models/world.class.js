@@ -12,6 +12,8 @@ class World {
   ctx;
   keyboard;
   camera_x = 0;
+  soundMuted = false; // Neue Variable für Stummschalten
+  backgroundMusic = new Audio("assets/audio/mexican-background-music.mp3");
 
   /**
    * Creates an instance of World.
@@ -51,7 +53,11 @@ class World {
         if (this.character.isColliding(salsaBottle)) {
           this.status_bar_salsa.salsaBottles += 1;
           this.level.salsaBottles.splice(index, 1);
-          // TODO Add Sound when Salsa Bottle is collected
+          let salsaBottleCollectedSound = new Audio(
+            "assets/audio/item-recieved.mp3"
+          );
+          salsaBottleCollectedSound.volume = 0.1;
+          salsaBottleCollectedSound.play();
         }
       });
     }, 75);
@@ -60,7 +66,9 @@ class World {
         if (this.character.isColliding(coin)) {
           this.status_bar_coins.coins += 1;
           this.level.coins.splice(index, 1);
-          // TODO Add Sound when Coin is collected
+          let coinSound = new Audio("assets/audio/coin-recieved.mp3");
+          coinSound.volume = 0.025;
+          coinSound.play();
         }
       });
     }, 75);
@@ -81,7 +89,11 @@ class World {
     this.level.clouds.forEach((cloud) => cloud.move());
     this.ctx.translate(-this.camera_x, 0);
     this.ctx.restore();
-    this.addStatusBarToMap(this.status_bar_salsa, this.status_bar_health, this.status_bar_coins);
+    this.addStatusBarToMap(
+      this.status_bar_salsa,
+      this.status_bar_health,
+      this.status_bar_coins
+    );
     this.throwable_objects.forEach((bottle) => bottle.draw(this.ctx));
     requestAnimationFrame(() => this.draw());
   }
@@ -103,7 +115,7 @@ class World {
       this.drawAssetsOtherDirection(mo);
     }
     mo.draw(this.ctx);
-    mo.drawHitbox(this.ctx);
+    // mo.drawHitbox(this.ctx); // Hitboxen an und ausschalten
     if (mo.otherDirection) {
       this.restoreAssetFacingDirection(mo);
     }
@@ -142,5 +154,11 @@ class World {
   restoreAssetFacingDirection(mo) {
     this.ctx.restore();
     mo.x = mo.x * -1;
+  }
+
+  playBackgroundMusic() {
+    this.backgroundMusic.loop = true;
+    this.backgroundMusic.volume = 0.005; // default 0.005
+    this.backgroundMusic.play();
   }
 }

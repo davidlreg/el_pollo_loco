@@ -1,6 +1,19 @@
 let canvas;
 let world;
 let keyboard = new KeyboardInputs();
+let muteButton = document.getElementById("mute-btn");
+let isMuted = false;
+
+// Liste aller erstellten Sounds
+let allSounds = [];
+
+// Originaler Audio-Konstruktor wird überschrieben, um alle Sounds zu speichern
+const OriginalAudio = window.Audio;
+window.Audio = function (...args) {
+  const audio = new OriginalAudio(...args);
+  allSounds.push(audio);
+  return audio;
+};
 
 /**
  * Initializes the game by setting up the canvas and world.
@@ -58,4 +71,53 @@ window.addEventListener("keyup", (event) => {
     event.preventDefault();
     keyboard.throwBottle = false;
   }
+});
+
+document.addEventListener(
+  "click",
+  () => {
+    world.playBackgroundMusic();
+  },
+  { once: true }
+);
+
+document.addEventListener(
+  "keydown",
+  () => {
+    world.playBackgroundMusic();
+  },
+  { once: true }
+);
+
+document.getElementById("fullscreen-btn").addEventListener("click", () => {
+  let canvas = document.querySelector("canvas");
+
+  if (!document.fullscreenElement) {
+    if (canvas.requestFullscreen) {
+      canvas.requestFullscreen();
+    } else if (canvas.mozRequestFullScreen) {
+      // Firefox
+      canvas.mozRequestFullScreen();
+    } else if (canvas.webkitRequestFullscreen) {
+      // Chrome, Safari, Opera
+      canvas.webkitRequestFullscreen();
+    } else if (canvas.msRequestFullscreen) {
+      // IE/Edge
+      canvas.msRequestFullscreen();
+    }
+  } else {
+    document.exitFullscreen();
+  }
+});
+
+muteButton.addEventListener("click", () => {
+  isMuted = !isMuted;
+
+  // Alle gespeicherten Sounds muten oder unmute
+  allSounds.forEach((audio) => {
+    audio.muted = isMuted;
+  });
+
+  // Button-Text ändern
+  muteButton.innerText = isMuted ? "🔇 Unmute" : "🔊 Mute";
 });

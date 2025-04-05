@@ -19,7 +19,7 @@ class ThrowableObject extends MovableObject {
     "assets/img/6_salsa_bottle/bottle_rotation/bottle_splash/5_bottle_splash.png",
     "assets/img/6_salsa_bottle/bottle_rotation/bottle_splash/6_bottle_splash.png",
   ];
- 
+
   /**
    * Creates a throwable object.
    * @param {number} x - The initial x-position.
@@ -29,8 +29,8 @@ class ThrowableObject extends MovableObject {
    */
   constructor(x, y, world, direction) {
     super();
-    this.x = x;
-    this.y = y;
+    this.x = x + - 10;
+    this.y = y + 45;
     this.width = 80;
     this.height = 80;
     this.speedX = 10 * direction;
@@ -46,14 +46,32 @@ class ThrowableObject extends MovableObject {
    * Moves the throwable object in an arc-like motion and triggers splash animation upon impact.
    */
   throw() {
+    let throwSound = new Audio("assets/audio/bottle-throw-sound.mp3");
+    throwSound.play();
+    throwSound.volume = 0.05;
+
+    if (!this.bottleBreakSound) {
+      this.bottleBreakSound = new Audio("assets/audio/bottle-break.mp3");
+      this.bottleBreakSound.volume = 0.05;
+    }
+
+    let hasBroken = false;
+
     let interval = setInterval(() => {
       this.x += this.speedX;
       this.y -= this.speedY;
       this.speedY -= 1;
+
       if (this.y > 380) {
         this.y = 360;
         clearInterval(interval);
         this.playSplashAnimation();
+
+        if (!hasBroken) {
+          hasBroken = true;
+          this.bottleBreakSound.currentTime = 0; // Sound von Anfang abspielen
+          this.bottleBreakSound.play();
+        }
       }
     }, 50);
   }
@@ -64,8 +82,10 @@ class ThrowableObject extends MovableObject {
   animateRotation() {
     let rotationInterval = setInterval(() => {
       if (!this.hasSplashed) {
-        this.currentImage = (this.currentImage + 1) % this.IMAGES_BOTTLE_ROTATION.length;
-        this.img = this.imageCache[this.IMAGES_BOTTLE_ROTATION[this.currentImage]];
+        this.currentImage =
+          (this.currentImage + 1) % this.IMAGES_BOTTLE_ROTATION.length;
+        this.img =
+          this.imageCache[this.IMAGES_BOTTLE_ROTATION[this.currentImage]];
       } else {
         clearInterval(rotationInterval);
       }
@@ -93,7 +113,9 @@ class ThrowableObject extends MovableObject {
    */
   removeBottle() {
     setTimeout(() => {
-      this.world.throwable_objects = this.world.throwable_objects.filter((obj) => obj !== this);
+      this.world.throwable_objects = this.world.throwable_objects.filter(
+        (obj) => obj !== this
+      );
     }, 500);
   }
 }

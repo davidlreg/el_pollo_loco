@@ -34,6 +34,8 @@ class MovableObject extends DrawableObject {
    */
   jump() {
     this.speedY = 16.5;
+    this.jumpingSound.play();
+    this.jumpingSound.volume = 0.02;
   }
 
   /**
@@ -53,11 +55,22 @@ class MovableObject extends DrawableObject {
    * @param {CanvasRenderingContext2D} ctx - The rendering context
    */
   drawHitbox(ctx) {
-    if (this instanceof Character || this instanceof Chicken || this instanceof Coin || this instanceof SalsaBottle || this instanceof Endboss) {
+    if (
+      this instanceof Character ||
+      this instanceof Chicken ||
+      this instanceof Coin ||
+      this instanceof SalsaBottle ||
+      this instanceof Endboss
+    ) {
       ctx.beginPath();
       ctx.lineWidth = "4";
       ctx.strokeStyle = "blue";
-      ctx.rect(this.x + this.offset.left, this.y + this.offset.top, this.width - this.offset.left - this.offset.right, this.height - this.offset.top - this.offset.bottom);
+      ctx.rect(
+        this.x + this.offset.left,
+        this.y + this.offset.top,
+        this.width - this.offset.left - this.offset.right,
+        this.height - this.offset.top - this.offset.bottom
+      );
       ctx.stroke();
     }
   }
@@ -85,15 +98,15 @@ class MovableObject extends DrawableObject {
       return;
     }
 
-    this.energy -= 20;
+    this.energy -= 0; // -= 20 ist der Standartwert ich hab mir selber Godmode gegeben damit die Hühner nicht nerven
+    let hurtSound = new Audio("assets/audio/character-pain.mp3");
+    hurtSound.play();
+    hurtSound.volume = 0.25;
     if (this.energy <= 0) {
       this.energy = 0;
     }
     this.lastHit = new Date().getTime();
 
-    console.log("Energy after hit: " + this.energy);
-
-    // TODO: Ensure that `statusBarHealth` is set
     if (this.statusBarHealth) {
       this.statusBarHealth.updateHealthBar(this.energy); // Update the health bar
     }

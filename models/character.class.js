@@ -10,6 +10,12 @@ class Character extends MovableObject {
   width = 120;
   height = 260;
   speedX = 4;
+  walkingSound = new Audio(
+    "assets/audio/character-footsteps.wav"
+  );
+  jumpingSound = new Audio(
+    "assets/audio/character-jump-soundeffect.mp3"
+  );
 
   /**
    * Collision offset values.
@@ -54,7 +60,11 @@ class Character extends MovableObject {
     "assets/img/2_character_pepe/3_jump/J-39.png",
   ];
 
-  IMAGES_HURT = ["assets/img/2_character_pepe/4_hurt/H-41.png", "assets/img/2_character_pepe/4_hurt/H-42.png", "assets/img/2_character_pepe/4_hurt/H-43.png"];
+  IMAGES_HURT = [
+    "assets/img/2_character_pepe/4_hurt/H-41.png",
+    "assets/img/2_character_pepe/4_hurt/H-42.png",
+    "assets/img/2_character_pepe/4_hurt/H-43.png",
+  ];
 
   IMAGES_DEAD = [
     "assets/img/2_character_pepe/5_dead/D-51.png",
@@ -86,6 +96,9 @@ class Character extends MovableObject {
   characterMoveLeft() {
     this.x -= this.speedX;
     this.otherDirection = true;
+    if (!this.isCharacterAboveGround()) {
+      this.playWalkingSound();
+    }
   }
 
   /**
@@ -94,6 +107,33 @@ class Character extends MovableObject {
   characterMoveRight() {
     this.x += this.speedX;
     this.otherDirection = false;
+    if (!this.isCharacterAboveGround()) {
+      this.playWalkingSound();
+    }
+  }
+
+  /**
+   * Spielt den Geh-Sound ab, wenn er nicht bereits läuft.
+   */
+  playWalkingSound() {
+    if (this.walkingSound.paused && !this.isCharacterAboveGround()) {
+      this.walkingSound.loop = true;
+      this.walkingSound.volume = 0.2;
+      this.walkingSound.play();
+    }
+  }
+
+  /**
+   * Stoppt den Geh-Sound, wenn der Charakter nicht mehr läuft.
+   */
+  stopWalkingSound() {
+    if (
+      (!this.world.keyboard.moveLeft && !this.world.keyboard.moveRight) ||
+      this.isCharacterAboveGround()
+    ) {
+      this.walkingSound.pause();
+      this.walkingSound.currentTime = 0; // Zurücksetzen für den nächsten Start
+    }
   }
 
   /**
@@ -103,11 +143,15 @@ class Character extends MovableObject {
     let currentTime = new Date().getTime();
 
     if (currentTime - this.lastThrowTime >= this.throwCooldown) {
-      console.log("Throwing Salsa-Bottle");
       this.world.status_bar_salsa.salsaBottles--;
       let offsetX = this.otherDirection ? -20 : 50;
       let direction = this.otherDirection ? -1 : 1;
-      let bottle = new ThrowableObject(this.x + offsetX + this.world.camera_x, this.y + 100, this.world, direction);
+      let bottle = new ThrowableObject(
+        this.x + offsetX + this.world.camera_x,
+        this.y + 100,
+        this.world,
+        direction
+      );
       this.world.throwable_objects.push(bottle);
       bottle.throw();
       this.lastThrowTime = currentTime;
@@ -155,7 +199,10 @@ class Character extends MovableObject {
     }, 175);
 
     setInterval(() => {
-      if (this.world.keyboard.moveRight && this.x < this.world.level.level_end_x) {
+      if (
+        this.world.keyboard.moveRight &&
+        this.x < this.world.level.level_end_x
+      ) {
         this.characterMoveRight();
       }
       if (this.world.keyboard.moveLeft && this.x > -60) {
@@ -164,9 +211,16 @@ class Character extends MovableObject {
       if (this.world.keyboard.jump && !this.isCharacterAboveGround()) {
         this.jump();
       }
-      if (this.world.keyboard.throwBottle && this.world.status_bar_salsa.salsaBottles > 0) {
+      if (
+        this.world.keyboard.throwBottle &&
+        this.world.status_bar_salsa.salsaBottles > 0
+      ) {
         this.characterThrowBottle();
       }
+
+      // Sound stoppen, wenn kein Bewegungs-Input
+      this.stopWalkingSound();
+
       this.world.camera_x = -this.x + 60;
     }, 1000 / 60);
   }
