@@ -43,7 +43,13 @@ class World {
   checkCollisions() {
     setInterval(() => {
       this.level.enemies.forEach((enemy) => {
-        if (this.character.isColliding(enemy)) {
+        if (this.character.isCollidingFromAbove(enemy)) {
+          console.log("Enemy Down!");
+          // Optional: Gegner besiegen oder entfernen:
+          // enemy.die();
+          // this.level.enemies.splice(this.level.enemies.indexOf(enemy), 1);
+          // this.character.jump(); // Rückstoß nach oben
+        } else if (this.character.isColliding(enemy)) {
           this.character.hit();
         }
       });
@@ -115,7 +121,7 @@ class World {
       this.drawAssetsOtherDirection(mo);
     }
     mo.draw(this.ctx);
-    // mo.drawHitbox(this.ctx); // Hitboxen an und ausschalten
+    mo.drawHitbox(this.ctx); // Hitboxen an und ausschalten
     if (mo.otherDirection) {
       this.restoreAssetFacingDirection(mo);
     }

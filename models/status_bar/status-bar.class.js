@@ -3,7 +3,7 @@
  * @class
  */
 class StatusBar extends DrawableObject {
-  salsaBottles = 69;
+  salsaBottles = 0;
   health = 5;
   coins = 0;
 

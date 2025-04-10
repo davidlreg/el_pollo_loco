@@ -89,16 +89,31 @@ class MovableObject extends DrawableObject {
     );
   }
 
+  isCollidingFromAbove(mo) {
+    const isHorizontallyAligned =
+      this.x + this.width - this.offset.right > mo.x + mo.offset.left &&
+      this.x + this.offset.left < mo.x + mo.width - mo.offset.right;
+
+    const characterBottom = this.y + this.height - this.offset.bottom;
+    const enemyTop = mo.y + mo.offset.top;
+
+    const isAbove = characterBottom <= enemyTop;
+    const isFalling = this.speedY > 0;
+
+    const result = isHorizontallyAligned && isAbove && isFalling;
+
+    return result;
+  }
+
   /**
    * Reduces the object's energy when hit.
    */
   hit() {
     if (this.isHurt()) {
-      // TODO: Character cannot be hit for the next 0.8 seconds.
       return;
     }
 
-    this.energy -= 0; // -= 20 ist der Standartwert ich hab mir selber Godmode gegeben damit die Hühner nicht nerven
+    this.energy -= 20; // -= 20 ist der Standartwert
     let hurtSound = new Audio("assets/audio/character-pain.mp3");
     hurtSound.play();
     hurtSound.volume = 0.25;
@@ -120,6 +135,8 @@ class MovableObject extends DrawableObject {
     let timePassed = new Date().getTime() - this.lastHit;
     return timePassed / 1000 < 0.8;
   }
+
+  enemyDown() {}
 
   /**
    * Updates the health bar based on the energy level.
