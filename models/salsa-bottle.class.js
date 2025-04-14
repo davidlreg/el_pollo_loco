@@ -1,9 +1,3 @@
-/**
- * Represents a salsa bottle in the game.
- *
- * @class
- * @extends MovableObject
- */
 class SalsaBottle extends MovableObject {
   y = 350;
   width = 80;
@@ -21,9 +15,6 @@ class SalsaBottle extends MovableObject {
     "assets/img/6_salsa_bottle/2_salsa_bottle_on_ground.png",
   ];
 
-  /**
-   * Creates a new salsa bottle instance.
-   */
   constructor() {
     super().loadImage("assets/img/6_salsa_bottle/1_salsa_bottle_on_ground.png");
     this.loadImages(this.SALSA_BOTTLE_IMAGES);

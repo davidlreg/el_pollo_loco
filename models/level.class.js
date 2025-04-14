@@ -1,6 +1,3 @@
-/**
- * Represents a game level.
- */
 class Level {
   /**
    * @type {Array} List of enemies in the level
@@ -32,15 +29,6 @@ class Level {
    */
   level_end_x = 2200;
 
-  /**
-   * Creates a new level instance.
-   *
-   * @param {Array} enemies - The enemies present in the level.
-   * @param {Array} clouds - The clouds present in the level.
-   * @param {Array} coins - The coins present in the level.
-   * @param {Array} salsaBottles - The salsa bottles present in the level.
-   * @param {Array} backgroundObjects - The background objects in the level.
-   */
   constructor(enemies, clouds, coins, salsaBottles, backgroundObjects) {
     this.enemies = enemies;
     this.clouds = clouds;

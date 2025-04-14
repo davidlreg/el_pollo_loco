@@ -20,13 +20,6 @@ class ThrowableObject extends MovableObject {
     "assets/img/6_salsa_bottle/bottle_rotation/bottle_splash/6_bottle_splash.png",
   ];
 
-  /**
-   * Creates a throwable object.
-   * @param {number} x - The initial x-position.
-   * @param {number} y - The initial y-position.
-   * @param {object} world - The game world instance.
-   * @param {number} direction - The throw direction (-1 for left, 1 for right).
-   */
   constructor(x, y, world, direction) {
     super();
     this.x = x + - 10;

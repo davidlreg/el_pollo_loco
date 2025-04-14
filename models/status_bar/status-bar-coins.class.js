@@ -1,15 +1,6 @@
-/**
- * @class StatusBarCoins
- * @extends StatusBar
- * Represents a status bar for displaying coins.
- */
 class StatusBarCoins extends StatusBar {
   IMAGE_COIN = ["assets/img/7_statusbars/3_icons/icon_coin.png"];
 
-  /**
-   * Creates an instance of StatusBarCoins.
-   * @memberof StatusBarCoins
-   */
   constructor() {
     super().loadImage(this.IMAGE_COIN);
 

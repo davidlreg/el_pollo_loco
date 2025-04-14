@@ -1,7 +1,3 @@
-/**
- * StatusBar class extending DrawableObject to manage status information like salsa bottles, health, and coins.
- * @class
- */
 class StatusBar extends DrawableObject {
   salsaBottles = 0;
   health = 5;

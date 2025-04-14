@@ -1,6 +1,3 @@
-/**
- * Represents a movable object that extends a drawable object.
- */
 class MovableObject extends DrawableObject {
   speed = 0.15;
   otherDirection = false;
@@ -8,6 +5,7 @@ class MovableObject extends DrawableObject {
   acceleration = 1;
   energy = 100;
   lastHit = 0;
+  enemyDownSound = new Audio("assets/audio/enemy-down.mp3");
 
   /**
    * Plays an animation by cycling through a set of images.
@@ -18,6 +16,17 @@ class MovableObject extends DrawableObject {
     let path = images[i];
     this.img = this.imageCache[path];
     this.currentImage++;
+  }
+
+  /**
+   * Handles object movement and animation.
+   * @TODO Implement custom movement logic
+   */
+  animate() {
+    this.moveLeft();
+    this.walkingInterval = setInterval(() => {
+      this.playAnimation(this.IMAGES_WALKING);
+    }, 250);
   }
 
   /**
@@ -34,8 +43,10 @@ class MovableObject extends DrawableObject {
    */
   jump() {
     this.speedY = 16.5;
-    this.jumpingSound.play();
-    this.jumpingSound.volume = 0.02;
+    if (this instanceof Character) {
+      this.jumpingSound.volume = 0.02;
+      this.jumpingSound.play();
+    }
   }
 
   /**
@@ -46,8 +57,31 @@ class MovableObject extends DrawableObject {
       if (this.isCharacterAboveGround() || this.speedY > 0) {
         this.y -= this.speedY;
         this.speedY -= this.acceleration;
+        if (this.y >= 165) {
+          this.y = 165;
+          this.speedY = 0;
+        }
       }
     }, 1000 / 60);
+  }
+
+  /**
+   * Handles the death of the object, stopping movement and playing sound.
+   */
+  die() {
+    if (this.isDead) return;
+    this.isDead = true;
+    this.speed = 0;
+    clearInterval(this.walkingInterval);
+    this.enemyDownSound.volume = 0.3;
+    this.enemyDownSound.play();
+    this.loadImage(this.IMAGE_DEAD);
+    setTimeout(() => {
+      const index = world.level.enemies.indexOf(this);
+      if (index > -1) {
+        world.level.enemies.splice(index, 1);
+      }
+    }, 800);
   }
 
   /**
@@ -58,6 +92,7 @@ class MovableObject extends DrawableObject {
     if (
       this instanceof Character ||
       this instanceof Chicken ||
+      this instanceof SmallChicken ||
       this instanceof Coin ||
       this instanceof SalsaBottle ||
       this instanceof Endboss
@@ -89,22 +124,6 @@ class MovableObject extends DrawableObject {
     );
   }
 
-  isCollidingFromAbove(mo) {
-    const isHorizontallyAligned =
-      this.x + this.width - this.offset.right > mo.x + mo.offset.left &&
-      this.x + this.offset.left < mo.x + mo.width - mo.offset.right;
-
-    const characterBottom = this.y + this.height - this.offset.bottom;
-    const enemyTop = mo.y + mo.offset.top;
-
-    const isAbove = characterBottom <= enemyTop;
-    const isFalling = this.speedY > 0;
-
-    const result = isHorizontallyAligned && isAbove && isFalling;
-
-    return result;
-  }
-
   /**
    * Reduces the object's energy when hit.
    */
@@ -112,8 +131,7 @@ class MovableObject extends DrawableObject {
     if (this.isHurt()) {
       return;
     }
-
-    this.energy -= 20; // -= 20 ist der Standartwert
+    this.energy -= 20;
     let hurtSound = new Audio("assets/audio/character-pain.mp3");
     hurtSound.play();
     hurtSound.volume = 0.25;
@@ -121,9 +139,8 @@ class MovableObject extends DrawableObject {
       this.energy = 0;
     }
     this.lastHit = new Date().getTime();
-
     if (this.statusBarHealth) {
-      this.statusBarHealth.updateHealthBar(this.energy); // Update the health bar
+      this.statusBarHealth.updateHealthBar(this.energy);
     }
   }
 
@@ -135,8 +152,6 @@ class MovableObject extends DrawableObject {
     let timePassed = new Date().getTime() - this.lastHit;
     return timePassed / 1000 < 0.8;
   }
-
-  enemyDown() {}
 
   /**
    * Updates the health bar based on the energy level.

@@ -1,6 +1,3 @@
-/**
- * Class representing keyboard inputs for a game.
- */
 class KeyboardInputs {
   /**
    * @type {boolean} Indicates if the right movement key is pressed.

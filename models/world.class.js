@@ -1,8 +1,6 @@
-/**
- * Represents the game world.
- */
 class World {
   character = new Character();
+  endboss = new Endboss();
   status_bar_salsa = new StatusBarSalsa();
   status_bar_health = new StatusBarHealth();
   status_bar_coins = new StatusBarCoins();
@@ -12,14 +10,10 @@ class World {
   ctx;
   keyboard;
   camera_x = 0;
-  soundMuted = false; // Neue Variable für Stummschalten
+  soundMuted = false;
+  endbossActivated = false;
   backgroundMusic = new Audio("assets/audio/mexican-background-music.mp3");
 
-  /**
-   * Creates an instance of World.
-   * @param {HTMLCanvasElement} canvas - The game canvas.
-   * @param {Object} keyboard - The keyboard input handler.
-   */
   constructor(canvas, keyboard) {
     this.ctx = canvas.getContext("2d");
     this.canvas = canvas;
@@ -27,6 +21,7 @@ class World {
     this.draw();
     this.setWorld();
     this.checkCollisions();
+    this.activateEndboss();
   }
 
   /**
@@ -43,17 +38,18 @@ class World {
   checkCollisions() {
     setInterval(() => {
       this.level.enemies.forEach((enemy) => {
-        if (this.character.isCollidingFromAbove(enemy)) {
-          console.log("Enemy Down!");
-          // Optional: Gegner besiegen oder entfernen:
-          // enemy.die();
-          // this.level.enemies.splice(this.level.enemies.indexOf(enemy), 1);
-          // this.character.jump(); // Rückstoß nach oben
-        } else if (this.character.isColliding(enemy)) {
-          this.character.hit();
+        if (enemy.isDead) return;
+
+        if (this.character.isColliding(enemy)) {
+          if (this.character.speedY < 0) {
+            enemy.die();
+            this.character.jump();
+          } else {
+            this.character.hit();
+          }
         }
       });
-    }, 75);
+    }, 25);
     setInterval(() => {
       this.level.salsaBottles.forEach((salsaBottle, index) => {
         if (this.character.isColliding(salsaBottle)) {
@@ -81,6 +77,28 @@ class World {
   }
 
   /**
+   * Activates the endboss behavior when the character reaches a certain point.
+   */
+  activateEndboss() {
+    setInterval(() => {
+      if (this.character.x > 2180) {
+        this.endboss.moveLeft();
+        this.endbossActivated = true; // Aktivieren, wenn einmal überschritten
+        if (!this.endboss.isJumping) {
+          this.endboss.currentAnimation = this.endboss.IMAGES_WALKING;
+        }
+      }
+    }, 1000 / 60);
+
+    setInterval(() => {
+      if (this.endbossActivated && Math.random() < 0.4) {
+        this.endboss.currentAnimation = this.endboss.IMAGES_ATTACK;
+        this.endboss.bossJump();
+      }
+    }, 2000);
+  }
+
+  /**
    * Clears the canvas and redraws all game objects.
    */
   draw() {
@@ -89,9 +107,10 @@ class World {
     this.addObjectsToMap(this.level.backgroundObjects);
     this.addObjectsToMap(this.level.clouds);
     this.addObjectsToMap(this.level.coins);
-    this.addToMap(this.character);
-    this.addObjectsToMap(this.level.enemies);
     this.addObjectsToMap(this.level.salsaBottles);
+    this.addObjectsToMap(this.level.enemies);
+    this.addToMap(this.endboss);
+    this.addToMap(this.character);
     this.level.clouds.forEach((cloud) => cloud.move());
     this.ctx.translate(-this.camera_x, 0);
     this.ctx.restore();
@@ -121,7 +140,7 @@ class World {
       this.drawAssetsOtherDirection(mo);
     }
     mo.draw(this.ctx);
-    mo.drawHitbox(this.ctx); // Hitboxen an und ausschalten
+    // mo.drawHitbox(this.ctx); // Hitboxen an und ausschalten
     if (mo.otherDirection) {
       this.restoreAssetFacingDirection(mo);
     }
@@ -162,6 +181,9 @@ class World {
     mo.x = mo.x * -1;
   }
 
+  /**
+   * Plays the background music for the game.
+   */
   playBackgroundMusic() {
     this.backgroundMusic.loop = true;
     this.backgroundMusic.volume = 0.005; // default 0.005

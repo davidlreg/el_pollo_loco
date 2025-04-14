@@ -1,13 +1,6 @@
-/**
- * Class representing the health status bar.
- * @extends StatusBar
- */
 class StatusBarHealth extends StatusBar {
   IMAGE_HEALTH = ["assets/img/7_statusbars/3_icons/icon_health.png"];
 
-  /**
-   * Creates an instance of StatusBarHealth.
-   */
   constructor() {
     super().loadImage(this.IMAGE_HEALTH);
     this.x = 100;
