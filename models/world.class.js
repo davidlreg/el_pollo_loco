@@ -1,15 +1,15 @@
 class World {
+  canvas;
+  ctx;
+  keyboard;
+  level = level1;
+  camera_x = 0;
   character = new Character();
   endboss = new Endboss();
   status_bar_salsa = new StatusBarSalsa();
   status_bar_health = new StatusBarHealth();
   status_bar_coins = new StatusBarCoins();
   throwable_objects = [];
-  level = level1;
-  canvas;
-  ctx;
-  keyboard;
-  camera_x = 0;
   soundMuted = false;
   endbossActivated = false;
   backgroundMusic = new Audio("assets/audio/mexican-background-music.mp3");
@@ -18,10 +18,10 @@ class World {
     this.ctx = canvas.getContext("2d");
     this.canvas = canvas;
     this.keyboard = keyboard;
-    this.draw();
     this.setWorld();
-    this.checkCollisions();
-    this.activateEndboss();
+    this.startGameLoops();
+    this.playBackgroundMusic();
+    this.draw();
   }
 
   /**
@@ -32,48 +32,62 @@ class World {
     this.character.statusBarHealth = this.status_bar_health;
   }
 
+  startGameLoops() {
+    setInterval(() => this.checkCollisions(), 25);
+  }
+
   /**
    * Checks for collisions between the character and game objects at intervals.
    */
   checkCollisions() {
-    setInterval(() => {
-      this.level.enemies.forEach((enemy) => {
-        if (enemy.isDead) return;
+    this.level.enemies.forEach((enemy) => {
+      if (!enemy.isDead && this.character.isColliding(enemy)) {
+        this.character.speedY < 0
+          ? (enemy.die(), this.character.jump())
+          : this.character.hit();
+      }
+    });
 
-        if (this.character.isColliding(enemy)) {
-          if (this.character.speedY < 0) {
-            enemy.die();
-            this.character.jump();
-          } else {
-            this.character.hit();
-          }
+    if (this.character.isColliding(this.endboss)) {
+      this.character.hit();
+    }
+
+    this.level.salsaBottles.forEach((bottle, index) => {
+      if (this.character.isColliding(bottle)) {
+        this.status_bar_salsa.salsaBottles += 1;
+        this.level.salsaBottles.splice(index, 1);
+        this.playSound("assets/audio/item-recieved.mp3", 0.1);
+      }
+    });
+
+    this.level.coins.forEach((coin, index) => {
+      if (this.character.isColliding(coin)) {
+        this.status_bar_coins.coins += 1;
+        this.level.coins.splice(index, 1);
+        this.playSound("assets/audio/coin-recieved.mp3", 0.025);
+      }
+    });
+
+    this.checkBottleEnemyCollisions();
+    this.checkEndbossActivation();
+  }
+
+  checkBottleEnemyCollisions() {
+    this.throwable_objects.forEach((bottle) => {
+      this.level.enemies.forEach((enemy) => {
+        if (bottle.isColliding(enemy)) {
+          enemy.die();
+          console.log("Enemy Hit!");
         }
       });
-    }, 25);
-    setInterval(() => {
-      this.level.salsaBottles.forEach((salsaBottle, index) => {
-        if (this.character.isColliding(salsaBottle)) {
-          this.status_bar_salsa.salsaBottles += 1;
-          this.level.salsaBottles.splice(index, 1);
-          let salsaBottleCollectedSound = new Audio(
-            "assets/audio/item-recieved.mp3"
-          );
-          salsaBottleCollectedSound.volume = 0.1;
-          salsaBottleCollectedSound.play();
-        }
-      });
-    }, 75);
-    setInterval(() => {
-      this.level.coins.forEach((coin, index) => {
-        if (this.character.isColliding(coin)) {
-          this.status_bar_coins.coins += 1;
-          this.level.coins.splice(index, 1);
-          let coinSound = new Audio("assets/audio/coin-recieved.mp3");
-          coinSound.volume = 0.025;
-          coinSound.play();
-        }
-      });
-    }, 75);
+    });
+  }
+
+  checkEndbossActivation() {
+    if (this.character.x > 2180 && !this.endbossActivated) {
+      this.endbossActivated = true;
+      this.activateEndboss();
+    }
   }
 
   /**
@@ -83,7 +97,7 @@ class World {
     setInterval(() => {
       if (this.character.x > 2180) {
         this.endboss.moveLeft();
-        this.endbossActivated = true; // Aktivieren, wenn einmal überschritten
+        this.endbossActivated = true;
         if (!this.endboss.isJumping) {
           this.endboss.currentAnimation = this.endboss.IMAGES_WALKING;
         }
@@ -96,6 +110,20 @@ class World {
         this.endboss.bossJump();
       }
     }, 2000);
+  }
+
+  checkBottleEnemyCollisions() {
+    this.throwable_objects.forEach((bottle) => {
+      this.level.enemies.forEach((enemy) => {
+        if (bottle.isColliding(enemy)) {
+          enemy.die();
+          console.log("Enemy Hit!");
+          // // Optionale: Flasche entfernen
+          // const index = this.throwable_objects.indexOf(bottle);
+          // if (index > -1) this.throwable_objects.splice(index, 1);
+        }
+      });
+    });
   }
 
   /**
@@ -137,12 +165,16 @@ class World {
    */
   addToMap(mo) {
     if (mo.otherDirection) {
-      this.drawAssetsOtherDirection(mo);
+      this.ctx.save();
+      this.ctx.translate(mo.width, 0);
+      this.ctx.scale(-1, 1);
+      mo.x *= -1;
     }
     mo.draw(this.ctx);
-    // mo.drawHitbox(this.ctx); // Hitboxen an und ausschalten
+    mo.drawHitbox(this.ctx);
     if (mo.otherDirection) {
-      this.restoreAssetFacingDirection(mo);
+      this.ctx.restore();
+      mo.x *= -1;
     }
   }
 
@@ -151,7 +183,7 @@ class World {
    * @param {...Object} statusBars - The status bar elements to be drawn.
    */
   addStatusBarToMap(...statusBars) {
-    statusBars.forEach((element) => element.draw(this.ctx));
+    statusBars.forEach((bar) => bar.draw(this.ctx));
   }
 
   /**
@@ -161,24 +193,10 @@ class World {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
   }
 
-  /**
-   * Flips an object horizontally before drawing.
-   * @param {Object} mo - The object to be flipped.
-   */
-  drawAssetsOtherDirection(mo) {
-    this.ctx.save();
-    this.ctx.translate(mo.width, 0);
-    this.ctx.scale(-1, 1);
-    mo.x = mo.x * -1;
-  }
-
-  /**
-   * Restores an object's original direction after being drawn flipped.
-   * @param {Object} mo - The object to restore.
-   */
-  restoreAssetFacingDirection(mo) {
-    this.ctx.restore();
-    mo.x = mo.x * -1;
+  playSound(path, volume) {
+    const sound = new Audio(path);
+    sound.volume = volume;
+    sound.play();
   }
 
   /**

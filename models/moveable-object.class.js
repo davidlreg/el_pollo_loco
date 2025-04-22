@@ -1,4 +1,5 @@
 class MovableObject extends DrawableObject {
+  offset = { top: 0, bottom: 0, left: 0, right: 0 };
   speed = 0.15;
   otherDirection = false;
   speedY = 0;
@@ -116,12 +117,19 @@ class MovableObject extends DrawableObject {
    * @returns {boolean} True if colliding, otherwise false
    */
   isColliding(mo) {
-    return (
-      this.x + this.width - this.offset.right > mo.x + mo.offset.left &&
-      this.y + this.height - this.offset.bottom > mo.y + mo.offset.top &&
-      this.x + this.offset.left < mo.x + mo.width - mo.offset.right &&
-      this.y + this.offset.top < mo.y + mo.height - mo.offset.bottom
-    );
+    if (
+      this.x + this.width - this.offset.right <= mo.x + mo.offset.left ||
+      this.x + this.offset.left >= mo.x + mo.width - mo.offset.right
+    ) {
+      return false;
+    }
+    if (
+      this.y + this.height - this.offset.bottom <= mo.y + mo.offset.top ||
+      this.y + this.offset.top >= mo.y + mo.height - mo.offset.bottom
+    ) {
+      return false;
+    }
+    return true;
   }
 
   /**
@@ -131,7 +139,7 @@ class MovableObject extends DrawableObject {
     if (this.isHurt()) {
       return;
     }
-    this.energy -= 20;
+    this.energy -= 0; // 20 Default
     let hurtSound = new Audio("assets/audio/character-pain.mp3");
     hurtSound.play();
     hurtSound.volume = 0.25;
@@ -167,5 +175,21 @@ class MovableObject extends DrawableObject {
    */
   isDead() {
     return this.energy === 0;
+  }
+
+  /**
+   * Plays the splash animation when the bottle hits the ground.
+   */
+  playSplashAnimation() {
+    this.hasSplashed = true;
+    let i = 0;
+    let splashInterval = setInterval(() => {
+      this.img = this.imageCache[this.IMAGES_BOTTLE_SPLASH[i]];
+      i++;
+      if (i >= this.IMAGES_BOTTLE_SPLASH.length) {
+        clearInterval(splashInterval);
+        this.removeBottle();
+      }
+    }, 100);
   }
 }
