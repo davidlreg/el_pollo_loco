@@ -1,30 +1,17 @@
-/**
- * Represents a playable character in the game.
- * @class
- * @extends MovableObject
- */
 class Character extends MovableObject {
   world;
   x = 0;
   y = 165;
   width = 120;
   height = 260;
-  speedX = 4;
-  walkingSound = new Audio(
-    "assets/audio/character-footsteps.wav"
-  );
-  jumpingSound = new Audio(
-    "assets/audio/character-jump-soundeffect.mp3"
-  );
-
-  /**
-   * Collision offset values.
-   * @type {Object}
-   */
   offset = { top: 120, left: 30, right: 40, bottom: 10 };
-
+  speedX = 4;
+  speedY = 0;
   lastThrowTime = 0;
   throwCooldown = 1000;
+  walkingSound = new Audio("assets/audio/character-footsteps.wav");
+  jumpingSound = new Audio("assets/audio/character-jump-soundeffect.mp3");
+  characterDeadSound = new Audio("assets/audio/character-dead.mp3");
 
   IMAGES_IDLE = [
     "assets/img/2_character_pepe/1_idle/idle/I-1.png",
@@ -76,9 +63,6 @@ class Character extends MovableObject {
     "assets/img/2_character_pepe/5_dead/D-57.png",
   ];
 
-  /**
-   * Initializes the character, loads images, and starts animations.
-   */
   constructor() {
     super().loadImage("assets/img/2_character_pepe/1_idle/idle/I-1.png");
     this.loadImages(this.IMAGES_IDLE);
@@ -113,7 +97,19 @@ class Character extends MovableObject {
   }
 
   /**
-   * Spielt den Geh-Sound ab, wenn er nicht bereits läuft.
+   * Handles character death behavior.
+   * Displays game over and plays death sound.
+   */
+  characterDead() {
+    console.log("Charactert Died!");
+    // Bewegen des Charakters unterbinden
+    // Bilder zu DEAD austauschen
+    // DEAD Sound abspielen
+    // Game Over Screen anzeigen
+  }
+
+  /**
+   * Plays the walking sound if not already playing.
    */
   playWalkingSound() {
     if (this.walkingSound.paused && !this.isCharacterAboveGround()) {
@@ -124,7 +120,7 @@ class Character extends MovableObject {
   }
 
   /**
-   * Stoppt den Geh-Sound, wenn der Charakter nicht mehr läuft.
+   * Stops the walking sound when the character is idle or in the air.
    */
   stopWalkingSound() {
     if (
@@ -132,12 +128,12 @@ class Character extends MovableObject {
       this.isCharacterAboveGround()
     ) {
       this.walkingSound.pause();
-      this.walkingSound.currentTime = 0; // Zurücksetzen für den nächsten Start
+      this.walkingSound.currentTime = 0;
     }
   }
 
   /**
-   * Throws a bottle if cooldown allows.
+   * Throws a bottle if the cooldown has passed.
    */
   characterThrowBottle() {
     let currentTime = new Date().getTime();
@@ -159,25 +155,15 @@ class Character extends MovableObject {
   }
 
   /**
-   * Checks if the character is above the ground.
-   * @returns {boolean} True if above ground.
+   * Checks whether the character is above ground.
+   * @returns {boolean} True if character is above ground.
    */
   isCharacterAboveGround() {
     return this.y < 165;
   }
 
   /**
-   * Plays the idle animation.
-   */
-  playIdleAnimation() {
-    let i = this.currentImage % this.IMAGES_IDLE.length;
-    let path = this.IMAGES_IDLE[i];
-    this.img = this.imageCache[path];
-    this.currentImage++;
-  }
-
-  /**
-   * Handles animation logic.
+   * Runs the character's animations and movement logic.
    */
   animate() {
     setInterval(() => {
@@ -187,6 +173,7 @@ class Character extends MovableObject {
     setInterval(() => {
       if (this.isDead()) {
         this.playAnimation(this.IMAGES_DEAD);
+        this.characterDead();
       } else if (this.isHurt()) {
         this.playAnimation(this.IMAGES_HURT);
       } else if (this.isCharacterAboveGround()) {
@@ -218,10 +205,19 @@ class Character extends MovableObject {
         this.characterThrowBottle();
       }
 
-      // Sound stoppen, wenn kein Bewegungs-Input
       this.stopWalkingSound();
 
       this.world.camera_x = -this.x + 60;
     }, 1000 / 60);
+  }
+
+  /**
+   * Plays the idle animation.
+   */
+  playIdleAnimation() {
+    let i = this.currentImage % this.IMAGES_IDLE.length;
+    let path = this.IMAGES_IDLE[i];
+    this.img = this.imageCache[path];
+    this.currentImage++;
   }
 }

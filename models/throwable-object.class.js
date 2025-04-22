@@ -20,16 +20,9 @@ class ThrowableObject extends MovableObject {
     "assets/img/6_salsa_bottle/bottle_rotation/bottle_splash/6_bottle_splash.png",
   ];
 
-  /**
-   * Creates a throwable object.
-   * @param {number} x - The initial x-position.
-   * @param {number} y - The initial y-position.
-   * @param {object} world - The game world instance.
-   * @param {number} direction - The throw direction (-1 for left, 1 for right).
-   */
   constructor(x, y, world, direction) {
     super();
-    this.x = x + - 10;
+    this.x = x + - 10; 
     this.y = y + 45;
     this.width = 80;
     this.height = 80;
@@ -88,22 +81,6 @@ class ThrowableObject extends MovableObject {
           this.imageCache[this.IMAGES_BOTTLE_ROTATION[this.currentImage]];
       } else {
         clearInterval(rotationInterval);
-      }
-    }, 100);
-  }
-
-  /**
-   * Plays the splash animation when the bottle hits the ground.
-   */
-  playSplashAnimation() {
-    this.hasSplashed = true;
-    let i = 0;
-    let splashInterval = setInterval(() => {
-      this.img = this.imageCache[this.IMAGES_BOTTLE_SPLASH[i]];
-      i++;
-      if (i >= this.IMAGES_BOTTLE_SPLASH.length) {
-        clearInterval(splashInterval);
-        this.removeBottle();
       }
     }, 100);
   }

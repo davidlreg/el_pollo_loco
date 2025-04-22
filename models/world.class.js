@@ -1,32 +1,27 @@
-/**
- * Represents the game world.
- */
 class World {
+  canvas;
+  ctx;
+  keyboard;
+  level = level1;
+  camera_x = 0;
   character = new Character();
+  endboss = new Endboss();
   status_bar_salsa = new StatusBarSalsa();
   status_bar_health = new StatusBarHealth();
   status_bar_coins = new StatusBarCoins();
   throwable_objects = [];
-  level = level1;
-  canvas;
-  ctx;
-  keyboard;
-  camera_x = 0;
-  soundMuted = false; // Neue Variable für Stummschalten
+  soundMuted = false;
+  endbossActivated = false;
   backgroundMusic = new Audio("assets/audio/mexican-background-music.mp3");
 
-  /**
-   * Creates an instance of World.
-   * @param {HTMLCanvasElement} canvas - The game canvas.
-   * @param {Object} keyboard - The keyboard input handler.
-   */
   constructor(canvas, keyboard) {
     this.ctx = canvas.getContext("2d");
     this.canvas = canvas;
     this.keyboard = keyboard;
-    this.draw();
     this.setWorld();
-    this.checkCollisions();
+    this.startGameLoops();
+    this.playBackgroundMusic();
+    this.draw();
   }
 
   /**
@@ -37,41 +32,98 @@ class World {
     this.character.statusBarHealth = this.status_bar_health;
   }
 
+  startGameLoops() {
+    setInterval(() => this.checkCollisions(), 25);
+  }
+
   /**
    * Checks for collisions between the character and game objects at intervals.
    */
   checkCollisions() {
-    setInterval(() => {
+    this.level.enemies.forEach((enemy) => {
+      if (!enemy.isDead && this.character.isColliding(enemy)) {
+        this.character.speedY < 0
+          ? (enemy.die(), this.character.jump())
+          : this.character.hit();
+      }
+    });
+
+    if (this.character.isColliding(this.endboss)) {
+      this.character.hit();
+    }
+
+    this.level.salsaBottles.forEach((bottle, index) => {
+      if (this.character.isColliding(bottle)) {
+        this.status_bar_salsa.salsaBottles += 1;
+        this.level.salsaBottles.splice(index, 1);
+        this.playSound("assets/audio/item-recieved.mp3", 0.1);
+      }
+    });
+
+    this.level.coins.forEach((coin, index) => {
+      if (this.character.isColliding(coin)) {
+        this.status_bar_coins.coins += 1;
+        this.level.coins.splice(index, 1);
+        this.playSound("assets/audio/coin-recieved.mp3", 0.025);
+      }
+    });
+
+    this.checkBottleEnemyCollisions();
+    this.checkEndbossActivation();
+  }
+
+  checkBottleEnemyCollisions() {
+    this.throwable_objects.forEach((bottle) => {
       this.level.enemies.forEach((enemy) => {
-        if (this.character.isColliding(enemy)) {
-          this.character.hit();
+        if (bottle.isColliding(enemy)) {
+          enemy.die();
+          console.log("Enemy Hit!");
         }
       });
-    }, 75);
+    });
+  }
+
+  checkEndbossActivation() {
+    if (this.character.x > 2180 && !this.endbossActivated) {
+      this.endbossActivated = true;
+      this.activateEndboss();
+    }
+  }
+
+  /**
+   * Activates the endboss behavior when the character reaches a certain point.
+   */
+  activateEndboss() {
     setInterval(() => {
-      this.level.salsaBottles.forEach((salsaBottle, index) => {
-        if (this.character.isColliding(salsaBottle)) {
-          this.status_bar_salsa.salsaBottles += 1;
-          this.level.salsaBottles.splice(index, 1);
-          let salsaBottleCollectedSound = new Audio(
-            "assets/audio/item-recieved.mp3"
-          );
-          salsaBottleCollectedSound.volume = 0.1;
-          salsaBottleCollectedSound.play();
+      if (this.character.x > 2180) {
+        this.endboss.moveLeft();
+        this.endbossActivated = true;
+        if (!this.endboss.isJumping) {
+          this.endboss.currentAnimation = this.endboss.IMAGES_WALKING;
         }
-      });
-    }, 75);
+      }
+    }, 1000 / 60);
+
     setInterval(() => {
-      this.level.coins.forEach((coin, index) => {
-        if (this.character.isColliding(coin)) {
-          this.status_bar_coins.coins += 1;
-          this.level.coins.splice(index, 1);
-          let coinSound = new Audio("assets/audio/coin-recieved.mp3");
-          coinSound.volume = 0.025;
-          coinSound.play();
+      if (this.endbossActivated && Math.random() < 0.4) {
+        this.endboss.currentAnimation = this.endboss.IMAGES_ATTACK;
+        this.endboss.bossJump();
+      }
+    }, 2000);
+  }
+
+  checkBottleEnemyCollisions() {
+    this.throwable_objects.forEach((bottle) => {
+      this.level.enemies.forEach((enemy) => {
+        if (bottle.isColliding(enemy)) {
+          enemy.die();
+          console.log("Enemy Hit!");
+          // // Optionale: Flasche entfernen
+          // const index = this.throwable_objects.indexOf(bottle);
+          // if (index > -1) this.throwable_objects.splice(index, 1);
         }
       });
-    }, 75);
+    });
   }
 
   /**
@@ -83,9 +135,10 @@ class World {
     this.addObjectsToMap(this.level.backgroundObjects);
     this.addObjectsToMap(this.level.clouds);
     this.addObjectsToMap(this.level.coins);
-    this.addToMap(this.character);
-    this.addObjectsToMap(this.level.enemies);
     this.addObjectsToMap(this.level.salsaBottles);
+    this.addObjectsToMap(this.level.enemies);
+    this.addToMap(this.endboss);
+    this.addToMap(this.character);
     this.level.clouds.forEach((cloud) => cloud.move());
     this.ctx.translate(-this.camera_x, 0);
     this.ctx.restore();
@@ -112,12 +165,16 @@ class World {
    */
   addToMap(mo) {
     if (mo.otherDirection) {
-      this.drawAssetsOtherDirection(mo);
+      this.ctx.save();
+      this.ctx.translate(mo.width, 0);
+      this.ctx.scale(-1, 1);
+      mo.x *= -1;
     }
     mo.draw(this.ctx);
-    // mo.drawHitbox(this.ctx); // Hitboxen an und ausschalten
+    mo.drawHitbox(this.ctx);
     if (mo.otherDirection) {
-      this.restoreAssetFacingDirection(mo);
+      this.ctx.restore();
+      mo.x *= -1;
     }
   }
 
@@ -126,7 +183,7 @@ class World {
    * @param {...Object} statusBars - The status bar elements to be drawn.
    */
   addStatusBarToMap(...statusBars) {
-    statusBars.forEach((element) => element.draw(this.ctx));
+    statusBars.forEach((bar) => bar.draw(this.ctx));
   }
 
   /**
@@ -136,26 +193,15 @@ class World {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
   }
 
-  /**
-   * Flips an object horizontally before drawing.
-   * @param {Object} mo - The object to be flipped.
-   */
-  drawAssetsOtherDirection(mo) {
-    this.ctx.save();
-    this.ctx.translate(mo.width, 0);
-    this.ctx.scale(-1, 1);
-    mo.x = mo.x * -1;
+  playSound(path, volume) {
+    const sound = new Audio(path);
+    sound.volume = volume;
+    sound.play();
   }
 
   /**
-   * Restores an object's original direction after being drawn flipped.
-   * @param {Object} mo - The object to restore.
+   * Plays the background music for the game.
    */
-  restoreAssetFacingDirection(mo) {
-    this.ctx.restore();
-    mo.x = mo.x * -1;
-  }
-
   playBackgroundMusic() {
     this.backgroundMusic.loop = true;
     this.backgroundMusic.volume = 0.005; // default 0.005

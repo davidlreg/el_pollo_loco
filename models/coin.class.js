@@ -1,8 +1,3 @@
-/**
- * Represents a coin object in the game.
- * @class
- * @extends MovableObject
- */
 class Coin extends MovableObject {
   y = 170;
   width = 120;
@@ -13,10 +8,6 @@ class Coin extends MovableObject {
     "assets/img/8_coin/coin_2.png",
   ];
 
-  /**
-   * Creates a new Coin instance.
-   * Loads the image and sets random x position.
-   */
   constructor() {
     super().loadImage("assets/img/8_coin/coin_1.png");
     this.loadImages(this.COIN_IMAGES);

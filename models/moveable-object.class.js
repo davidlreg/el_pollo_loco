@@ -1,13 +1,12 @@
-/**
- * Represents a movable object that extends a drawable object.
- */
 class MovableObject extends DrawableObject {
+  offset = { top: 0, bottom: 0, left: 0, right: 0 };
   speed = 0.15;
   otherDirection = false;
   speedY = 0;
   acceleration = 1;
   energy = 100;
   lastHit = 0;
+  enemyDownSound = new Audio("assets/audio/enemy-down.mp3");
 
   /**
    * Plays an animation by cycling through a set of images.
@@ -18,6 +17,17 @@ class MovableObject extends DrawableObject {
     let path = images[i];
     this.img = this.imageCache[path];
     this.currentImage++;
+  }
+
+  /**
+   * Handles object movement and animation.
+   * @TODO Implement custom movement logic
+   */
+  animate() {
+    this.moveLeft();
+    this.walkingInterval = setInterval(() => {
+      this.playAnimation(this.IMAGES_WALKING);
+    }, 250);
   }
 
   /**
@@ -34,8 +44,10 @@ class MovableObject extends DrawableObject {
    */
   jump() {
     this.speedY = 16.5;
-    this.jumpingSound.play();
-    this.jumpingSound.volume = 0.02;
+    if (this instanceof Character) {
+      this.jumpingSound.volume = 0.02;
+      this.jumpingSound.play();
+    }
   }
 
   /**
@@ -46,8 +58,31 @@ class MovableObject extends DrawableObject {
       if (this.isCharacterAboveGround() || this.speedY > 0) {
         this.y -= this.speedY;
         this.speedY -= this.acceleration;
+        if (this.y >= 165) {
+          this.y = 165;
+          this.speedY = 0;
+        }
       }
     }, 1000 / 60);
+  }
+
+  /**
+   * Handles the death of the object, stopping movement and playing sound.
+   */
+  die() {
+    if (this.isDead) return;
+    this.isDead = true;
+    this.speed = 0;
+    clearInterval(this.walkingInterval);
+    this.enemyDownSound.volume = 0.3;
+    this.enemyDownSound.play();
+    this.loadImage(this.IMAGE_DEAD);
+    setTimeout(() => {
+      const index = world.level.enemies.indexOf(this);
+      if (index > -1) {
+        world.level.enemies.splice(index, 1);
+      }
+    }, 800);
   }
 
   /**
@@ -58,6 +93,7 @@ class MovableObject extends DrawableObject {
     if (
       this instanceof Character ||
       this instanceof Chicken ||
+      this instanceof SmallChicken ||
       this instanceof Coin ||
       this instanceof SalsaBottle ||
       this instanceof Endboss
@@ -81,12 +117,19 @@ class MovableObject extends DrawableObject {
    * @returns {boolean} True if colliding, otherwise false
    */
   isColliding(mo) {
-    return (
-      this.x + this.width - this.offset.right > mo.x + mo.offset.left &&
-      this.y + this.height - this.offset.bottom > mo.y + mo.offset.top &&
-      this.x + this.offset.left < mo.x + mo.width - mo.offset.right &&
-      this.y + this.offset.top < mo.y + mo.height - mo.offset.bottom
-    );
+    if (
+      this.x + this.width - this.offset.right <= mo.x + mo.offset.left ||
+      this.x + this.offset.left >= mo.x + mo.width - mo.offset.right
+    ) {
+      return false;
+    }
+    if (
+      this.y + this.height - this.offset.bottom <= mo.y + mo.offset.top ||
+      this.y + this.offset.top >= mo.y + mo.height - mo.offset.bottom
+    ) {
+      return false;
+    }
+    return true;
   }
 
   /**
@@ -94,11 +137,9 @@ class MovableObject extends DrawableObject {
    */
   hit() {
     if (this.isHurt()) {
-      // TODO: Character cannot be hit for the next 0.8 seconds.
       return;
     }
-
-    this.energy -= 0; // -= 20 ist der Standartwert ich hab mir selber Godmode gegeben damit die Hühner nicht nerven
+    this.energy -= 0; // 20 Default
     let hurtSound = new Audio("assets/audio/character-pain.mp3");
     hurtSound.play();
     hurtSound.volume = 0.25;
@@ -106,9 +147,8 @@ class MovableObject extends DrawableObject {
       this.energy = 0;
     }
     this.lastHit = new Date().getTime();
-
     if (this.statusBarHealth) {
-      this.statusBarHealth.updateHealthBar(this.energy); // Update the health bar
+      this.statusBarHealth.updateHealthBar(this.energy);
     }
   }
 
@@ -135,5 +175,21 @@ class MovableObject extends DrawableObject {
    */
   isDead() {
     return this.energy === 0;
+  }
+
+  /**
+   * Plays the splash animation when the bottle hits the ground.
+   */
+  playSplashAnimation() {
+    this.hasSplashed = true;
+    let i = 0;
+    let splashInterval = setInterval(() => {
+      this.img = this.imageCache[this.IMAGES_BOTTLE_SPLASH[i]];
+      i++;
+      if (i >= this.IMAGES_BOTTLE_SPLASH.length) {
+        clearInterval(splashInterval);
+        this.removeBottle();
+      }
+    }, 100);
   }
 }

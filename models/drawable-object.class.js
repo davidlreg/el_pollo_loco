@@ -1,6 +1,3 @@
-/**
- * Represents a drawable object in a 2D canvas context.
- */
 class DrawableObject {
   x = 120;
   y = 280;
