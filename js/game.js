@@ -3,11 +3,8 @@ let world;
 let keyboard = new KeyboardInputs();
 let muteButton = document.getElementById("mute-btn");
 let isMuted = false;
-
-// Liste aller erstellten Sounds
 let allSounds = [];
 
-// Originaler Audio-Konstruktor wird überschrieben, um alle Sounds zu speichern
 const OriginalAudio = window.Audio;
 window.Audio = function (...args) {
   const audio = new OriginalAudio(...args);
@@ -94,13 +91,10 @@ document.getElementById("fullscreen-btn").addEventListener("click", () => {
     if (canvas.requestFullscreen) {
       canvas.requestFullscreen();
     } else if (canvas.mozRequestFullScreen) {
-      // Firefox
       canvas.mozRequestFullScreen();
     } else if (canvas.webkitRequestFullscreen) {
-      // Chrome, Safari, Opera
       canvas.webkitRequestFullscreen();
     } else if (canvas.msRequestFullscreen) {
-      // IE/Edge
       canvas.msRequestFullscreen();
     }
   } else {
@@ -110,12 +104,8 @@ document.getElementById("fullscreen-btn").addEventListener("click", () => {
 
 muteButton.addEventListener("click", () => {
   isMuted = !isMuted;
-
-  // Alle gespeicherten Sounds muten oder unmute
   allSounds.forEach((audio) => {
     audio.muted = isMuted;
   });
-
-  // Button-Text ändern
   muteButton.innerText = isMuted ? "🔇 Unmute" : "🔊 Mute";
 });

@@ -62,7 +62,7 @@ class ThrowableObject extends MovableObject {
 
         if (!hasBroken) {
           hasBroken = true;
-          this.bottleBreakSound.currentTime = 0; // Sound von Anfang abspielen
+          this.bottleBreakSound.currentTime = 0;
           this.bottleBreakSound.play();
         }
       }

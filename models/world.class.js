@@ -204,7 +204,7 @@ class World {
    */
   playBackgroundMusic() {
     this.backgroundMusic.loop = true;
-    this.backgroundMusic.volume = 0.005; // default 0.005
+    this.backgroundMusic.volume = 0.005;
     this.backgroundMusic.play();
   }
 }
