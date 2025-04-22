@@ -94,8 +94,8 @@ class MovableObject extends DrawableObject {
       this instanceof Character ||
       this instanceof Chicken ||
       this instanceof SmallChicken ||
-      this instanceof Coin ||
-      this instanceof SalsaBottle ||
+      // this instanceof Coin ||
+      // this instanceof SalsaBottle ||
       this instanceof Endboss
     ) {
       ctx.beginPath();
@@ -139,7 +139,7 @@ class MovableObject extends DrawableObject {
     if (this.isHurt()) {
       return;
     }
-    this.energy -= 0; // 20 Default
+    this.energy -= 0; // 20 / 0 = Godmode
     let hurtSound = new Audio("assets/audio/character-pain.mp3");
     hurtSound.play();
     hurtSound.volume = 0.25;

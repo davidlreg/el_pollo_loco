@@ -4,20 +4,28 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>El Pollo Loco</title>
-    <link
-      rel="icon"
-      type="image/x-icon"
-      href="assets/img/7_statusbars/3_icons/icon_salsa_bottle.png"
-    />
+    <link rel="icon" type="image/x-icon" href="assets/img/7_statusbars/3_icons/icon_salsa_bottle.png" />
     <link rel="stylesheet" href="style.css" />
   </head>
   <body onload="init()">
     <h1>El pollo loco</h1>
+
     <canvas id="canvas" width="720px" height="480px"></canvas>
-    <div class="buttons">
-      <button class="button" role="button" id="fullscreen-btn">Fullscreen</button>
-      <button class="button" role="button" id="mute-btn">🔊 Mute</button>
+
+    <div class="bottomWrapper">
+      <div class="controlls">
+        <p>⬅️ A — Move Left</p>
+        <p>➡️ D — Move Right</p>
+        <p>⏫ SPACE — Jump</p>
+        <p class="controllsBottle"><img class="controllsPicture" src="assets/img/6_salsa_bottle/salsa_bottle.png"> B — Throw Bottle</p>
+      </div>
+
+      <div class="buttons">
+        <button class="button" role="button" id="fullscreen-btn">Fullscreen</button>
+        <button class="button" role="button" id="mute-btn">🔊 Mute</button>
+      </div>
     </div>
+
     <script src="./models/drawable-object.class.js"></script>
     <script src="./models/moveable-object.class.js"></script>
     <script src="./models/throwable-object.class.js"></script>
