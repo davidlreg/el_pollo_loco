@@ -7,11 +7,20 @@
     <link rel="icon" type="image/x-icon" href="assets/img/7_statusbars/3_icons/icon_salsa_bottle.png" />
     <link rel="stylesheet" href="style.css" />
   </head>
-  <body onload="init()">
-    <h1>El pollo loco</h1>
+  <body>
+    <!-- Startbildschirm -->
+    <div id="startScreen" class="startScreen">
+      <h1>El Pollo Loco</h1>
+      <button id="start-btn">Start</button>
+      <div class="legalInfo"><button id="control-btn">Impressum</button> <button id="impressum-btn">Privacy</button></div>
+    </div>
 
+    <h1 id="headline">El Pollo Loco</h1>
+
+    <!-- Canvas, das Spiel -->
     <canvas id="canvas" width="720px" height="480px"></canvas>
 
+    <!-- Steuerung und Optionen -->
     <div class="bottomWrapper">
       <div class="controlls">
         <p class="controllsBottle"><img class="controllsPicture" src="assets/img/custom_images/arrow_back.png" /> A — Move Left</p>
@@ -26,6 +35,7 @@
       </div>
     </div>
 
+    <!-- Skripte -->
     <script src="./models/drawable-object.class.js"></script>
     <script src="./models/moveable-object.class.js"></script>
     <script src="./models/throwable-object.class.js"></script>

@@ -1,6 +1,6 @@
 const level1 = new Level(
   [new Chicken(), new Chicken(), new SmallChicken(), new Chicken(), new SmallChicken(), new Chicken(), new SmallChicken()],
-  generateClouds(), // <-- hier werden die Wolken automatisch erstellt
+  generateClouds(),
   [new Coin(), new Coin(), new Coin(), new Coin(), new Coin()],
   [new SalsaBottle(), new SalsaBottle(), new SalsaBottle(), new SalsaBottle(), new SalsaBottle(), new SalsaBottle(), new SalsaBottle()],
   [

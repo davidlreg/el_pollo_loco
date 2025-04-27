@@ -1,16 +1,19 @@
+const OriginalAudio = window.Audio;
+let allSounds = [];
+
+window.Audio = function (...args) {
+  const audio = new OriginalAudio(...args);
+  audio.muted = isMuted;
+  allSounds.push(audio);
+  return audio;
+};
+
 let canvas;
 let world;
 let keyboard = new KeyboardInputs();
 let muteButton = document.getElementById("mute-btn");
 let isMuted = false;
-let allSounds = [];
-
-const OriginalAudio = window.Audio;
-window.Audio = function (...args) {
-  const audio = new OriginalAudio(...args);
-  allSounds.push(audio);
-  return audio;
-};
+backgroundMusic = new Audio("assets/audio/mexican-background-music.mp3");
 
 /**
  * Initializes the game by setting up the canvas and world.
@@ -18,6 +21,16 @@ window.Audio = function (...args) {
 function init() {
   canvas = document.getElementById("canvas");
   world = new World(canvas, keyboard);
+  initBackgroundMusic();
+}
+
+/**
+ * Plays the background music for the game.
+ */
+function initBackgroundMusic() {
+  backgroundMusic.loop = true;
+  backgroundMusic.volume = 0.005;
+  backgroundMusic.play();
 }
 
 /**
@@ -68,22 +81,6 @@ window.addEventListener("keyup", (event) => {
   }
 });
 
-document.addEventListener(
-  "click",
-  () => {
-    world.playBackgroundMusic();
-  },
-  { once: true }
-);
-
-document.addEventListener(
-  "keydown",
-  () => {
-    world.playBackgroundMusic();
-  },
-  { once: true }
-);
-
 document.getElementById("fullscreen-btn").addEventListener("click", () => {
   let canvas = document.querySelector("canvas");
 
@@ -104,8 +101,58 @@ document.getElementById("fullscreen-btn").addEventListener("click", () => {
 
 muteButton.addEventListener("click", () => {
   isMuted = !isMuted;
-  allSounds.forEach((audio) => {
-    audio.muted = isMuted;
-  });
+  if (isMuted) {
+    muteAllSounds();
+  } else {
+    unmuteAllSounds();
+  }
   muteButton.innerText = isMuted ? "🔇 Unmute" : "🔊 Mute";
+});
+
+function muteAllSounds() {
+  allSounds.forEach((audio) => {
+    if (audio) {
+      audio.muted = true;
+      audio.pause();
+    }
+  });
+}
+
+function unmuteAllSounds() {
+  allSounds.forEach((audio) => {
+    if (audio) {
+      audio.muted = false;
+      if (audio.src.includes("assets/audio/mexican-background-music.mp3") && audio.paused) {
+        audio.play();
+      }
+    }
+  });
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+  const startScreen = document.getElementById("startScreen");
+  const headline = document.getElementById("headline");
+  const canvas = document.getElementById("canvas");
+  const startButton = document.getElementById("start-btn");
+  const controlButton = document.getElementById("control-btn");
+  const impressumButton = document.getElementById("impressum-btn");
+  const bottomWrapper = document.querySelector(".bottomWrapper");
+
+  function startGame() {
+    startScreen.style.display = "none";
+    headline.style.display = "flex";
+    canvas.style.display = "block";
+    bottomWrapper.style.display = "flex";
+    init();
+  }
+
+  startButton.addEventListener("click", startGame);
+
+  controlButton.addEventListener("click", function () {
+    console.log("TODO Impessum erstellen!");
+  });
+
+  impressumButton.addEventListener("click", function () {
+    console.log("TODO Datenschutzerklärung erstellen!");
+  });
 });

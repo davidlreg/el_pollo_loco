@@ -10,9 +10,7 @@ class World {
   status_bar_health = new StatusBarHealth();
   status_bar_coins = new StatusBarCoins();
   throwable_objects = [];
-  soundMuted = false;
   endbossActivated = false;
-  backgroundMusic = new Audio("assets/audio/mexican-background-music.mp3");
 
   constructor(canvas, keyboard) {
     this.ctx = canvas.getContext("2d");
@@ -20,7 +18,6 @@ class World {
     this.keyboard = keyboard;
     this.setWorld();
     this.startGameLoops();
-    this.playBackgroundMusic();
     this.draw();
   }
 
@@ -42,9 +39,7 @@ class World {
   checkCollisions() {
     this.level.enemies.forEach((enemy) => {
       if (!enemy.isDead && this.character.isColliding(enemy)) {
-        this.character.speedY < 0
-          ? (enemy.die(), this.character.jump())
-          : this.character.hit();
+        this.character.speedY < 0 ? (enemy.die(), this.character.jump()) : this.character.hit();
       }
     });
 
@@ -142,11 +137,7 @@ class World {
     this.level.clouds.forEach((cloud) => cloud.move());
     this.ctx.translate(-this.camera_x, 0);
     this.ctx.restore();
-    this.addStatusBarToMap(
-      this.status_bar_salsa,
-      this.status_bar_health,
-      this.status_bar_coins
-    );
+    this.addStatusBarToMap(this.status_bar_salsa, this.status_bar_health, this.status_bar_coins);
     this.throwable_objects.forEach((bottle) => this.addToMap(bottle));
     requestAnimationFrame(() => this.draw());
   }
@@ -197,14 +188,5 @@ class World {
     const sound = new Audio(path);
     sound.volume = volume;
     sound.play();
-  }
-
-  /**
-   * Plays the background music for the game.
-   */
-  playBackgroundMusic() {
-    this.backgroundMusic.loop = true;
-    this.backgroundMusic.volume = 0.005;
-    this.backgroundMusic.play();
   }
 }
