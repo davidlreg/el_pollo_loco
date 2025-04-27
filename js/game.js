@@ -147,12 +147,4 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   startButton.addEventListener("click", startGame);
-
-  controlButton.addEventListener("click", function () {
-    console.log("TODO Impessum erstellen!");
-  });
-
-  impressumButton.addEventListener("click", function () {
-    console.log("TODO Datenschutzerklärung erstellen!");
-  });
 });
