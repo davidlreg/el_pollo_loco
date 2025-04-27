@@ -1,5 +1,5 @@
 class StatusBar extends DrawableObject {
-  salsaBottles = 30;
+  salsaBottles = 9;
   health = 5;
   coins = 0;
 

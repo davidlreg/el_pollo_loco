@@ -3,6 +3,12 @@ class ThrowableObject extends MovableObject {
   speedY;
   world;
   hasSplashed = false;
+  offset = {
+    top: 15,
+    left: 15,
+    right: 15,
+    bottom: 15,
+  };
 
   IMAGES_BOTTLE_ROTATION = [
     "assets/img/6_salsa_bottle/bottle_rotation/1_bottle_rotation.png",
@@ -22,7 +28,7 @@ class ThrowableObject extends MovableObject {
 
   constructor(x, y, world, direction) {
     super();
-    this.x = x + - 10; 
+    this.x = x + -10;
     this.y = y + 45;
     this.width = 80;
     this.height = 80;
@@ -75,10 +81,8 @@ class ThrowableObject extends MovableObject {
   animateRotation() {
     let rotationInterval = setInterval(() => {
       if (!this.hasSplashed) {
-        this.currentImage =
-          (this.currentImage + 1) % this.IMAGES_BOTTLE_ROTATION.length;
-        this.img =
-          this.imageCache[this.IMAGES_BOTTLE_ROTATION[this.currentImage]];
+        this.currentImage = (this.currentImage + 1) % this.IMAGES_BOTTLE_ROTATION.length;
+        this.img = this.imageCache[this.IMAGES_BOTTLE_ROTATION[this.currentImage]];
       } else {
         clearInterval(rotationInterval);
       }
@@ -90,9 +94,7 @@ class ThrowableObject extends MovableObject {
    */
   removeBottle() {
     setTimeout(() => {
-      this.world.throwable_objects = this.world.throwable_objects.filter(
-        (obj) => obj !== this
-      );
+      this.world.throwable_objects = this.world.throwable_objects.filter((obj) => obj !== this);
     }, 500);
   }
 }

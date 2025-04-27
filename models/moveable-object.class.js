@@ -96,6 +96,7 @@ class MovableObject extends DrawableObject {
       this instanceof SmallChicken ||
       // this instanceof Coin ||
       // this instanceof SalsaBottle ||
+      this instanceof ThrowableObject ||
       this instanceof Endboss
     ) {
       ctx.beginPath();

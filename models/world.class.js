@@ -147,7 +147,7 @@ class World {
       this.status_bar_health,
       this.status_bar_coins
     );
-    this.throwable_objects.forEach((bottle) => bottle.draw(this.ctx));
+    this.throwable_objects.forEach((bottle) => this.addToMap(bottle));
     requestAnimationFrame(() => this.draw());
   }
 
