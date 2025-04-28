@@ -157,6 +157,11 @@ canvas {
   background-color: #d85d4f39;
 }
 
+.legalInfo {
+  display: flex;
+  flex-direction: column;
+}
+
 /* Spiel-Elemente Anzeigen, wenn das Spiel gestartet ist */
 #headline {
   display: none;
@@ -170,8 +175,9 @@ canvas {
   display: none;
 }
 
-/* Impressum-Styling*/
-.impressumWrapper {
+/* Impressum & Privacy Styling*/
+.legalWrapper {
+  width: 100%;
   color: white;
   background-color: rgba(0, 0, 0, 0.5);
   overflow-y: scroll;
@@ -182,23 +188,18 @@ canvas {
 
 .topLine {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-}
-
-.goBackArrow {
   width: 100%;
-  display: flex;
-  justify-content: flex-end;
 }
 
 /* Hide scrollbar for Chrome, Safari and Opera */
-.impressumWrapper::-webkit-scrollbar {
+.legalWrapper::-webkit-scrollbar {
   display: none;
 }
 
 /* Hide scrollbar for IE, Edge and Firefox */
-.impressumWrapper {
+.legalWrapper {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
@@ -218,9 +219,9 @@ canvas {
   }
 }
 
-@media (max-width: 500px) {
-  .impressumWrapper {
-    font-size: 16px;
+@media (max-width: 700px) {
+  .legalWrapper {
+    font-size: 12px;
     padding: 8px;
   }
 

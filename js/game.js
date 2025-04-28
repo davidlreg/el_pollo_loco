@@ -134,8 +134,6 @@ document.addEventListener("DOMContentLoaded", function () {
   const headline = document.getElementById("headline");
   const canvas = document.getElementById("canvas");
   const startButton = document.getElementById("start-btn");
-  const controlButton = document.getElementById("control-btn");
-  const impressumButton = document.getElementById("impressum-btn");
   const bottomWrapper = document.querySelector(".bottomWrapper");
 
   function startGame() {
