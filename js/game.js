@@ -134,15 +134,38 @@ document.addEventListener("DOMContentLoaded", function () {
   const headline = document.getElementById("headline");
   const canvas = document.getElementById("canvas");
   const startButton = document.getElementById("start-btn");
+  const howToPlayButton = document.getElementById("htp-btn");
+  const htpDialogWindow = document.getElementById("htpDialog");
+  const closeDialog = document.getElementById("closeHtpDialog");
   const bottomWrapper = document.querySelector(".bottomWrapper");
 
   function startGame() {
     startScreen.style.display = "none";
-    headline.style.display = "flex";
+    headline.style.display = "block";
     canvas.style.display = "block";
     bottomWrapper.style.display = "flex";
     init();
   }
 
+  function showHtpDialog() {
+    htpDialogWindow.style.display = "block";
+    setTimeout(() => {
+      document.addEventListener("click", closeDialogOutside);
+    }, 10);
+  }
+
+  function closeHtpDialog() {
+    htpDialogWindow.style.display = "none";
+    document.removeEventListener("click", closeDialogOutside);
+  }
+
+  function closeDialogOutside(event) {
+    if (htpDialogWindow.style.display === "block" && !htpDialogWindow.contains(event.target) && event.target !== howToPlayButton) {
+      closeHtpDialog();
+    }
+  }
+
   startButton.addEventListener("click", startGame);
+  howToPlayButton.addEventListener("click", showHtpDialog);
+  closeDialog.addEventListener("click", closeHtpDialog);
 });
