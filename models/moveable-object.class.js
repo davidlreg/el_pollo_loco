@@ -74,8 +74,9 @@ class MovableObject extends DrawableObject {
     this.isDead = true;
     this.speed = 0;
     clearInterval(this.walkingInterval);
-    this.enemyDownSound.volume = 0.3;
-    this.enemyDownSound.play();
+    let enemyDownSound = new Audio("assets/audio/enemy-down.mp3");
+    enemyDownSound.volume = 0.3;
+    enemyDownSound.play();
     this.loadImage(this.IMAGE_DEAD);
     setTimeout(() => {
       const index = world.level.enemies.indexOf(this);
@@ -102,12 +103,7 @@ class MovableObject extends DrawableObject {
       ctx.beginPath();
       ctx.lineWidth = "4";
       ctx.strokeStyle = "blue";
-      ctx.rect(
-        this.x + this.offset.left,
-        this.y + this.offset.top,
-        this.width - this.offset.left - this.offset.right,
-        this.height - this.offset.top - this.offset.bottom
-      );
+      ctx.rect(this.x + this.offset.left, this.y + this.offset.top, this.width - this.offset.left - this.offset.right, this.height - this.offset.top - this.offset.bottom);
       ctx.stroke();
     }
   }
@@ -118,16 +114,10 @@ class MovableObject extends DrawableObject {
    * @returns {boolean} True if colliding, otherwise false
    */
   isColliding(mo) {
-    if (
-      this.x + this.width - this.offset.right <= mo.x + mo.offset.left ||
-      this.x + this.offset.left >= mo.x + mo.width - mo.offset.right
-    ) {
+    if (this.x + this.width - this.offset.right <= mo.x + mo.offset.left || this.x + this.offset.left >= mo.x + mo.width - mo.offset.right) {
       return false;
     }
-    if (
-      this.y + this.height - this.offset.bottom <= mo.y + mo.offset.top ||
-      this.y + this.offset.top >= mo.y + mo.height - mo.offset.bottom
-    ) {
+    if (this.y + this.height - this.offset.bottom <= mo.y + mo.offset.top || this.y + this.offset.top >= mo.y + mo.height - mo.offset.bottom) {
       return false;
     }
     return true;
