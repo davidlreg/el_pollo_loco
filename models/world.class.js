@@ -22,9 +22,6 @@ class World {
     this.draw();
   }
 
-  /**
-   * Assigns this world instance to the character.
-   */
   setWorld() {
     this.character.world = this;
     this.character.statusBarHealth = this.status_bar_health;
@@ -34,20 +31,30 @@ class World {
     setInterval(() => this.checkCollisions(), 25);
   }
 
-  /**
-   * Checks for collisions between the character and game objects at intervals.
-   */
   checkCollisions() {
+    this.checkCharacterEnemyCollisions();
+    this.checkCharacterEndbossCollision();
+    this.collectBottles();
+    this.collectCoins();
+    this.checkBottleEnemyCollisions();
+    this.checkEndbossActivation();
+  }
+
+  checkCharacterEnemyCollisions() {
     this.level.enemies.forEach((enemy) => {
       if (!enemy.isDead && this.character.isColliding(enemy)) {
         this.character.speedY < 0 ? (enemy.die(), this.character.jump()) : this.character.hit();
       }
     });
+  }
 
+  checkCharacterEndbossCollision() {
     if (this.character.isColliding(this.endboss)) {
       this.character.hit();
     }
+  }
 
+  collectBottles() {
     this.level.salsaBottles.forEach((bottle, index) => {
       if (this.character.isColliding(bottle)) {
         this.status_bar_salsa.salsaBottles += 1;
@@ -55,7 +62,9 @@ class World {
         this.playSound("assets/audio/item-recieved.mp3", 0.1);
       }
     });
+  }
 
+  collectCoins() {
     this.level.coins.forEach((coin, index) => {
       if (this.character.isColliding(coin)) {
         this.status_bar_coins.coins += 1;
@@ -63,9 +72,6 @@ class World {
         this.playSound("assets/audio/coin-recieved.mp3", 0.025);
       }
     });
-
-    this.checkBottleEnemyCollisions();
-    this.checkEndbossActivation();
   }
 
   checkBottleEnemyCollisions() {
@@ -86,48 +92,39 @@ class World {
     }
   }
 
-  /**
-   * Activates the endboss behavior when the character reaches a certain point.
-   */
   activateEndboss() {
-    setInterval(() => {
-      if (this.character.x > 2180) {
-        this.endboss.moveLeft();
-        this.endbossActivated = true;
-        if (!this.endboss.isJumping) {
-          this.endboss.currentAnimation = this.endboss.IMAGES_WALKING;
-        }
-      }
-    }, 1000 / 60);
-
-    setInterval(() => {
-      if (this.endbossActivated && Math.random() < 0.4) {
-        this.endboss.currentAnimation = this.endboss.IMAGES_ATTACK;
-        this.endboss.bossJump();
-      }
-    }, 2000);
+    setInterval(() => this.moveEndboss(), 1000 / 60);
+    setInterval(() => this.randomEndbossAttack(), 2000);
   }
 
-  checkBottleEnemyCollisions() {
-    this.throwable_objects.forEach((bottle) => {
-      this.level.enemies.forEach((enemy) => {
-        if (bottle.isColliding(enemy)) {
-          enemy.die();
-          console.log("Enemy Hit!");
-          // // Optionale: Flasche entfernen
-          // const index = this.throwable_objects.indexOf(bottle);
-          // if (index > -1) this.throwable_objects.splice(index, 1);
-        }
-      });
-    });
+  moveEndboss() {
+    if (this.character.x > 2180) {
+      this.endboss.moveLeft();
+      if (!this.endboss.isJumping) {
+        this.endboss.currentAnimation = this.endboss.IMAGES_WALKING;
+      }
+    }
   }
 
-  /**
-   * Clears the canvas and redraws all game objects.
-   */
+  randomEndbossAttack() {
+    if (this.endbossActivated && Math.random() < 0.4) {
+      this.endboss.currentAnimation = this.endboss.IMAGES_ATTACK;
+      this.endboss.bossJump();
+    }
+  }
+
   draw() {
     this.clearCanvas();
     this.ctx.translate(this.camera_x, 0);
+    this.drawGameObjects();
+    this.ctx.translate(-this.camera_x, 0);
+    this.ctx.restore();
+    this.drawStatusBars();
+    this.drawThrowables();
+    requestAnimationFrame(() => this.draw());
+  }
+
+  drawGameObjects() {
     this.addObjectsToMap(this.level.backgroundObjects);
     this.addObjectsToMap(this.level.clouds);
     this.addObjectsToMap(this.level.coins);
@@ -136,25 +133,26 @@ class World {
     this.addToMap(this.endboss);
     this.addToMap(this.character);
     this.level.clouds.forEach((cloud) => cloud.move());
-    this.ctx.translate(-this.camera_x, 0);
-    this.ctx.restore();
-    this.addStatusBarToMap(this.status_bar_salsa, this.status_bar_health, this.status_bar_coins, ...(this.endbossActivated ? [this.status_bar_endboss] : []));
-    this.throwable_objects.forEach((bottle) => this.addToMap(bottle));
-    requestAnimationFrame(() => this.draw());
   }
 
-  /**
-   * Adds multiple objects to the canvas.
-   * @param {Array} objects - The objects to be added.
-   */
+  drawStatusBars() {
+    const bars = [this.status_bar_salsa, this.status_bar_health, this.status_bar_coins];
+    if (this.endbossActivated) bars.push(this.status_bar_endboss);
+    this.addStatusBarToMap(...bars);
+  }
+
+  drawThrowables() {
+    this.throwable_objects.forEach((bottle) => this.addToMap(bottle));
+  }
+
+  clearCanvas() {
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+  }
+
   addObjectsToMap(objects) {
     objects.forEach((o) => this.addToMap(o));
   }
 
-  /**
-   * Adds a single object to the canvas.
-   * @param {Object} mo - The movable object to be added.
-   */
   addToMap(mo) {
     if (mo.otherDirection) {
       this.ctx.save();
@@ -170,19 +168,8 @@ class World {
     }
   }
 
-  /**
-   * Adds multiple status bar elements to the canvas.
-   * @param {...Object} statusBars - The status bar elements to be drawn.
-   */
   addStatusBarToMap(...statusBars) {
     statusBars.forEach((bar) => bar.draw(this.ctx));
-  }
-
-  /**
-   * Clears the entire canvas.
-   */
-  clearCanvas() {
-    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
   }
 
   playSound(path, volume) {
