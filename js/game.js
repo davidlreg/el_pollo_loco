@@ -140,6 +140,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const bottomWrapper = document.querySelector(".bottomWrapper");
 
   function startGame() {
+    initLevelOne();
     startScreen.style.display = "none";
     headline.style.display = "block";
     canvas.style.display = "block";
