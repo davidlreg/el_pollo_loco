@@ -16,25 +16,34 @@ class SalsaBottle extends MovableObject {
   ];
 
   constructor() {
-    super().loadImage("assets/img/6_salsa_bottle/1_salsa_bottle_on_ground.png");
-    this.loadImages(this.SALSA_BOTTLE_IMAGES);
-    this.x = 300 + Math.random() * 1900;
+    super();
+    this.initializeSalsaBottle();
+  }
+
+  initializeSalsaBottle() {
+    this.loadInitialImage();
+    this.loadAnimationImages();
+    this.setStartPosition();
     this.animate();
   }
 
-  /**
-   * Loads an image for the salsa bottle.
-   *
-   * @param {string} path - Path to the image file
-   */
+  loadInitialImage() {
+    this.loadImage(this.SALSA_BOTTLE_IMAGES[0]);
+  }
+
+  loadAnimationImages() {
+    this.loadImages(this.SALSA_BOTTLE_IMAGES);
+  }
+
+  setStartPosition() {
+    this.x = 300 + Math.random() * 1900;
+  }
+
   loadImage(path) {
     this.img = new Image();
     this.img.src = path;
   }
 
-  /**
-   * Plays the bottle animation.
-   */
   playBottleAnimation() {
     let i = this.currentImage % this.SALSA_BOTTLE_IMAGES.length;
     let path = this.SALSA_BOTTLE_IMAGES[i];
@@ -43,8 +52,6 @@ class SalsaBottle extends MovableObject {
   }
 
   animate() {
-    setInterval(() => {
-      this.playBottleAnimation();
-    }, 500);
+    setInterval(() => this.playBottleAnimation(), 500);
   }
 }
