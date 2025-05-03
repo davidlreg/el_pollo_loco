@@ -9,6 +9,7 @@ class World {
   status_bar_salsa = new StatusBarSalsa();
   status_bar_health = new StatusBarHealth();
   status_bar_coins = new StatusBarCoins();
+  status_bar_endboss = new StatusBarEndboss();
   throwable_objects = [];
   endbossActivated = false;
 
@@ -137,7 +138,7 @@ class World {
     this.level.clouds.forEach((cloud) => cloud.move());
     this.ctx.translate(-this.camera_x, 0);
     this.ctx.restore();
-    this.addStatusBarToMap(this.status_bar_salsa, this.status_bar_health, this.status_bar_coins);
+    this.addStatusBarToMap(this.status_bar_salsa, this.status_bar_health, this.status_bar_coins, ...(this.endbossActivated ? [this.status_bar_endboss] : []));
     this.throwable_objects.forEach((bottle) => this.addToMap(bottle));
     requestAnimationFrame(() => this.draw());
   }
