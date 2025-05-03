@@ -141,6 +141,10 @@ class MovableObject extends DrawableObject {
     if (this.statusBarHealth) {
       this.statusBarHealth.updateHealthBar(this.energy);
     }
+    if (this instanceof Character && this.sleepMode) {
+      this.sleepMode = false;
+      this.lastInputTime = new Date().getTime()
+    }
   }
 
   /**
