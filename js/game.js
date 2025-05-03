@@ -1,3 +1,4 @@
+let isMuted = localStorage.getItem("isMuted") === "true";
 const OriginalAudio = window.Audio;
 let allSounds = [];
 
@@ -12,8 +13,7 @@ let canvas;
 let world;
 let keyboard = new KeyboardInputs();
 let muteButton = document.getElementById("mute-btn");
-let isMuted = false;
-backgroundMusic = new Audio("assets/audio/mexican-background-music.mp3");
+let backgroundMusic = new Audio("assets/audio/mexican-background-music.mp3");
 
 /**
  * Initializes the game by setting up the canvas and world.
@@ -30,7 +30,9 @@ function init() {
 function initBackgroundMusic() {
   backgroundMusic.loop = true;
   backgroundMusic.volume = 0.005;
-  backgroundMusic.play();
+  if (!isMuted) {
+    backgroundMusic.play();
+  }
 }
 
 /**
@@ -101,12 +103,17 @@ document.getElementById("fullscreen-btn").addEventListener("click", () => {
 
 muteButton.addEventListener("click", () => {
   isMuted = !isMuted;
+  localStorage.setItem("isMuted", isMuted);
+
   if (isMuted) {
     muteAllSounds();
   } else {
     unmuteAllSounds();
   }
-  muteButton.innerText = isMuted ? "🔇 Unmute" : "🔊 Mute";
+
+  if (muteButton) {
+    muteButton.innerText = isMuted ? "🔇 Unmute" : "🔊 Mute";
+  }
 });
 
 function muteAllSounds() {
@@ -138,6 +145,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const htpDialogWindow = document.getElementById("htpDialog");
   const closeDialog = document.getElementById("closeHtpDialog");
   const bottomWrapper = document.querySelector(".bottomWrapper");
+  muteButton.innerText = isMuted ? "🔇 Unmute" : "🔊 Mute";
 
   function startGame() {
     initLevelOne();
