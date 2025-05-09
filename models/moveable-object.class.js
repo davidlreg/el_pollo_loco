@@ -130,7 +130,7 @@ class MovableObject extends DrawableObject {
     if (this.isHurt()) {
       return;
     }
-    this.energy -= 0; // 20 Default / 0 = Godmode
+    this.energy -= 20; // 20 Default / 0 = Godmode
     let hurtSound = new Audio("assets/audio/character-pain.mp3");
     hurtSound.play();
     hurtSound.volume = 0.25;

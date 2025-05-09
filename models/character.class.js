@@ -116,7 +116,7 @@ class Character extends MovableObject {
   characterDead() {
     console.log("Charactert Died!");
     // Bewegen des Charakters unterbinden
-    // Bilder zu DEAD austauschen
+    this.playAnimation(this.IMAGES_DEAD);
     // DEAD Sound abspielen
     // Game Over Screen anzeigen
   }
