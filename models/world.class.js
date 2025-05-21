@@ -28,7 +28,7 @@ class World {
   }
 
   startGameLoops() {
-    setInterval(() => this.checkCollisions(), 25);
+    this.collisionCheckInterval = setInterval(() => this.checkCollisions(), 25);
   }
 
   checkCollisions() {
@@ -93,11 +93,13 @@ class World {
   }
 
   activateEndboss() {
-    setInterval(() => this.endboss.moveEndboss(this.character), 1000 / 60);
-    setInterval(() => this.endboss.randomEndbossAttack(), 2000);
+    this.endbossMoveInterval = setInterval(() => this.endboss.moveEndboss(this.character), 1000 / 60);
+    this.endbossAttackInterval = setInterval(() => this.endboss.randomEndbossAttack(), 2000);
   }
 
   draw() {
+    if (this.gameIsOver) return;
+
     this.clearCanvas();
     this.ctx.translate(this.camera_x, 0);
     this.drawGameObjects();
@@ -105,7 +107,8 @@ class World {
     this.ctx.restore();
     this.drawStatusBars();
     this.drawThrowables();
-    requestAnimationFrame(() => this.draw());
+
+    this.animationFrameId = requestAnimationFrame(() => this.draw());
   }
 
   drawGameObjects() {
@@ -160,5 +163,36 @@ class World {
     const sound = new Audio(path);
     sound.volume = volume;
     sound.play();
+  }
+
+  isGameOver() {
+    if (this.character.isDead()) {
+      setTimeout(() => {
+        this.stopAllGameLoops();
+        const canvas = document.getElementById("canvas");
+        canvas.style.display = "none";
+        const bottomWrapper = document.querySelector(".bottomWrapper");
+        bottomWrapper.style.display = "none";
+        const headline = document.getElementById("headline");
+        headline.style.display = "none";
+        const youLostMsg = document.getElementById("gameOverScreen");
+        youLostMsg.style.display = "block";
+        if (this.backgroundMusic) {
+          this.backgroundMusic.pause();
+          this.backgroundMusic.currentTime = 0;
+        }
+      }, 2000);
+    } else if (this.endboss.endbossDeath == true) {
+      console.log("Congrats You Won!");
+    }
+  }
+
+  stopAllGameLoops() {
+    this.gameIsOver = true;
+    this.character.stopAllIntervals();
+    if (this.collisionCheckInterval) clearInterval(this.collisionCheckInterval);
+    if (this.endbossMoveInterval) clearInterval(this.endbossMoveInterval);
+    if (this.endbossAttackInterval) clearInterval(this.endbossAttackInterval);
+    if (this.animationFrameId) cancelAnimationFrame(this.animationFrameId);
   }
 }

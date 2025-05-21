@@ -212,6 +212,35 @@ canvas {
   display: none;
 }
 
+/* Game Over Screen Styling */
+
+.gameOverScreen {
+  display: none;
+  width: 100%;
+  height: 100%;
+}
+
+.gameOverWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.gameOverImg {
+  width: 80%;
+  background-size: cover;
+}
+
+.gameOverBtns {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 24px;
+}
+
 /* Impressum & Privacy Styling*/
 .legalWrapper {
   width: 100%;

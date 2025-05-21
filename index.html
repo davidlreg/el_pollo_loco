@@ -11,7 +11,7 @@
   <body>
     <!-- Startbildschirm -->
     <div id="startScreen" class="startScreen">
-      <h1>El Pollo Loco</h1>
+      <h1 id="gameName">El Pollo Loco</h1>
       <button id="start-btn" onclick="initLevelOne()">Start</button>
       <button id="htp-btn">How to play?</button>
 
@@ -64,6 +64,13 @@
       <div class="buttons">
         <button class="button" role="button" id="fullscreen-btn">Fullscreen</button>
         <button class="button" role="button" id="mute-btn">🔊 Mute</button>
+      </div>
+    </div>
+
+    <div id="gameOverScreen" class="gameOverScreen">
+      <div class="gameOverWrapper">
+        <img class="gameOverImg" id="youLostMsg" src="assets/img/You won, you lost/You lost.png" />
+        <div class="gameOverBtns"><button class="button">Restart</button> <button class="button">Back to Homescreen</button></div>
       </div>
     </div>
 

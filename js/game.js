@@ -21,6 +21,7 @@ let backgroundMusic = new Audio("assets/audio/mexican-background-music.mp3");
 function init() {
   canvas = document.getElementById("canvas");
   world = new World(canvas, keyboard);
+  world.backgroundMusic = backgroundMusic;
   initBackgroundMusic();
 }
 

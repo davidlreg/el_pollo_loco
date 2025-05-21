@@ -14,6 +14,7 @@ class Endboss extends MovableObject {
   jumpStrength = 20;
   groundLevel = 135;
   isJumping = false;
+  endbossDeath = false;
 
   IMAGES_ALERT = [
     "assets/img/4_enemie_boss_chicken/2_alert/G5.png",
