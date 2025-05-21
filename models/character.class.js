@@ -65,7 +65,11 @@ class Character extends MovableObject {
     "assets/img/2_character_pepe/3_jump/J-39.png",
   ];
 
-  IMAGES_HURT = ["assets/img/2_character_pepe/4_hurt/H-41.png", "assets/img/2_character_pepe/4_hurt/H-42.png", "assets/img/2_character_pepe/4_hurt/H-43.png"];
+  IMAGES_HURT = [
+    "assets/img/2_character_pepe/4_hurt/H-41.png",
+    "assets/img/2_character_pepe/4_hurt/H-42.png",
+    "assets/img/2_character_pepe/4_hurt/H-43.png",
+  ];
 
   IMAGES_DEAD = [
     "assets/img/2_character_pepe/5_dead/D-51.png",
@@ -142,7 +146,10 @@ class Character extends MovableObject {
    * Stops the walking sound when the character is idle or in the air.
    */
   stopWalkingSound() {
-    if ((!this.world.keyboard.moveLeft && !this.world.keyboard.moveRight) || this.isCharacterAboveGround()) {
+    if (
+      (!this.world.keyboard.moveLeft && !this.world.keyboard.moveRight) ||
+      this.isCharacterAboveGround()
+    ) {
       this.walkingSound.pause();
       this.walkingSound.currentTime = 0;
     }
@@ -158,7 +165,12 @@ class Character extends MovableObject {
       this.world.status_bar_salsa.salsaBottles--;
       let offsetX = this.otherDirection ? -20 : 50;
       let direction = this.otherDirection ? -1 : 1;
-      let bottle = new ThrowableObject(this.x + offsetX + this.world.camera_x, this.y + 100, this.world, direction);
+      let bottle = new ThrowableObject(
+        this.x + offsetX + this.world.camera_x,
+        this.y + 100,
+        this.world,
+        direction
+      );
       this.world.throwable_objects.push(bottle);
       bottle.throw();
       this.lastThrowTime = currentTime;
@@ -194,7 +206,12 @@ class Character extends MovableObject {
         this.playAnimation(this.IMAGES_LONG_IDLE);
       }
 
-      if (this.world.keyboard.moveLeft || this.world.keyboard.moveRight || this.world.keyboard.jump || this.world.keyboard.throwBottle) {
+      if (
+        this.world.keyboard.moveLeft ||
+        this.world.keyboard.moveRight ||
+        this.world.keyboard.jump ||
+        this.world.keyboard.throwBottle
+      ) {
         this.lastInputTime = now;
 
         if (this.sleepMode) {
@@ -206,7 +223,6 @@ class Character extends MovableObject {
 
     setInterval(() => {
       if (this.isDead()) {
-        this.playAnimation(this.IMAGES_DEAD);
         this.characterDead();
       } else if (this.isHurt()) {
         this.playAnimation(this.IMAGES_HURT);
