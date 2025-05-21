@@ -55,12 +55,20 @@ class MovableObject extends DrawableObject {
    */
   applyGravity() {
     setInterval(() => {
-      if (this.isCharacterAboveGround() || this.speedY > 0) {
+      if (this.isCharacterAboveGround() || this.speedY > 0 || this.isFallingAfterDeath) {
         this.y -= this.speedY;
         this.speedY -= this.acceleration;
-        if (this.y >= 165) {
+
+        if (this.y >= 165 && !this.isFallingAfterDeath) {
           this.y = 165;
           this.speedY = 0;
+        }
+
+        // Stoppe Bewegung, wenn Character unter dem sichtbaren Bereich ist
+        if (this instanceof Character && this.y > 600) {
+          this.speedY = 0;
+          this.isFallingAfterDeath = false;
+          // Optional: Animation/Level-Ende/Neustart
         }
       }
     }, 1000 / 60);
@@ -114,6 +122,9 @@ class MovableObject extends DrawableObject {
    * @returns {boolean} True if colliding, otherwise false
    */
   isColliding(mo) {
+    if (this.isDead() || (typeof mo.isDead === "function" && mo.isDead())) {
+      return false;
+    }
     if (this.x + this.width - this.offset.right <= mo.x + mo.offset.left || this.x + this.offset.left >= mo.x + mo.width - mo.offset.right) {
       return false;
     }
@@ -143,7 +154,7 @@ class MovableObject extends DrawableObject {
     }
     if (this instanceof Character && this.sleepMode) {
       this.sleepMode = false;
-      this.lastInputTime = new Date().getTime()
+      this.lastInputTime = new Date().getTime();
     }
   }
 

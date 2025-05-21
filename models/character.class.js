@@ -11,6 +11,8 @@ class Character extends MovableObject {
   throwCooldown = 1000;
   idleTime = 0;
   sleepMode = false;
+  hasPlayedDeathSound = false;
+  isFallingAfterDeath = false;
   lastInputTime = Date.now();
   walkingSound = new Audio("assets/audio/character-footsteps.wav");
   jumpingSound = new Audio("assets/audio/character-jump-soundeffect.mp3");
@@ -114,11 +116,15 @@ class Character extends MovableObject {
    * Displays game over and plays death sound.
    */
   characterDead() {
-    console.log("Charactert Died!");
-    // Bewegen des Charakters unterbinden
+    if (!this.hasPlayedDeathSound) {
+      this.characterDeadSound.volume = 0.3;
+      this.characterDeadSound.play();
+      this.hasPlayedDeathSound = true;
+      this.speedY = 20;
+      this.isFallingAfterDeath = true;
+    }
+
     this.playAnimation(this.IMAGES_DEAD);
-    // DEAD Sound abspielen
-    // Game Over Screen anzeigen
   }
 
   /**
@@ -214,19 +220,20 @@ class Character extends MovableObject {
     }, 175);
 
     setInterval(() => {
-      if (this.world.keyboard.moveRight && this.x < this.world.level.level_end_x) {
-        this.characterMoveRight();
+      if (!this.isDead()) {
+        if (this.world.keyboard.moveRight && this.x < this.world.level.level_end_x) {
+          this.characterMoveRight();
+        }
+        if (this.world.keyboard.moveLeft && this.x > -60) {
+          this.characterMoveLeft();
+        }
+        if (this.world.keyboard.jump && !this.isCharacterAboveGround()) {
+          this.jump();
+        }
+        if (this.world.keyboard.throwBottle && this.world.status_bar_salsa.salsaBottles > 0) {
+          this.characterThrowBottle();
+        }
       }
-      if (this.world.keyboard.moveLeft && this.x > -60) {
-        this.characterMoveLeft();
-      }
-      if (this.world.keyboard.jump && !this.isCharacterAboveGround()) {
-        this.jump();
-      }
-      if (this.world.keyboard.throwBottle && this.world.status_bar_salsa.salsaBottles > 0) {
-        this.characterThrowBottle();
-      }
-
       this.stopWalkingSound();
 
       this.world.camera_x = -this.x + 60;
