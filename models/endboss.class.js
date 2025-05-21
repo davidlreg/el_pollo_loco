@@ -44,17 +44,9 @@ class Endboss extends MovableObject {
     "assets/img/4_enemie_boss_chicken/3_attack/G20.png",
   ];
 
-  IMAGES_HURT = [
-    "assets/img/4_enemie_boss_chicken/4_hurt/G21.png",
-    "assets/img/4_enemie_boss_chicken/4_hurt/G22.png",
-    "assets/img/4_enemie_boss_chicken/4_hurt/G23.png",
-  ];
+  IMAGES_HURT = ["assets/img/4_enemie_boss_chicken/4_hurt/G21.png", "assets/img/4_enemie_boss_chicken/4_hurt/G22.png", "assets/img/4_enemie_boss_chicken/4_hurt/G23.png"];
 
-  IMAGES_DEAD = [
-    "assets/img/4_enemie_boss_chicken/5_dead/G24.png",
-    "assets/img/4_enemie_boss_chicken/5_dead/G25.png",
-    "assets/img/4_enemie_boss_chicken/5_dead/G26.png",
-  ];
+  IMAGES_DEAD = ["assets/img/4_enemie_boss_chicken/5_dead/G24.png", "assets/img/4_enemie_boss_chicken/5_dead/G25.png", "assets/img/4_enemie_boss_chicken/5_dead/G26.png"];
 
   currentAnimation = this.IMAGES_ALERT;
 
@@ -98,5 +90,21 @@ class Endboss extends MovableObject {
         this.currentAnimation = this.IMAGES_WALKING;
       }
     }, 40);
+  }
+
+  moveEndboss(character) {
+    if (character.x > 2180) {
+      this.moveLeft();
+      if (!this.isJumping) {
+        this.currentAnimation = this.IMAGES_WALKING;
+      }
+    }
+  }
+
+  randomEndbossAttack() {
+    if (Math.random() < 0.4) {
+      this.currentAnimation = this.IMAGES_ATTACK;
+      this.bossJump();
+    }
   }
 }

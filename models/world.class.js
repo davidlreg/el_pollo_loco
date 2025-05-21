@@ -93,24 +93,8 @@ class World {
   }
 
   activateEndboss() {
-    setInterval(() => this.moveEndboss(), 1000 / 60);
-    setInterval(() => this.randomEndbossAttack(), 2000);
-  }
-
-  moveEndboss() {
-    if (this.character.x > 2180) {
-      this.endboss.moveLeft();
-      if (!this.endboss.isJumping) {
-        this.endboss.currentAnimation = this.endboss.IMAGES_WALKING;
-      }
-    }
-  }
-
-  randomEndbossAttack() {
-    if (this.endbossActivated && Math.random() < 0.4) {
-      this.endboss.currentAnimation = this.endboss.IMAGES_ATTACK;
-      this.endboss.bossJump();
-    }
+    setInterval(() => this.endboss.moveEndboss(this.character), 1000 / 60);
+    setInterval(() => this.endboss.randomEndbossAttack(), 2000);
   }
 
   draw() {
