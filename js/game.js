@@ -178,4 +178,51 @@ document.addEventListener("DOMContentLoaded", function () {
   startButton.addEventListener("click", startGame);
   howToPlayButton.addEventListener("click", showHtpDialog);
   closeDialog.addEventListener("click", closeHtpDialog);
+
+  function restartGame() {
+    clearIntervals();
+    stopSounds();
+    resetVariables();
+    initLevelOne();
+    init(); // Startet World neu
+    document.getElementById("gameOverScreen").style.display = "none";
+    headline.style.display = "block";
+    canvas.style.display = "block";
+    bottomWrapper.style.display = "flex";
+
+    if (world?.character?.characterSnoringSound) {
+      world.character.characterSnoringSound.pause();
+      world.character.characterSnoringSound.currentTime = 0;
+    }
+  }
+
+  function clearIntervals() {
+    if (world?.collisionCheckInterval) {
+      clearInterval(world.collisionCheckInterval);
+    }
+  }
+
+  function stopSounds() {
+    allSounds.forEach((audio) => {
+      if (audio) {
+        audio.pause();
+        audio.currentTime = 0;
+      }
+    });
+
+    if (world?.character) {
+      world.character.stopAllSounds();
+    }
+
+    backgroundMusic.pause();
+    backgroundMusic.currentTime = 0;
+  }
+
+  function resetVariables() {
+    keyboard = new KeyboardInputs();
+    world = null;
+    level1 = null;
+  }
+
+  document.getElementById("restart-btn").addEventListener("click", restartGame);
 });
