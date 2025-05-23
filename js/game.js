@@ -184,7 +184,8 @@ document.addEventListener("DOMContentLoaded", function () {
     stopSounds();
     resetVariables();
     initLevelOne();
-    init(); // Startet World neu
+    this.gameIsOver = false;
+    init();
     document.getElementById("gameOverScreen").style.display = "none";
     headline.style.display = "block";
     canvas.style.display = "block";
@@ -194,6 +195,20 @@ document.addEventListener("DOMContentLoaded", function () {
       world.character.characterSnoringSound.pause();
       world.character.characterSnoringSound.currentTime = 0;
     }
+  }
+
+  function backToStartScreen() {
+    if (world?.gameOverTimeout) {
+      clearTimeout(world.gameOverTimeout);
+      world.gameOverTimeout = null;
+    }
+    document.getElementById("startScreen").style.display = "flex";
+    document.getElementById("canvas").style.display = "none";
+    document.querySelector(".bottomWrapper").style.display = "none";
+    document.getElementById("headline").style.display = "none";
+    document.getElementById("gameOverScreen").style.display = "none";
+    stopSounds();
+    clearIntervals();
   }
 
   function clearIntervals() {
@@ -225,4 +240,5 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   document.getElementById("restart-btn").addEventListener("click", restartGame);
+  document.getElementById("backToStart-btn").addEventListener("click", backToStartScreen);
 });

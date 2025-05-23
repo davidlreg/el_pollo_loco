@@ -12,6 +12,7 @@ class World {
   status_bar_endboss = new StatusBarEndboss();
   throwable_objects = [];
   endbossActivated = false;
+  gameOverTimeout = null;
 
   constructor(canvas, keyboard) {
     this.ctx = canvas.getContext("2d");
@@ -167,23 +168,40 @@ class World {
 
   isGameOver() {
     if (this.character.isDead()) {
-      setTimeout(() => {
-        this.stopAllGameLoops();
-        const canvas = document.getElementById("canvas");
-        canvas.style.display = "none";
-        const bottomWrapper = document.querySelector(".bottomWrapper");
-        bottomWrapper.style.display = "none";
-        const headline = document.getElementById("headline");
-        headline.style.display = "none";
-        const youLostMsg = document.getElementById("gameOverScreen");
-        youLostMsg.style.display = "block";
-        if (this.backgroundMusic) {
-          this.backgroundMusic.pause();
-          this.backgroundMusic.currentTime = 0;
-        }
-      }, 2000);
-    } else if (this.endboss.endbossDeath == true) {
-      console.log("Congrats You Won!");
+      this.handleGameOver();
+    } else if (this.endboss.endbossDeath === true) {
+      this.handleGameWon();
+    }
+  }
+
+  handleGameOver() {
+    this.gameOverTimeout = setTimeout(() => {
+      this.stopAllGameLoops();
+      this.hideGameUI();
+      if (!this.gameIsOver) return;
+      this.showGameOverScreen();
+      this.stopBackgroundMusic();
+    }, 2000);
+  }
+
+  handleGameWon() {
+    console.log("Congrats You Won!");
+  }
+
+  hideGameUI() {
+    document.getElementById("canvas").style.display = "none";
+    document.querySelector(".bottomWrapper").style.display = "none";
+    document.getElementById("headline").style.display = "none";
+  }
+
+  showGameOverScreen() {
+    document.getElementById("gameOverScreen").style.display = "block";
+  }
+
+  stopBackgroundMusic() {
+    if (this.backgroundMusic) {
+      this.backgroundMusic.pause();
+      this.backgroundMusic.currentTime = 0;
     }
   }
 
