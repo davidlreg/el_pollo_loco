@@ -40,9 +40,9 @@ class ThrowableObject extends MovableObject {
 
   initSounds() {
     this.throwSound = new Audio("assets/audio/bottle-throw-sound.mp3");
-    this.throwSound.volume = 0.05;
+    this.throwSound.volume = 0.005;
     this.bottleBreakSound = new Audio("assets/audio/bottle-break.mp3");
-    this.bottleBreakSound.volume = 0.05;
+    this.bottleBreakSound.volume = 0.005;
   }
 
   throw() {

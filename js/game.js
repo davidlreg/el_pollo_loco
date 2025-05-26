@@ -30,7 +30,7 @@ function init() {
  */
 function initBackgroundMusic() {
   backgroundMusic.loop = true;
-  backgroundMusic.volume = 0.005;
+  backgroundMusic.volume = 0.0005;
   if (!isMuted) {
     backgroundMusic.play();
   }

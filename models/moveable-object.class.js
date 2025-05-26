@@ -45,7 +45,7 @@ class MovableObject extends DrawableObject {
   jump() {
     this.speedY = 16.5;
     if (this instanceof Character) {
-      this.jumpingSound.volume = 0.02;
+      this.jumpingSound.volume = 0.001;
       this.jumpingSound.play();
     }
   }
@@ -83,7 +83,7 @@ class MovableObject extends DrawableObject {
     this.speed = 0;
     clearInterval(this.walkingInterval);
     let enemyDownSound = new Audio("assets/audio/enemy-down.mp3");
-    enemyDownSound.volume = 0.3;
+    enemyDownSound.volume = 0.05;
     enemyDownSound.play();
     this.loadImage(this.IMAGE_DEAD);
     setTimeout(() => {
@@ -144,7 +144,7 @@ class MovableObject extends DrawableObject {
     this.energy -= 20; // 20 Default / 0 = Godmode
     let hurtSound = new Audio("assets/audio/character-pain.mp3");
     hurtSound.play();
-    hurtSound.volume = 0.25;
+    hurtSound.volume = 0.02;
     if (this.energy <= 0) {
       this.energy = 0;
     }

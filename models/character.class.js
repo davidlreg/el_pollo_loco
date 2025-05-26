@@ -108,7 +108,7 @@ class Character extends MovableObject {
 
   playSnoringSound() {
     if (this.characterSnoringSound.paused) {
-      this.characterSnoringSound.volume = 0.2;
+      this.characterSnoringSound.volume = 0.05;
       this.characterSnoringSound.loop = true;
       this.characterSnoringSound.play();
     }
@@ -133,7 +133,7 @@ class Character extends MovableObject {
   playWalkingSound() {
     if (this.walkingSound.paused && !this.isCharacterAboveGround()) {
       this.walkingSound.loop = true;
-      this.walkingSound.volume = 0.2;
+      this.walkingSound.volume = 0.02;
       this.walkingSound.play();
     }
   }
@@ -170,7 +170,7 @@ class Character extends MovableObject {
    */
   characterDead() {
     if (!this.hasPlayedDeathSound) {
-      this.characterDeadSound.volume = 0.3;
+      this.characterDeadSound.volume = 0.025;
       this.characterDeadSound.play();
       this.hasPlayedDeathSound = true;
       this.speedY = 20;

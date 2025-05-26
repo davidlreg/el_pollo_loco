@@ -15,6 +15,7 @@ class Endboss extends MovableObject {
   groundLevel = 135;
   isJumping = false;
   endbossDeath = false;
+  endbossScream = new Audio("assets/audio/endboss-chicken-scream.mp3");
 
   IMAGES_ALERT = [
     "assets/img/4_enemie_boss_chicken/2_alert/G5.png",
@@ -105,6 +106,8 @@ class Endboss extends MovableObject {
   randomEndbossAttack() {
     if (Math.random() < 0.4) {
       this.currentAnimation = this.IMAGES_ATTACK;
+      this.endbossScream.volume = 0.02;
+      this.endbossScream.play();
       this.bossJump();
     }
   }

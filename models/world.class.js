@@ -60,7 +60,7 @@ class World {
       if (this.character.isColliding(bottle)) {
         this.status_bar_salsa.salsaBottles += 1;
         this.level.salsaBottles.splice(index, 1);
-        this.playSound("assets/audio/item-recieved.mp3", 0.1);
+        this.playSound("assets/audio/item-recieved.mp3", 0.01);
       }
     });
   }
@@ -70,7 +70,7 @@ class World {
       if (this.character.isColliding(coin)) {
         this.status_bar_coins.coins += 1;
         this.level.coins.splice(index, 1);
-        this.playSound("assets/audio/coin-recieved.mp3", 0.025);
+        this.playSound("assets/audio/coin-recieved.mp3", 0.001);
       }
     });
   }
