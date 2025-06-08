@@ -3,13 +3,15 @@ class Endboss extends MovableObject {
   y = 135;
   width = 250;
   height = 300;
+  speed = 0.005;
+
   offset = {
     top: 50,
     left: 20,
     right: 20,
     bottom: 30,
   };
-  speed = 0.005;
+
   gravity = 1.2;
   jumpStrength = 20;
   groundLevel = 135;
@@ -66,9 +68,17 @@ class Endboss extends MovableObject {
    * Starts the animation loop for the Endboss.
    */
   animate() {
-    setInterval(() => {
-      this.playAnimation(this.currentAnimation);
-    }, 500);
+    let i = 0;
+
+    if (this.world.character.x >= 2800 && i <= 8) {
+      setInterval(() => {
+        this.playAnimation(this.IMAGES_ALERT);
+      }, 500);
+    } else {
+      setInterval(() => {
+        this.playAnimation(this.IMAGES_WALKING);
+      }, 500);
+    }
   }
 
   /**
