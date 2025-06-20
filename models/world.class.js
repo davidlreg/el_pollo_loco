@@ -5,7 +5,7 @@ class World {
   level = level1;
   camera_x = 0;
   character = new Character();
-  endboss = new Endboss();
+  endboss = new Endboss(this);
   status_bar_salsa = new StatusBarSalsa();
   status_bar_health = new StatusBarHealth();
   status_bar_coins = new StatusBarCoins();

@@ -4,6 +4,7 @@ class Endboss extends MovableObject {
   width = 250;
   height = 300;
   speed = 0.005;
+  world;
 
   offset = {
     top: 50,
@@ -54,8 +55,9 @@ class Endboss extends MovableObject {
 
   currentAnimation = this.IMAGES_ALERT;
 
-  constructor() {
+  constructor(world) {
     super().loadImage("assets/img/4_enemie_boss_chicken/2_alert/G5.png");
+    this.world = world;
     this.loadImages(this.IMAGES_ALERT);
     this.loadImages(this.IMAGES_WALKING);
     this.loadImages(this.IMAGES_ATTACK);
@@ -73,6 +75,7 @@ class Endboss extends MovableObject {
     if (this.world.character.x >= 2800 && i <= 8) {
       setInterval(() => {
         this.playAnimation(this.IMAGES_ALERT);
+        console.log("Play Alert Animation!");
       }, 500);
     } else {
       setInterval(() => {
