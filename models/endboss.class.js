@@ -3,7 +3,7 @@ class Endboss extends MovableObject {
   y = 135;
   width = 250;
   height = 300;
-  speed = 0.005;
+  speed = 0.01;
   world;
 
   offset = {
@@ -18,6 +18,10 @@ class Endboss extends MovableObject {
   groundLevel = 135;
   isJumping = false;
   endbossDeath = false;
+  endbossAlert = false;
+  walkingStarted = false;
+  isAttacking = false;
+  endbossAlertCounter = 0;
   endbossScream = new Audio("assets/audio/endboss-chicken-scream.mp3");
 
   IMAGES_ALERT = [
@@ -49,9 +53,17 @@ class Endboss extends MovableObject {
     "assets/img/4_enemie_boss_chicken/3_attack/G20.png",
   ];
 
-  IMAGES_HURT = ["assets/img/4_enemie_boss_chicken/4_hurt/G21.png", "assets/img/4_enemie_boss_chicken/4_hurt/G22.png", "assets/img/4_enemie_boss_chicken/4_hurt/G23.png"];
+  IMAGES_HURT = [
+    "assets/img/4_enemie_boss_chicken/4_hurt/G21.png",
+    "assets/img/4_enemie_boss_chicken/4_hurt/G22.png",
+    "assets/img/4_enemie_boss_chicken/4_hurt/G23.png",
+  ];
 
-  IMAGES_DEAD = ["assets/img/4_enemie_boss_chicken/5_dead/G24.png", "assets/img/4_enemie_boss_chicken/5_dead/G25.png", "assets/img/4_enemie_boss_chicken/5_dead/G26.png"];
+  IMAGES_DEAD = [
+    "assets/img/4_enemie_boss_chicken/5_dead/G24.png",
+    "assets/img/4_enemie_boss_chicken/5_dead/G25.png",
+    "assets/img/4_enemie_boss_chicken/5_dead/G26.png",
+  ];
 
   currentAnimation = this.IMAGES_ALERT;
 
@@ -67,61 +79,142 @@ class Endboss extends MovableObject {
   }
 
   /**
-   * Starts the animation loop for the Endboss.
+   * Starts the alert animation when the player approaches.
+   * Stops after 8 frames and sets the alert flag.
    */
   animate() {
-    let i = 0;
-
-    if (this.world.character.x >= 2800 && i <= 8) {
-      setInterval(() => {
+    const alertInterval = setInterval(() => {
+      if (this.shouldPlayAlertAnimation()) {
         this.playAnimation(this.IMAGES_ALERT);
-        console.log("Play Alert Animation!");
-      }, 500);
-    } else {
-      setInterval(() => {
-        this.playAnimation(this.IMAGES_WALKING);
-      }, 500);
-    }
+        this.endbossAlertCounter++;
+      }
+
+      if (this.endbossAlertCounter >= 8) {
+        clearInterval(alertInterval);
+
+        setTimeout(() => {
+          this.endbossAlert = true;
+        }, 500);
+      }
+    }, 500);
   }
 
   /**
-   * Makes the Endboss jump with a specified jump strength and gravity effect.
-   * The jump ends when the Endboss reaches the ground level.
+   * Checks if the alert animation should continue.
+   * @returns {boolean}
+   */
+  shouldPlayAlertAnimation() {
+    return this.world.character.x > 2000 && this.endbossAlertCounter < 8;
+  }
+
+  /**
+   * Triggers the jump action and plays attack animation during jump.
    */
   bossJump() {
-    if (this.isJumping) return;
+    if (this.isJumping || this.endbossDeath) return;
 
+    this.startJumpAnimation();
+    this.executeJumpPhysics();
+  }
+
+  /**
+   * Starts the attack animation loop during the jump.
+   */
+  startJumpAnimation() {
     this.isJumping = true;
     this.jumpHeight = this.jumpStrength;
 
-    let jumpInterval = setInterval(() => {
+    this.jumpAnimationInterval = setInterval(() => {
+      this.currentAnimation = this.IMAGES_ATTACK;
+      this.playAnimation(this.currentAnimation);
+    }, 250);
+  }
+
+  /**
+   * Updates vertical position during jump and stops when landed.
+   */
+  executeJumpPhysics() {
+    this.jumpInterval = setInterval(() => {
       this.y -= this.jumpHeight;
       this.jumpHeight -= this.gravity;
 
       if (this.y >= this.groundLevel) {
-        this.y = this.groundLevel;
-        clearInterval(jumpInterval);
-        this.isJumping = false;
-        this.currentAnimation = this.IMAGES_WALKING;
+        this.finishJump();
       }
     }, 40);
   }
 
+  /**
+   * Ends the jump and clears all related intervals.
+   */
+  finishJump() {
+    this.y = this.groundLevel;
+    this.isJumping = false;
+    clearInterval(this.jumpInterval);
+    clearInterval(this.jumpAnimationInterval);
+  }
+
+  /**
+   * Moves the boss left if player is close enough and animation has started.
+   * @param {Character} character - The player character.
+   */
   moveEndboss(character) {
-    if (character.x > 2180) {
+    if (this.endbossAlert && character.x > 2180) {
       this.moveLeft();
-      if (!this.isJumping) {
-        this.currentAnimation = this.IMAGES_WALKING;
-      }
+      this.tryStartWalkingAnimation();
     }
   }
 
+  /**
+   * Starts walking animation once if not already started.
+   */
+  tryStartWalkingAnimation() {
+    if (!this.walkingStarted) {
+      this.walkingStarted = true;
+      this.startWalkingAnimation();
+    }
+  }
+
+  /**
+   * Loops the walking animation if not jumping or attacking.
+   */
+  startWalkingAnimation() {
+    if (this.walkingInterval) return;
+
+    this.walkingInterval = setInterval(() => {
+      if (this.canPlayWalking()) {
+        this.currentAnimation = this.IMAGES_WALKING;
+        this.playAnimation(this.currentAnimation);
+      }
+    }, 200);
+  }
+
+  /**
+   * Checks if walking animation is allowed.
+   * @returns {boolean}
+   */
+  canPlayWalking() {
+    return !this.isJumping && !this.isAttacking && !this.endbossDeath;
+  }
+
+  /**
+   * Randomly triggers the boss’s attack with sound and jump.
+   */
   randomEndbossAttack() {
     if (Math.random() < 0.4) {
-      this.currentAnimation = this.IMAGES_ATTACK;
-      this.endbossScream.volume = 0.02;
-      this.endbossScream.play();
-      this.bossJump();
+      this.performAttack();
     }
+  }
+
+  /**
+   * Plays attack scream and initiates jump.
+   */
+  performAttack() {
+    this.isAttacking = true;
+    this.endbossScream.volume = 0.02;
+    this.endbossScream.play();
+    this.bossJump();
+
+    setTimeout(() => (this.isAttacking = false), 1000);
   }
 }
