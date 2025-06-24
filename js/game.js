@@ -13,6 +13,7 @@ let canvas;
 let world;
 let keyboard = new KeyboardInputs();
 let muteButton = document.getElementById("mute-btn");
+let mobileMuteBtn = document.getElementById("mute-btn-mobile");
 let backgroundMusic = new Audio("assets/audio/mexican-background-music.mp3");
 
 /**
@@ -23,6 +24,7 @@ function init() {
   world = new World(canvas, keyboard);
   world.backgroundMusic = backgroundMusic;
   initBackgroundMusic();
+  addEventsForMobileButtons();
 }
 
 /**
@@ -84,6 +86,60 @@ window.addEventListener("keyup", (event) => {
   }
 });
 
+// MobileButtons Event Listener
+
+function addEventsForMobileButtons() {
+  document
+    .getElementById("mobile-left-btn")
+    .addEventListener("touchstart", (event) => {
+      event.preventDefault();
+      keyboard.moveLeft = true;
+    });
+  document
+    .getElementById("mobile-right-btn")
+    .addEventListener("touchstart", (event) => {
+      event.preventDefault();
+      keyboard.moveRight = true;
+    });
+  document
+    .getElementById("mobile-jump-btn")
+    .addEventListener("touchstart", (event) => {
+      event.preventDefault();
+      keyboard.jump = true;
+    });
+  document
+    .getElementById("mobile-throw-btn")
+    .addEventListener("touchstart", (event) => {
+      event.preventDefault();
+      keyboard.throwBottle = true;
+    });
+
+  document
+    .getElementById("mobile-left-btn")
+    .addEventListener("touchend", (event) => {
+      event.preventDefault();
+      keyboard.moveLeft = false;
+    });
+  document
+    .getElementById("mobile-right-btn")
+    .addEventListener("touchend", (event) => {
+      event.preventDefault();
+      keyboard.moveRight = false;
+    });
+  document
+    .getElementById("mobile-jump-btn")
+    .addEventListener("touchend", (event) => {
+      event.preventDefault();
+      keyboard.jump = false;
+    });
+  document
+    .getElementById("mobile-throw-btn")
+    .addEventListener("touchend", (event) => {
+      event.preventDefault();
+      keyboard.throwBottle = false;
+    });
+}
+
 document.getElementById("fullscreen-btn").addEventListener("click", () => {
   let canvas = document.querySelector("canvas");
 
@@ -102,7 +158,7 @@ document.getElementById("fullscreen-btn").addEventListener("click", () => {
   }
 });
 
-muteButton.addEventListener("click", () => {
+function toggleMute() {
   isMuted = !isMuted;
   localStorage.setItem("isMuted", isMuted);
 
@@ -112,10 +168,12 @@ muteButton.addEventListener("click", () => {
     unmuteAllSounds();
   }
 
-  if (muteButton) {
-    muteButton.innerText = isMuted ? "🔇 Unmute" : "🔊 Mute";
-  }
-});
+  if (muteButton) muteButton.innerText = isMuted ? "🔇 Unmute" : "🔊 Mute";
+  if (mobileMuteBtn) mobileMuteBtn.innerText = isMuted ? "🔇" : "🔊";
+}
+
+muteButton.addEventListener("click", toggleMute);
+mobileMuteBtn.addEventListener("click", toggleMute);
 
 function muteAllSounds() {
   allSounds.forEach((audio) => {
@@ -130,7 +188,10 @@ function unmuteAllSounds() {
   allSounds.forEach((audio) => {
     if (audio) {
       audio.muted = false;
-      if (audio.src.includes("assets/audio/mexican-background-music.mp3") && audio.paused) {
+      if (
+        audio.src.includes("assets/audio/mexican-background-music.mp3") &&
+        audio.paused
+      ) {
         audio.play();
       }
     }
@@ -170,7 +231,11 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function closeDialogOutside(event) {
-    if (htpDialogWindow.style.display === "block" && !htpDialogWindow.contains(event.target) && event.target !== howToPlayButton) {
+    if (
+      htpDialogWindow.style.display === "block" &&
+      !htpDialogWindow.contains(event.target) &&
+      event.target !== howToPlayButton
+    ) {
       closeHtpDialog();
     }
   }
@@ -240,5 +305,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   document.getElementById("restart-btn").addEventListener("click", restartGame);
-  document.getElementById("backToStart-btn").addEventListener("click", backToStartScreen);
+  document
+    .getElementById("backToStart-btn")
+    .addEventListener("click", backToStartScreen);
 });
