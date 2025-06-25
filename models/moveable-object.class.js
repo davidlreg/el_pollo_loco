@@ -55,7 +55,11 @@ class MovableObject extends DrawableObject {
    */
   applyGravity() {
     setInterval(() => {
-      if (this.isCharacterAboveGround() || this.speedY > 0 || this.isFallingAfterDeath) {
+      if (
+        this.isCharacterAboveGround() ||
+        this.speedY > 0 ||
+        this.isFallingAfterDeath
+      ) {
         this.y -= this.speedY;
         this.speedY -= this.acceleration;
 
@@ -99,21 +103,40 @@ class MovableObject extends DrawableObject {
    * @param {CanvasRenderingContext2D} ctx - The rendering context
    */
   drawHitbox(ctx) {
-    if (
-      this instanceof Character ||
+    const isRelevant =
       this instanceof Chicken ||
       this instanceof SmallChicken ||
-      // this instanceof Coin ||
-      // this instanceof SalsaBottle ||
       this instanceof ThrowableObject ||
-      this instanceof Endboss
-    ) {
-      ctx.beginPath();
-      ctx.lineWidth = "4";
-      ctx.strokeStyle = "blue";
-      ctx.rect(this.x + this.offset.left, this.y + this.offset.top, this.width - this.offset.left - this.offset.right, this.height - this.offset.top - this.offset.bottom);
-      ctx.stroke();
+      this instanceof Endboss;
+
+    if (!isRelevant) return;
+
+    const thisLeft = this.x + this.offset.left;
+    const thisTop = this.y + this.offset.top;
+    const thisWidth = this.width - this.offset.left - this.offset.right;
+    const thisHeight = this.height - this.offset.top - this.offset.bottom;
+
+    let hit = false;
+
+    if (this.world) {
+      const allObjects = [
+        ...this.world.level.enemies,
+        ...this.world.throwable_objects,
+        this.world.character,
+        this.world.endboss,
+      ];
+
+      hit = allObjects.some((obj) => {
+        if (obj === this || typeof obj.isColliding !== "function") return false;
+        return this.isColliding(obj);
+      });
     }
+
+    ctx.beginPath();
+    ctx.lineWidth = "3";
+    ctx.strokeStyle = hit ? "lime" : "red";
+    ctx.rect(thisLeft, thisTop, thisWidth, thisHeight);
+    ctx.stroke();
   }
 
   /**
@@ -122,16 +145,28 @@ class MovableObject extends DrawableObject {
    * @returns {boolean} True if colliding, otherwise false
    */
   isColliding(mo) {
-    if (this.isDead() || (typeof mo.isDead === "function" && mo.isDead())) {
+    const thisLeft = this.x + this.offset.left;
+    const thisRight = this.x + this.width - this.offset.right;
+    const thisTop = this.y + this.offset.top;
+    const thisBottom = this.y + this.height - this.offset.bottom;
+    const moLeft = mo.x + mo.offset.left;
+    const moRight = mo.x + mo.width - mo.offset.right;
+    const moTop = mo.y + mo.offset.top;
+    const moBottom = mo.y + mo.height - mo.offset.bottom;
+
+    if (
+      (this instanceof ThrowableObject && mo instanceof Character) ||
+      (this instanceof Character && mo instanceof ThrowableObject)
+    ) {
       return false;
     }
-    if (this.x + this.width - this.offset.right <= mo.x + mo.offset.left || this.x + this.offset.left >= mo.x + mo.width - mo.offset.right) {
-      return false;
-    }
-    if (this.y + this.height - this.offset.bottom <= mo.y + mo.offset.top || this.y + this.offset.top >= mo.y + mo.height - mo.offset.bottom) {
-      return false;
-    }
-    return true;
+
+    return (
+      thisRight > moLeft &&
+      thisLeft < moRight &&
+      thisBottom > moTop &&
+      thisTop < moBottom
+    );
   }
 
   /**
@@ -141,7 +176,7 @@ class MovableObject extends DrawableObject {
     if (this.isHurt()) {
       return;
     }
-    this.energy -= 20; // 20 Default / 0 = Godmode
+    this.energy -= 0; // 20 Default / 0 = Godmode
     let hurtSound = new Audio("assets/audio/character-pain.mp3");
     hurtSound.play();
     hurtSound.volume = 0.02;

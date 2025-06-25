@@ -17,6 +17,7 @@ class Endboss extends MovableObject {
   jumpStrength = 20;
   groundLevel = 135;
   isJumping = false;
+  energy = 100; // 5 benötigte Treffer = 20 Schaden pro Treffer
   endbossDeath = false;
   endbossAlert = false;
   walkingStarted = false;
@@ -97,6 +98,30 @@ class Endboss extends MovableObject {
         }, 500);
       }
     }, 500);
+  }
+
+  hit() {
+    if (this.isHurt()) return;
+    this.energy -= 20;
+    this.lastHit = new Date().getTime();
+    console.log(this.energy);
+
+    if (this.energy <= 0) {
+      this.energy = 0;
+      this.endbossDeath = true;
+      this.die();
+    }
+
+    this.world.status_bar_endboss.updateHealthBar(this.energy);
+  }
+
+  isHurt() {
+    let timePassed = new Date().getTime() - this.lastHit;
+    return timePassed / 1000 < 0.8;
+  }
+
+  die() {
+    console.log("Endboss besiegt!");
   }
 
   /**

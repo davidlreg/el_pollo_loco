@@ -1,5 +1,6 @@
 class Chicken extends MovableObject {
   y = 350;
+  world;
   width = 60;
   height = 70;
   offset = {
@@ -22,6 +23,7 @@ class Chicken extends MovableObject {
     super().loadImage(
       "assets/img/3_enemies_chicken/chicken_normal/1_walk/1_w.png"
     );
+    this.world = world;
     this.loadImages(this.IMAGES_WALKING);
     this.loadImage(this.IMAGE_DEAD);
     this.x = 400 + Math.random() * 2100;

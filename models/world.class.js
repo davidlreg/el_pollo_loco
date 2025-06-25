@@ -1,4 +1,5 @@
 class World {
+  startGame;
   canvas;
   ctx;
   keyboard;
@@ -37,14 +38,15 @@ class World {
     this.checkCharacterEndbossCollision();
     this.collectBottles();
     this.collectCoins();
-    this.checkBottleEnemyCollisions();
     this.checkEndbossActivation();
   }
 
   checkCharacterEnemyCollisions() {
     this.level.enemies.forEach((enemy) => {
       if (!enemy.isDead && this.character.isColliding(enemy)) {
-        this.character.speedY < 0 ? (enemy.die(), this.character.jump()) : this.character.hit();
+        this.character.speedY < 0
+          ? (enemy.die(), this.character.jump())
+          : this.character.hit();
       }
     });
   }
@@ -77,10 +79,17 @@ class World {
 
   checkBottleEnemyCollisions() {
     this.throwable_objects.forEach((bottle) => {
+      // Endboss treffer
+      if (!bottle.hasSplashed && bottle.isColliding(this.endboss)) {
+        this.endboss.hit();
+        bottle.playSplashAnimation();
+      }
+
+      // Normaler Gegner treffer
       this.level.enemies.forEach((enemy) => {
-        if (bottle.isColliding(enemy)) {
+        if (!enemy.isDead && !bottle.hasSplashed && bottle.isColliding(enemy)) {
           enemy.die();
-          console.log("Enemy Hit!");
+          bottle.playSplashAnimation();
         }
       });
     });
@@ -94,8 +103,14 @@ class World {
   }
 
   activateEndboss() {
-    this.endbossMoveInterval = setInterval(() => this.endboss.moveEndboss(this.character), 1000 / 60);
-    this.endbossAttackInterval = setInterval(() => this.endboss.randomEndbossAttack(), 2000);
+    this.endbossMoveInterval = setInterval(
+      () => this.endboss.moveEndboss(this.character),
+      1000 / 60
+    );
+    this.endbossAttackInterval = setInterval(
+      () => this.endboss.randomEndbossAttack(),
+      1600
+    );
   }
 
   draw() {
@@ -108,7 +123,7 @@ class World {
     this.ctx.restore();
     this.drawStatusBars();
     this.drawThrowables();
-
+    this.checkBottleEnemyCollisions();
     this.animationFrameId = requestAnimationFrame(() => this.draw());
   }
 
@@ -124,7 +139,11 @@ class World {
   }
 
   drawStatusBars() {
-    const bars = [this.status_bar_salsa, this.status_bar_health, this.status_bar_coins];
+    const bars = [
+      this.status_bar_salsa,
+      this.status_bar_health,
+      this.status_bar_coins,
+    ];
     if (this.endbossActivated) bars.push(this.status_bar_endboss);
     this.addStatusBarToMap(...bars);
   }
