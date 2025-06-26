@@ -11,12 +11,11 @@ class Cloud extends MovableObject {
 
   /**
    * Moves the cloud to the left and resets its position when it moves off-screen.
+   *
    */
   move() {
     this.x -= this.speed;
-
     if (this.x + this.width < 0) {
-      // suche die aktuell rechteste Cloud
       let farthestCloud = Math.max(...world.level.clouds.map((c) => c.x));
       this.x = farthestCloud + this.width;
     }

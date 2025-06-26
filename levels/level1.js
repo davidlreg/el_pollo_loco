@@ -1,42 +1,110 @@
 let level1;
 
+/**
+ * Initializes level one of the game by creating enemies, clouds, coins,
+ * throwable objects, and background layers, and assigns them to the global `level1` variable.
+ *
+ * @function
+ */
 function initLevelOne() {
   level1 = new Level(
-    [new Chicken(), new Chicken(), new SmallChicken(), new Chicken(), new SmallChicken(), new Chicken(), new SmallChicken()],
+    [
+      new Chicken(),
+      new Chicken(),
+      new SmallChicken(),
+      new Chicken(),
+      new SmallChicken(),
+      new Chicken(),
+      new SmallChicken(),
+    ],
     generateClouds(),
     [new Coin(), new Coin(), new Coin(), new Coin(), new Coin()],
-    [new SalsaBottle(), new SalsaBottle(), new SalsaBottle(), new SalsaBottle(), new SalsaBottle(), new SalsaBottle(), new SalsaBottle()],
+    [
+      new SalsaBottle(),
+      new SalsaBottle(),
+      new SalsaBottle(),
+      new SalsaBottle(),
+      new SalsaBottle(),
+      new SalsaBottle(),
+      new SalsaBottle(),
+    ],
     [
       new BackgroundObject("assets/img/5_background/layers/air.png", -719),
-      new BackgroundObject("assets/img/5_background/layers/3_third_layer/2.png", -719),
-      new BackgroundObject("assets/img/5_background/layers/2_second_layer/2.png", -719),
-      new BackgroundObject("assets/img/5_background/layers/1_first_layer/2.png", -719),
+      new BackgroundObject(
+        "assets/img/5_background/layers/3_third_layer/2.png",
+        -719
+      ),
+      new BackgroundObject(
+        "assets/img/5_background/layers/2_second_layer/2.png",
+        -719
+      ),
+      new BackgroundObject(
+        "assets/img/5_background/layers/1_first_layer/2.png",
+        -719
+      ),
 
       new BackgroundObject("assets/img/5_background/layers/air.png", 0),
-      new BackgroundObject("assets/img/5_background/layers/3_third_layer/1.png", 0),
-      new BackgroundObject("assets/img/5_background/layers/2_second_layer/1.png", 0),
-      new BackgroundObject("assets/img/5_background/layers/1_first_layer/1.png", 0),
+      new BackgroundObject(
+        "assets/img/5_background/layers/3_third_layer/1.png",
+        0
+      ),
+      new BackgroundObject(
+        "assets/img/5_background/layers/2_second_layer/1.png",
+        0
+      ),
+      new BackgroundObject(
+        "assets/img/5_background/layers/1_first_layer/1.png",
+        0
+      ),
 
       new BackgroundObject("assets/img/5_background/layers/air.png", 719),
-      new BackgroundObject("assets/img/5_background/layers/3_third_layer/2.png", 719),
-      new BackgroundObject("assets/img/5_background/layers/2_second_layer/2.png", 719),
-      new BackgroundObject("assets/img/5_background/layers/1_first_layer/2.png", 719),
+      new BackgroundObject(
+        "assets/img/5_background/layers/3_third_layer/2.png",
+        719
+      ),
+      new BackgroundObject(
+        "assets/img/5_background/layers/2_second_layer/2.png",
+        719
+      ),
+      new BackgroundObject(
+        "assets/img/5_background/layers/1_first_layer/2.png",
+        719
+      ),
 
       new BackgroundObject("assets/img/5_background/layers/air.png", 719 * 2),
-      new BackgroundObject("assets/img/5_background/layers/3_third_layer/1.png", 719 * 2),
-      new BackgroundObject("assets/img/5_background/layers/2_second_layer/1.png", 719 * 2),
-      new BackgroundObject("assets/img/5_background/layers/1_first_layer/1.png", 719 * 2),
+      new BackgroundObject(
+        "assets/img/5_background/layers/3_third_layer/1.png",
+        719 * 2
+      ),
+      new BackgroundObject(
+        "assets/img/5_background/layers/2_second_layer/1.png",
+        719 * 2
+      ),
+      new BackgroundObject(
+        "assets/img/5_background/layers/1_first_layer/1.png",
+        719 * 2
+      ),
 
       new BackgroundObject("assets/img/5_background/layers/air.png", 719 * 3),
-      new BackgroundObject("assets/img/5_background/layers/3_third_layer/2.png", 719 * 3),
-      new BackgroundObject("assets/img/5_background/layers/2_second_layer/2.png", 719 * 3),
-      new BackgroundObject("assets/img/5_background/layers/1_first_layer/2.png", 719 * 3),
+      new BackgroundObject(
+        "assets/img/5_background/layers/3_third_layer/2.png",
+        719 * 3
+      ),
+      new BackgroundObject(
+        "assets/img/5_background/layers/2_second_layer/2.png",
+        719 * 3
+      ),
+      new BackgroundObject(
+        "assets/img/5_background/layers/1_first_layer/2.png",
+        719 * 3
+      ),
     ]
   );
 }
 
 /**
  * Generates an array of cloud objects positioned along the x-axis.
+ *
  * @returns {Cloud[]} An array of Cloud instances.
  */
 function generateClouds() {

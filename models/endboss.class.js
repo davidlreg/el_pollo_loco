@@ -82,6 +82,7 @@ class Endboss extends MovableObject {
   /**
    * Starts the alert animation when the player approaches.
    * Stops after 8 frames and sets the alert flag.
+   *
    */
   animate() {
     const alertInterval = setInterval(() => {
@@ -100,6 +101,11 @@ class Endboss extends MovableObject {
     }, 500);
   }
 
+  /**
+   * Reduces energy when hit, triggers death if energy is zero or below,
+   * and updates the health bar. Ignores hits if recently hurt.
+   *
+   */
   hit() {
     if (this.isHurt()) return;
     this.energy -= 20;
@@ -115,17 +121,27 @@ class Endboss extends MovableObject {
     this.world.status_bar_endboss.updateHealthBar(this.energy);
   }
 
+  /**
+   * Checks if the object is currently in a hurt cooldown period.
+   *
+   * @returns {boolean} True if less than 0.8 seconds passed since last hit.
+   */
   isHurt() {
     let timePassed = new Date().getTime() - this.lastHit;
     return timePassed / 1000 < 0.8;
   }
 
+  /**
+   * Handles actions to perform when the entity dies.
+   *
+   */
   die() {
     console.log("Endboss besiegt!");
   }
 
   /**
    * Checks if the alert animation should continue.
+   *
    * @returns {boolean}
    */
   shouldPlayAlertAnimation() {
@@ -134,21 +150,21 @@ class Endboss extends MovableObject {
 
   /**
    * Triggers the jump action and plays attack animation during jump.
+   *
    */
   bossJump() {
     if (this.isJumping || this.endbossDeath) return;
-
     this.startJumpAnimation();
     this.executeJumpPhysics();
   }
 
   /**
    * Starts the attack animation loop during the jump.
+   *
    */
   startJumpAnimation() {
     this.isJumping = true;
     this.jumpHeight = this.jumpStrength;
-
     this.jumpAnimationInterval = setInterval(() => {
       this.currentAnimation = this.IMAGES_ATTACK;
       this.playAnimation(this.currentAnimation);
@@ -157,6 +173,7 @@ class Endboss extends MovableObject {
 
   /**
    * Updates vertical position during jump and stops when landed.
+   *
    */
   executeJumpPhysics() {
     this.jumpInterval = setInterval(() => {
@@ -171,6 +188,7 @@ class Endboss extends MovableObject {
 
   /**
    * Ends the jump and clears all related intervals.
+   *
    */
   finishJump() {
     this.y = this.groundLevel;
@@ -181,6 +199,7 @@ class Endboss extends MovableObject {
 
   /**
    * Moves the boss left if player is close enough and animation has started.
+   *
    * @param {Character} character - The player character.
    */
   moveEndboss(character) {
@@ -192,6 +211,7 @@ class Endboss extends MovableObject {
 
   /**
    * Starts walking animation once if not already started.
+   *
    */
   tryStartWalkingAnimation() {
     if (!this.walkingStarted) {
@@ -202,6 +222,7 @@ class Endboss extends MovableObject {
 
   /**
    * Loops the walking animation if not jumping or attacking.
+   *
    */
   startWalkingAnimation() {
     if (this.walkingInterval) return;
@@ -216,6 +237,7 @@ class Endboss extends MovableObject {
 
   /**
    * Checks if walking animation is allowed.
+   *
    * @returns {boolean}
    */
   canPlayWalking() {
@@ -224,6 +246,7 @@ class Endboss extends MovableObject {
 
   /**
    * Randomly triggers the boss’s attack with sound and jump.
+   *
    */
   randomEndbossAttack() {
     if (Math.random() < 0.4) {
@@ -233,13 +256,13 @@ class Endboss extends MovableObject {
 
   /**
    * Plays attack scream and initiates jump.
+   *
    */
   performAttack() {
     this.isAttacking = true;
     this.endbossScream.volume = 0.02;
     this.endbossScream.play();
     this.bossJump();
-
     setTimeout(() => (this.isAttacking = false), 1000);
   }
 }

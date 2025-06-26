@@ -9,6 +9,7 @@ class StatusBarHealth extends StatusBar {
 
   /**
    * Draws the health status bar on the given canvas context.
+   *
    * @param {CanvasRenderingContext2D} ctx - The canvas rendering context.
    */
   draw(ctx) {
@@ -18,7 +19,7 @@ class StatusBarHealth extends StatusBar {
 
   /**
    * Updates the health bar based on the character's energy.
-   * TODO: Make energy threshold values configurable.
+   *
    * @param {number} energy - The current energy value of the character.
    */
   updateHealthBar(energy) {

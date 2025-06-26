@@ -3,15 +3,14 @@ class StatusBarCoins extends StatusBar {
 
   constructor() {
     super().loadImage(this.IMAGE_COIN);
-
     this.x = 200;
     this.y = 15;
   }
 
   /**
    * Draws the status bar and coin value.
+   *
    * @param {CanvasRenderingContext2D} ctx - The rendering context to draw on.
-   * @memberof StatusBarCoins
    */
   draw(ctx) {
     super.draw(ctx);

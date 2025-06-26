@@ -17,6 +17,7 @@ class Coin extends MovableObject {
 
   /**
    * Loads an image for the coin.
+   *
    * @param {string} path - Path to the image file
    */
   loadImage(path) {
@@ -25,7 +26,8 @@ class Coin extends MovableObject {
   }
 
   /**
-   * Plays the bottle animation.
+   * Plays the coin animation.
+   *
    */
   playCoinAnimation() {
     let i = this.currentImage % this.COIN_IMAGES.length;
@@ -34,6 +36,10 @@ class Coin extends MovableObject {
     this.currentImage++;
   }
 
+  /**
+   * Starts an interval to play the coin animation every 500 milliseconds.
+   *
+   */
   animate() {
     setInterval(() => {
       this.playCoinAnimation();

@@ -66,7 +66,11 @@ class Character extends MovableObject {
     "assets/img/2_character_pepe/3_jump/J-39.png",
   ];
 
-  IMAGES_HURT = ["assets/img/2_character_pepe/4_hurt/H-41.png", "assets/img/2_character_pepe/4_hurt/H-42.png", "assets/img/2_character_pepe/4_hurt/H-43.png"];
+  IMAGES_HURT = [
+    "assets/img/2_character_pepe/4_hurt/H-41.png",
+    "assets/img/2_character_pepe/4_hurt/H-42.png",
+    "assets/img/2_character_pepe/4_hurt/H-43.png",
+  ];
 
   IMAGES_DEAD = [
     "assets/img/2_character_pepe/5_dead/D-51.png",
@@ -85,6 +89,10 @@ class Character extends MovableObject {
     this.animate();
   }
 
+  /**
+   * Loads all character image sets (idle, long idle, move, jumping, hurt, dead).
+   *
+   */
   initCharacterImages() {
     this.loadImages(this.IMAGES_IDLE);
     this.loadImages(this.IMAGES_LONG_IDLE);
@@ -96,6 +104,7 @@ class Character extends MovableObject {
 
   /**
    * Plays the idle animation.
+   *
    */
   playIdleAnimation() {
     if (!this.sleepMode) {
@@ -106,6 +115,11 @@ class Character extends MovableObject {
     }
   }
 
+  /**
+   * Plays the character's snoring sound if it is not already playing.
+   * Sets volume to 5% and loops the sound.
+   *
+   */
   playSnoringSound() {
     if (this.characterSnoringSound.paused) {
       this.characterSnoringSound.volume = 0.05;
@@ -114,11 +128,22 @@ class Character extends MovableObject {
     }
   }
 
+  /**
+   * Stops and resets the character's snoring sound playback.
+   *
+   */
   stopSnoringSound() {
     this.characterSnoringSound.pause();
     this.characterSnoringSound.currentTime = 0;
   }
 
+  /**
+   * Moves the character horizontally based on the given direction.
+   * Updates the character's position and direction state.
+   * Plays walking sound if character is on the ground.
+   *
+   * @param {number} direction - Movement direction (-1 for left, 1 for right).
+   */
   moveCharacter(direction) {
     this.x += direction * this.speedX;
     this.otherDirection = direction < 0;
@@ -129,6 +154,7 @@ class Character extends MovableObject {
 
   /**
    * Plays the walking sound if not already playing.
+   *
    */
   playWalkingSound() {
     if (this.walkingSound.paused && !this.isCharacterAboveGround()) {
@@ -140,9 +166,13 @@ class Character extends MovableObject {
 
   /**
    * Stops the walking sound when the character is idle or in the air.
+   *
    */
   stopWalkingSound() {
-    if ((!this.world.keyboard.moveLeft && !this.world.keyboard.moveRight) || this.isCharacterAboveGround()) {
+    if (
+      (!this.world.keyboard.moveLeft && !this.world.keyboard.moveRight) ||
+      this.isCharacterAboveGround()
+    ) {
       this.walkingSound.pause();
       this.walkingSound.currentTime = 0;
     }
@@ -150,6 +180,7 @@ class Character extends MovableObject {
 
   /**
    * Throws a bottle if the cooldown has passed.
+   *
    */
   characterThrowBottle() {
     let currentTime = new Date().getTime();
@@ -157,7 +188,12 @@ class Character extends MovableObject {
       this.world.status_bar_salsa.salsaBottles--;
       let offsetX = this.otherDirection ? -20 : 50;
       let direction = this.otherDirection ? -1 : 1;
-      let bottle = new ThrowableObject(this.x + offsetX + this.world.camera_x, this.y + 100, this.world, direction);
+      let bottle = new ThrowableObject(
+        this.x + offsetX + this.world.camera_x,
+        this.y + 100,
+        this.world,
+        direction
+      );
       this.world.throwable_objects.push(bottle);
       bottle.throw();
       this.lastThrowTime = currentTime;
@@ -167,6 +203,7 @@ class Character extends MovableObject {
   /**
    * Handles character death behavior.
    * Displays game over and plays death sound.
+   *
    */
   characterDead() {
     if (!this.hasPlayedDeathSound) {
@@ -183,12 +220,17 @@ class Character extends MovableObject {
 
   /**
    * Checks whether the character is above ground.
+   *
    * @returns {boolean} True if character is above ground.
    */
   isCharacterAboveGround() {
     return this.y < 165;
   }
 
+  /**
+   * Starts all main animation and input loops.
+   *
+   */
   animate() {
     this.startSleepAnimationLoop();
     this.startInputTrackingLoop();
@@ -196,6 +238,11 @@ class Character extends MovableObject {
     this.startMovementAndCameraLoop();
   }
 
+  /**
+   * Starts the loop for playing sleep animations and snoring sound.
+   * Runs every 175ms.
+   *
+   */
   startSleepAnimationLoop() {
     const id = setInterval(() => {
       if (this.sleepMode && !this.isDead()) {
@@ -209,6 +256,11 @@ class Character extends MovableObject {
     this.intervalIds.push(id);
   }
 
+  /**
+   * Starts the loop to track user input inactivity and toggle sleep mode.
+   * Runs every 100ms.
+   *
+   */
   startInputTrackingLoop() {
     const id = setInterval(() => {
       const now = Date.now();
@@ -230,11 +282,26 @@ class Character extends MovableObject {
     this.intervalIds.push(id);
   }
 
+  /**
+   * Checks if any movement or action key is currently pressed.
+   *
+   * @returns {boolean} True if any key is pressed, false otherwise.
+   */
   anyKeyPressed() {
     const keyboard = this.world.keyboard;
-    return keyboard.moveLeft || keyboard.moveRight || keyboard.jump || keyboard.throwBottle;
+    return (
+      keyboard.moveLeft ||
+      keyboard.moveRight ||
+      keyboard.jump ||
+      keyboard.throwBottle
+    );
   }
 
+  /**
+   * Starts the animation update loop based on character state.
+   * Runs every 175ms.
+   *
+   */
   startAnimationUpdateLoop() {
     const id = setInterval(() => {
       if (this.isDead()) {
@@ -243,13 +310,21 @@ class Character extends MovableObject {
         this.playAnimation(this.IMAGES_HURT);
       } else if (this.isCharacterAboveGround()) {
         this.playAnimation(this.IMAGES_JUMPING);
-      } else if (this.world.keyboard.moveRight || this.world.keyboard.moveLeft) {
+      } else if (
+        this.world.keyboard.moveRight ||
+        this.world.keyboard.moveLeft
+      ) {
         this.playAnimation(this.IMAGES_MOVE);
       }
     }, 175);
     this.intervalIds.push(id);
   }
 
+  /**
+   * Starts the loop for handling movement input and updating camera.
+   * Runs at 60 FPS.
+   *
+   */
   startMovementAndCameraLoop() {
     const id = setInterval(() => {
       if (!this.isDead()) {
@@ -261,6 +336,10 @@ class Character extends MovableObject {
     this.intervalIds.push(id);
   }
 
+  /**
+   * Handles character movement based on current keyboard input.
+   *
+   */
   handleMovementInput() {
     const keyboard = this.world.keyboard;
     if (keyboard.moveRight && this.x < this.world.level.level_end_x) {
@@ -281,15 +360,27 @@ class Character extends MovableObject {
     }
   }
 
+  /**
+   * Updates the camera position based on character's x position.
+   *
+   */
   updateCamera() {
     this.world.camera_x = -this.x + 60;
   }
 
+  /**
+   * Stops all active intervals used for animation and input loops.
+   *
+   */
   stopAllIntervals() {
     this.intervalIds.forEach((id) => clearInterval(id));
     this.intervalIds = [];
   }
 
+  /**
+   * Stops and resets all character-related sounds.
+   *
+   */
   stopAllSounds() {
     this.walkingSound.pause();
     this.walkingSound.currentTime = 0;

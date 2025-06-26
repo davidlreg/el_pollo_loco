@@ -1,10 +1,9 @@
 class StatusBar extends DrawableObject {
-  salsaBottles = 9;
-  health = 5;
-  coins = 0;
-
   width = 70;
   height = 70;
+  salsaBottles = 69;
+  health = 5;
+  coins = 420;
 
   constructor() {
     super();
@@ -12,6 +11,7 @@ class StatusBar extends DrawableObject {
 
   /**
    * Draws the current value of the status bar next to the icon.
+   *
    * @param {CanvasRenderingContext2D} ctx - The canvas rendering context.
    * @param {number} value - The value to display.
    */
@@ -23,6 +23,7 @@ class StatusBar extends DrawableObject {
 
   /**
    * Sets the salsa bottle count.
+   *
    * @param {number} value - The number of salsa bottles.
    */
   setSalsaBottleCount(value) {
@@ -31,6 +32,7 @@ class StatusBar extends DrawableObject {
 
   /**
    * Sets the health value.
+   *
    * @param {number} value - The health value.
    */
   setHealth(value) {
@@ -39,6 +41,7 @@ class StatusBar extends DrawableObject {
 
   /**
    * Sets the coin count.
+   *
    * @param {number} value - The number of coins.
    */
   setCoinCount(value) {

@@ -10,6 +10,7 @@ class MovableObject extends DrawableObject {
 
   /**
    * Plays an animation by cycling through a set of images.
+   *
    * @param {string[]} images - Array of image paths
    */
   playAnimation(images) {
@@ -21,6 +22,7 @@ class MovableObject extends DrawableObject {
 
   /**
    * Handles object movement and animation.
+   *
    * @TODO Implement custom movement logic
    */
   animate() {
@@ -32,6 +34,7 @@ class MovableObject extends DrawableObject {
 
   /**
    * Moves the object to the left.
+   *
    */
   moveLeft() {
     setInterval(() => {
@@ -41,6 +44,7 @@ class MovableObject extends DrawableObject {
 
   /**
    * Makes the object jump by setting its vertical speed.
+   *
    */
   jump() {
     this.speedY = 16.5;
@@ -52,6 +56,7 @@ class MovableObject extends DrawableObject {
 
   /**
    * Applies gravity to the object, making it fall if not on the ground.
+   *
    */
   applyGravity() {
     setInterval(() => {
@@ -68,11 +73,9 @@ class MovableObject extends DrawableObject {
           this.speedY = 0;
         }
 
-        // Stoppe Bewegung, wenn Character unter dem sichtbaren Bereich ist
         if (this instanceof Character && this.y > 600) {
           this.speedY = 0;
           this.isFallingAfterDeath = false;
-          // Optional: Animation/Level-Ende/Neustart
         }
       }
     }, 1000 / 60);
@@ -80,6 +83,7 @@ class MovableObject extends DrawableObject {
 
   /**
    * Handles the death of the object, stopping movement and playing sound.
+   *
    */
   die() {
     if (this.isDead) return;
@@ -100,6 +104,7 @@ class MovableObject extends DrawableObject {
 
   /**
    * Draws the object's hitbox for debugging purposes.
+   *
    * @param {CanvasRenderingContext2D} ctx - The rendering context
    */
   drawHitbox(ctx) {
@@ -141,6 +146,7 @@ class MovableObject extends DrawableObject {
 
   /**
    * Checks if this object is colliding with another movable object.
+   *
    * @param {MovableObject} mo - Another movable object
    * @returns {boolean} True if colliding, otherwise false
    */
@@ -171,6 +177,7 @@ class MovableObject extends DrawableObject {
 
   /**
    * Reduces the object's energy when hit.
+   *
    */
   hit() {
     if (this.isHurt()) {
@@ -195,6 +202,7 @@ class MovableObject extends DrawableObject {
 
   /**
    * Checks if the object has been recently hurt.
+   *
    * @returns {boolean} True if hurt within the last 0.8 seconds
    */
   isHurt() {
@@ -204,6 +212,7 @@ class MovableObject extends DrawableObject {
 
   /**
    * Updates the health bar based on the energy level.
+   *
    * @param {StatusBarHealth} statusBarHealth - The status bar health object
    */
   updateHealthBarStatus(statusBarHealth) {
@@ -212,6 +221,7 @@ class MovableObject extends DrawableObject {
 
   /**
    * Checks if the object is dead.
+   *
    * @returns {boolean} True if energy is 0
    */
   isDead() {
@@ -220,6 +230,7 @@ class MovableObject extends DrawableObject {
 
   /**
    * Plays the splash animation when the bottle hits the ground.
+   *
    */
   playSplashAnimation() {
     this.hasSplashed = true;

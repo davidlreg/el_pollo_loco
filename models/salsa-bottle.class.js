@@ -20,6 +20,10 @@ class SalsaBottle extends MovableObject {
     this.initializeSalsaBottle();
   }
 
+  /**
+   * Initializes the salsa bottle by loading images, setting position, and starting animation.
+   *
+   */
   initializeSalsaBottle() {
     this.loadInitialImage();
     this.loadAnimationImages();
@@ -27,23 +31,44 @@ class SalsaBottle extends MovableObject {
     this.animate();
   }
 
+  /**
+   * Loads the initial image of the salsa bottle.
+   *
+   */
   loadInitialImage() {
     this.loadImage(this.SALSA_BOTTLE_IMAGES[0]);
   }
 
+  /**
+   * Loads all images used for the salsa bottle animation.
+   *
+   */
   loadAnimationImages() {
     this.loadImages(this.SALSA_BOTTLE_IMAGES);
   }
 
+  /**
+   * Sets a random start position for the salsa bottle on the x-axis.
+   *
+   */
   setStartPosition() {
     this.x = 300 + Math.random() * 1900;
   }
 
+  /**
+   * Loads a single image from the given path.
+   *
+   * @param {string} path - The URL or path of the image to load.
+   */
   loadImage(path) {
     this.img = new Image();
     this.img.src = path;
   }
 
+  /**
+   * Updates the current image to the next frame in the salsa bottle animation.
+   *
+   */
   playBottleAnimation() {
     let i = this.currentImage % this.SALSA_BOTTLE_IMAGES.length;
     let path = this.SALSA_BOTTLE_IMAGES[i];
@@ -51,6 +76,10 @@ class SalsaBottle extends MovableObject {
     this.currentImage++;
   }
 
+  /**
+   * Starts the animation loop, switching images every 500ms.
+   *
+   */
   animate() {
     setInterval(() => this.playBottleAnimation(), 500);
   }

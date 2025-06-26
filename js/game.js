@@ -1,7 +1,21 @@
+let canvas;
+let world;
 let isMuted = localStorage.getItem("isMuted") === "true";
-const OriginalAudio = window.Audio;
 let allSounds = [];
+let keyboard = new KeyboardInputs();
+let muteButton = document.getElementById("mute-btn");
+let mobileMuteBtn = document.getElementById("mute-btn-mobile");
+let backgroundMusic = new Audio("assets/audio/mexican-background-music.mp3");
+const OriginalAudio = window.Audio;
 
+/**
+ * Overrides the global Audio constructor to automatically apply the user's mute preference
+ * and track all created audio instances.
+ *
+ * @global
+ * @param {...any} args - Arguments passed to the original Audio constructor.
+ * @returns {HTMLAudioElement} - A new Audio object with the global mute setting applied.
+ */
 window.Audio = function (...args) {
   const audio = new OriginalAudio(...args);
   audio.muted = isMuted;
@@ -9,15 +23,9 @@ window.Audio = function (...args) {
   return audio;
 };
 
-let canvas;
-let world;
-let keyboard = new KeyboardInputs();
-let muteButton = document.getElementById("mute-btn");
-let mobileMuteBtn = document.getElementById("mute-btn-mobile");
-let backgroundMusic = new Audio("assets/audio/mexican-background-music.mp3");
-
 /**
  * Initializes the game by setting up the canvas and world.
+ *
  */
 function init() {
   canvas = document.getElementById("canvas");
@@ -29,6 +37,7 @@ function init() {
 
 /**
  * Plays the background music for the game.
+ *
  */
 function initBackgroundMusic() {
   backgroundMusic.loop = true;
@@ -86,8 +95,12 @@ window.addEventListener("keyup", (event) => {
   }
 });
 
-// MobileButtons Event Listener
-
+/**
+ * Adds touch event listeners to mobile control buttons.
+ * Updates the virtual keyboard state based on user interactions
+ * with left, right, jump, and throw buttons.
+ *
+ */
 function addEventsForMobileButtons() {
   document
     .getElementById("mobile-left-btn")
@@ -140,24 +153,12 @@ function addEventsForMobileButtons() {
     });
 }
 
-document.getElementById("fullscreen-btn").addEventListener("click", () => {
-  let canvas = document.querySelector("canvas");
-
-  if (!document.fullscreenElement) {
-    if (canvas.requestFullscreen) {
-      canvas.requestFullscreen();
-    } else if (canvas.mozRequestFullScreen) {
-      canvas.mozRequestFullScreen();
-    } else if (canvas.webkitRequestFullscreen) {
-      canvas.webkitRequestFullscreen();
-    } else if (canvas.msRequestFullscreen) {
-      canvas.msRequestFullscreen();
-    }
-  } else {
-    document.exitFullscreen();
-  }
-});
-
+/**
+ * Toggles the mute state of the application.
+ * Updates localStorage, applies mute/unmute logic,
+ * and adjusts UI buttons accordingly.
+ *
+ */
 function toggleMute() {
   isMuted = !isMuted;
   localStorage.setItem("isMuted", isMuted);
@@ -172,9 +173,11 @@ function toggleMute() {
   if (mobileMuteBtn) mobileMuteBtn.innerText = isMuted ? "🔇" : "🔊";
 }
 
-muteButton.addEventListener("click", toggleMute);
-mobileMuteBtn.addEventListener("click", toggleMute);
-
+/**
+ * Mutes and pauses all currently loaded audio elements.
+ * Iterates over the allSounds array and disables each sound.
+ *
+ */
 function muteAllSounds() {
   allSounds.forEach((audio) => {
     if (audio) {
@@ -184,6 +187,11 @@ function muteAllSounds() {
   });
 }
 
+/**
+ * Unmutes all audio elements in the `allSounds` array.
+ * Also resumes background music if it is paused.
+ *
+ */
 function unmuteAllSounds() {
   allSounds.forEach((audio) => {
     if (audio) {
@@ -198,6 +206,12 @@ function unmuteAllSounds() {
   });
 }
 
+/**
+ * Initializes the start screen and sets up event listeners after the DOM is fully loaded.
+ * Sets the mute button label, handles start button behavior, and displays game UI elements.
+ *
+ * @event DOMContentLoaded
+ */
 document.addEventListener("DOMContentLoaded", function () {
   const startScreen = document.getElementById("startScreen");
   const headline = document.getElementById("headline");
@@ -209,6 +223,12 @@ document.addEventListener("DOMContentLoaded", function () {
   const bottomWrapper = document.querySelector(".bottomWrapper");
   muteButton.innerText = isMuted ? "🔇 Unmute" : "🔊 Mute";
 
+  /**
+   * Starts the game by initializing the first level,
+   * hiding the start screen, showing the game UI elements,
+   * and calling the main game initialization function.
+   *
+   */
   function startGame() {
     initLevelOne();
     startScreen.style.display = "none";
@@ -218,6 +238,11 @@ document.addEventListener("DOMContentLoaded", function () {
     init();
   }
 
+  /**
+   * Displays the "How to Play" dialog and sets up a click listener
+   * to close it when clicking outside the dialog.
+   *
+   */
   function showHtpDialog() {
     htpDialogWindow.style.display = "block";
     setTimeout(() => {
@@ -225,11 +250,21 @@ document.addEventListener("DOMContentLoaded", function () {
     }, 10);
   }
 
+  /**
+   * Closes the HTP dialog by hiding the dialog window
+   * and removes the click event listener for outside clicks.
+   *
+   */
   function closeHtpDialog() {
     htpDialogWindow.style.display = "none";
     document.removeEventListener("click", closeDialogOutside);
   }
 
+  /**
+   * Closes the dialog if a click occurs outside of it and not on the trigger button.
+   *
+   * @param {MouseEvent} event - The click event to check the target element.
+   */
   function closeDialogOutside(event) {
     if (
       htpDialogWindow.style.display === "block" &&
@@ -240,10 +275,12 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  startButton.addEventListener("click", startGame);
-  howToPlayButton.addEventListener("click", showHtpDialog);
-  closeDialog.addEventListener("click", closeHtpDialog);
-
+  /**
+   * Restarts the game by clearing intervals, stopping sounds,
+   * resetting variables, initializing level one, and updating UI elements.
+   * Also stops and resets the character's snoring sound if it exists.
+   *
+   */
   function restartGame() {
     clearIntervals();
     stopSounds();
@@ -262,6 +299,11 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
+  /**
+   * Resets the UI to the start screen by clearing timeouts,
+   * hiding game elements, stopping sounds, and clearing intervals.
+   *
+   */
   function backToStartScreen() {
     if (world?.gameOverTimeout) {
       clearTimeout(world.gameOverTimeout);
@@ -276,12 +318,20 @@ document.addEventListener("DOMContentLoaded", function () {
     clearIntervals();
   }
 
+  /**
+   * Clears the collision check interval if it exists.
+   *
+   */
   function clearIntervals() {
     if (world?.collisionCheckInterval) {
       clearInterval(world.collisionCheckInterval);
     }
   }
 
+  /**
+   * Stops and resets all playing sounds including character sounds and background music.
+   *
+   */
   function stopSounds() {
     allSounds.forEach((audio) => {
       if (audio) {
@@ -298,14 +348,54 @@ document.addEventListener("DOMContentLoaded", function () {
     backgroundMusic.currentTime = 0;
   }
 
+  /**
+   * Resets game-related variables to their initial states.
+   *
+   * - Creates a new KeyboardInputs instance for `keyboard`.
+   * - Sets `world` and `level1` to null.
+   *
+   */
   function resetVariables() {
     keyboard = new KeyboardInputs();
     world = null;
     level1 = null;
   }
 
+  /**
+   * Adds event listeners to UI buttons for game control actions:
+   * - Restarting the game
+   * - Returning to the start screen
+   * - Starting the game
+   * - Showing and closing the "How to Play" dialog
+   * - Toggling mute (desktop and mobile buttons)
+   * - Toggling fullscreen mode for the game canvas
+   *
+   */
   document.getElementById("restart-btn").addEventListener("click", restartGame);
   document
     .getElementById("backToStart-btn")
     .addEventListener("click", backToStartScreen);
+  startButton.addEventListener("click", startGame);
+  howToPlayButton.addEventListener("click", showHtpDialog);
+  closeDialog.addEventListener("click", closeHtpDialog);
+  muteButton.addEventListener("click", toggleMute);
+  mobileMuteBtn.addEventListener("click", toggleMute);
+
+  document.getElementById("fullscreen-btn").addEventListener("click", () => {
+    let canvas = document.querySelector("canvas");
+
+    if (!document.fullscreenElement) {
+      if (canvas.requestFullscreen) {
+        canvas.requestFullscreen();
+      } else if (canvas.mozRequestFullScreen) {
+        canvas.mozRequestFullScreen();
+      } else if (canvas.webkitRequestFullscreen) {
+        canvas.webkitRequestFullscreen();
+      } else if (canvas.msRequestFullscreen) {
+        canvas.msRequestFullscreen();
+      }
+    } else {
+      document.exitFullscreen();
+    }
+  });
 });
