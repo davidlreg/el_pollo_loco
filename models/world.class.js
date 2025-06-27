@@ -106,44 +106,22 @@ class World {
     });
   }
 
-  // checkBottleEnemyCollisions() {
-  //   this.throwable_objects.forEach((bottle) => {
-  //     // Endboss treffer
-  //     if (!bottle.hasSplashed && bottle.isColliding(this.endboss)) {
-  //       this.endboss.hit();
-  //       bottle.playSplashAnimation();
-  //     }
-
-  //     // Normaler Gegner treffer
-  //     this.level.enemies.forEach((enemy) => {
-  //       if (!enemy.isDead && !bottle.hasSplashed && bottle.isColliding(enemy)) {
-  //         enemy.die();
-  //         bottle.playSplashAnimation();
-  //       }
-  //     });
-  //   });
-  // }
-
-  /**
-   * Checks collisions between throwable bottles and enemies,
-   * triggers hits or deaths and splash animations.
-   *
-   */
+  // /**
+  //  * Checks collisions between throwable bottles and enemies,
+  //  * triggers hits or deaths and splash animations.
+  //  *
+  //  */
   checkBottleEnemyCollisions() {
     this.throwable_objects.forEach((bottle) => {
       // Endboss treffer
-      if (bottle.isColliding(this.endboss)) {
-        console.log("Kollision erkannt mit Endboss", bottle, this.endboss);
-
+      if (!bottle.hasSplashed && bottle.isColliding(this.endboss)) {
         this.endboss.hit();
         bottle.playSplashAnimation();
       }
 
       // Normaler Gegner treffer
       this.level.enemies.forEach((enemy) => {
-        if (bottle.isColliding(enemy)) {
-          console.log(`Enemy ${enemy.type} hit by bottle`);
-
+        if (!enemy.isDead && !bottle.hasSplashed && bottle.isColliding(enemy)) {
           enemy.die();
           bottle.playSplashAnimation();
         }
