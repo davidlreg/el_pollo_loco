@@ -3,6 +3,7 @@ class Chicken extends MovableObject {
   world;
   width = 60;
   height = 70;
+  type = "chicken";
   offset = {
     top: 20,
     left: 10,

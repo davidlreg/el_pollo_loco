@@ -133,6 +133,8 @@ class World {
     this.throwable_objects.forEach((bottle) => {
       // Endboss treffer
       if (bottle.isColliding(this.endboss)) {
+        console.log("Kollision erkannt mit Endboss", bottle, this.endboss);
+
         this.endboss.hit();
         bottle.playSplashAnimation();
       }
@@ -140,6 +142,8 @@ class World {
       // Normaler Gegner treffer
       this.level.enemies.forEach((enemy) => {
         if (bottle.isColliding(enemy)) {
+          console.log(`Enemy ${enemy.type} hit by bottle`);
+
           enemy.die();
           bottle.playSplashAnimation();
         }

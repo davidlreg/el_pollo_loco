@@ -80,6 +80,11 @@ class ThrowableObject extends MovableObject {
     let interval = setInterval(() => {
       this.updateThrowPosition();
 
+      // Kollisionen prüfen
+      if (!hasBroken) {
+        this.world.checkBottleEnemyCollisions();
+      }
+
       if (this.hasHitGround()) {
         clearInterval(interval);
         this.triggerSplash(hasBroken);

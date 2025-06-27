@@ -3,6 +3,7 @@ class SmallChicken extends MovableObject {
   width = 60;
   height = 70;
   world;
+  type = "smallChicken";
   offset = {
     top: 10,
     left: 10,
