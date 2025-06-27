@@ -190,7 +190,6 @@ class World {
     this.ctx.translate(-this.camera_x, 0);
     this.ctx.restore();
     this.drawStatusBars();
-    this.drawThrowables();
     this.animationFrameId = requestAnimationFrame(() => this.draw());
   }
 
@@ -206,6 +205,7 @@ class World {
     this.addObjectsToMap(this.level.enemies);
     this.addToMap(this.endboss);
     this.addToMap(this.character);
+    this.drawThrowables();
     this.level.clouds.forEach((cloud) => cloud.move());
   }
 
