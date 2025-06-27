@@ -131,7 +131,7 @@ canvas {
   top: 740px;
   max-width: 720px;
   width: 100%;
-  display: none; /*flex als Standartwert & none um Menü zu verstecken */
+  display: flex; /*flex als Standartwert & none um Menü zu verstecken */
   justify-content: space-between;
   align-items: center;
   padding: 0px 8px;

@@ -189,7 +189,7 @@ class Character extends MovableObject {
       let offsetX = this.otherDirection ? -20 : 50;
       let direction = this.otherDirection ? -1 : 1;
       let bottle = new ThrowableObject(
-        this.x + offsetX + this.world.camera_x,
+        this.x + offsetX,
         this.y + 100,
         this.world,
         direction
