@@ -30,5 +30,6 @@ class StatusBarEndboss extends StatusBar {
       this.endbossHealth = 1;
     } else if (energy > 0) {
       this.endbossHealth = 0;
+    }
   }
 }
