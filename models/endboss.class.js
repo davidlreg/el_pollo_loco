@@ -3,7 +3,7 @@ class Endboss extends MovableObject {
   y = 135;
   width = 250;
   height = 300;
-  speed = 0.01;
+  speed = 0.65;
   world;
 
   offset = {
@@ -17,7 +17,7 @@ class Endboss extends MovableObject {
   jumpStrength = 20;
   groundLevel = 135;
   isJumping = false;
-  energy = 100; // 5 benötigte Treffer = 20 Schaden pro Treffer
+  energy = 100;
   endbossDeath = false;
   endbossAlert = false;
   walkingStarted = false;
@@ -93,10 +93,7 @@ class Endboss extends MovableObject {
 
       if (this.endbossAlertCounter >= 8) {
         clearInterval(alertInterval);
-
-        setTimeout(() => {
-          this.endbossAlert = true;
-        }, 500);
+        this.endbossAlert = true;
       }
     }, 500);
   }
@@ -137,12 +134,54 @@ class Endboss extends MovableObject {
    *
    */
   die() {
-    console.log("Endboss besiegt!");
-    this.playAnimation(this.IMAGES_DEAD);
+    this.endbossDeath = true;
 
-    setTimeout(() => {
-      this.world.endbossBarShouldBeVisible = false;
-    }, 2000); // 2000 ms = 2 Sekunden
+    this.deathAnimationInterval = setInterval(() => {
+      this.playAnimation(this.IMAGES_DEAD);
+    }, 200);
+
+    this.speedY = 18;
+    this.startY = this.y;
+    this.flyHeight = 150;
+    this.gravity = 0.45;
+    this.isFlyingUp = true;
+
+    this.deathInterval = setInterval(() => {
+      this.applyGravityToFlight();
+    }, 40);
+  }
+
+  /**
+   * Applies gravity-based movement for the death flight animation.
+   * Moves the object upward with decreasing speed, then downward with accelerating speed.
+   * Clears intervals and hides the object once it falls below the ground threshold.
+   *
+   */
+  applyGravityToFlight() {
+    if (this.isFlyingUp) {
+      this.y -= this.speedY;
+      this.speedY -= this.gravity;
+
+      if (this.speedY <= 0 || this.y <= this.startY - this.flyHeight) {
+        this.isFlyingUp = false;
+        this.speedY = 0;
+      }
+    } else {
+      this.speedY += this.gravity;
+      this.y += this.speedY;
+
+      if (this.y > this.groundLevel + 500) {
+        clearInterval(this.deathInterval);
+        clearInterval(this.deathAnimationInterval);
+        clearInterval(this.world.endbossMoveInterval);
+        clearInterval(this.world.endbossAttackInterval);
+        clearInterval(this.walkingInterval);
+        this.walkingInterval = null;
+
+        this.world.endbossBarShouldBeVisible = false;
+        this.visible = false;
+      }
+    }
   }
 
   /**
@@ -210,11 +249,11 @@ class Endboss extends MovableObject {
    */
   moveEndboss(character) {
     if (this.endbossDeath) return;
+    if (character.x <= 2180) return;
+    if (!this.endbossAlert) return;
 
-    if (this.endbossAlert && character.x > 2180) {
-      this.moveLeft();
-      this.tryStartWalkingAnimation();
-    }
+    this.x -= this.speed;
+    if (this.endbossAlert == true) this.tryStartWalkingAnimation();
   }
 
   /**
@@ -258,6 +297,7 @@ class Endboss extends MovableObject {
    */
   randomEndbossAttack() {
     if (this.endbossDeath) return;
+    if (!this.endbossAlert) return;
 
     if (Math.random() < 0.4) {
       this.performAttack();
