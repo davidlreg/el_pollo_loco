@@ -178,24 +178,27 @@ class MovableObject extends DrawableObject {
   }
 
   /**
-   * Reduces the object's energy when hit.
+   * Reduces the object's energy by given damage amount when hit.
    *
+   * @param {number} damage - Amount of energy to reduce
    */
-  hit() {
+  hit(damage = 20) {
     if (this.isHurt()) {
       return;
     }
-    this.energy -= 20; // 20 Default / 0 = Godmode
+    this.energy -= damage;
+    if (this.energy < 0) this.energy = 0;
+
     let hurtSound = new Audio("assets/audio/character-pain.mp3");
-    hurtSound.play();
     hurtSound.volume = 0.02;
-    if (this.energy <= 0) {
-      this.energy = 0;
-    }
+    hurtSound.play();
+
     this.lastHit = new Date().getTime();
+
     if (this.statusBarHealth) {
       this.statusBarHealth.updateHealthBar(this.energy);
     }
+
     if (this instanceof Character && this.sleepMode) {
       this.sleepMode = false;
       this.lastInputTime = new Date().getTime();

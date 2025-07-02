@@ -64,7 +64,7 @@ class World {
       if (!enemy.isDead && this.character.isColliding(enemy)) {
         this.character.speedY < 0
           ? (enemy.die(), this.character.jump())
-          : this.character.hit();
+          : this.character.hit(20);
       }
     });
   }
@@ -75,7 +75,7 @@ class World {
    */
   checkCharacterEndbossCollision() {
     if (this.character.isColliding(this.endboss)) {
-      this.character.hit();
+      this.character.hit(40);
     }
   }
 
