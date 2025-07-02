@@ -113,13 +113,11 @@ class World {
   //  */
   checkBottleEnemyCollisions() {
     this.throwable_objects.forEach((bottle) => {
-      // Endboss treffer
       if (!bottle.hasSplashed && bottle.isColliding(this.endboss)) {
         this.endboss.hit();
         bottle.playSplashAnimation();
       }
 
-      // Normaler Gegner treffer
       this.level.enemies.forEach((enemy) => {
         if (!enemy.isDead && !bottle.hasSplashed && bottle.isColliding(enemy)) {
           enemy.die();

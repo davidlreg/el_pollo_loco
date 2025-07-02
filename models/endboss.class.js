@@ -114,6 +114,7 @@ class Endboss extends MovableObject {
 
     if (this.energy <= 0) {
       this.energy = 0;
+      this.world.status_bar_endboss.updateHealthBar(this.energy);
       this.endbossDeath = true;
       this.die();
     }
@@ -137,6 +138,7 @@ class Endboss extends MovableObject {
    */
   die() {
     console.log("Endboss besiegt!");
+    this.playAnimation(this.IMAGES_DEAD);
   }
 
   /**

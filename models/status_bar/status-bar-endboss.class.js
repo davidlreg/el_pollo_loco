@@ -16,6 +16,19 @@ class StatusBarEndboss extends StatusBar {
    */
   draw(ctx) {
     super.draw(ctx);
-    this.drawValue(ctx, 5);
+    this.drawValue(ctx, this.endbossHealth);
+  }
+
+  updateHealthBar(energy) {
+    if (energy > 80) {
+      this.endbossHealth = 4;
+    } else if (energy > 60) {
+      this.endbossHealth = 3;
+    } else if (energy > 40) {
+      this.endbossHealth = 2;
+    } else if (energy > 20) {
+      this.endbossHealth = 1;
+    } else if (energy > 0) {
+      this.endbossHealth = 0;
   }
 }
