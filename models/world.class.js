@@ -13,6 +13,7 @@ class World {
   status_bar_endboss = new StatusBarEndboss();
   throwable_objects = [];
   endbossActivated = false;
+  endbossBarShouldBeVisible = true;
   gameOverTimeout = null;
 
   constructor(canvas, keyboard) {
@@ -195,7 +196,11 @@ class World {
       this.status_bar_health,
       this.status_bar_coins,
     ];
-    if (this.endbossActivated) bars.push(this.status_bar_endboss);
+
+    if (this.endbossActivated && this.endbossBarShouldBeVisible) {
+      bars.push(this.status_bar_endboss);
+    }
+
     this.addStatusBarToMap(...bars);
   }
 

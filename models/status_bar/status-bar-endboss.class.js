@@ -20,15 +20,15 @@ class StatusBarEndboss extends StatusBar {
   }
 
   updateHealthBar(energy) {
-    if (energy > 80) {
+    if (energy >= 80) {
       this.endbossHealth = 4;
-    } else if (energy > 60) {
+    } else if (energy >= 60) {
       this.endbossHealth = 3;
-    } else if (energy > 40) {
+    } else if (energy >= 40) {
       this.endbossHealth = 2;
-    } else if (energy > 20) {
+    } else if (energy >= 20) {
       this.endbossHealth = 1;
-    } else if (energy > 0) {
+    } else if (energy >= 0) {
       this.endbossHealth = 0;
     }
   }

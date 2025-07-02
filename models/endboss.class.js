@@ -139,6 +139,10 @@ class Endboss extends MovableObject {
   die() {
     console.log("Endboss besiegt!");
     this.playAnimation(this.IMAGES_DEAD);
+
+    setTimeout(() => {
+      this.world.endbossBarShouldBeVisible = false;
+    }, 2000); // 2000 ms = 2 Sekunden
   }
 
   /**
@@ -205,6 +209,8 @@ class Endboss extends MovableObject {
    * @param {Character} character - The player character.
    */
   moveEndboss(character) {
+    if (this.endbossDeath) return;
+
     if (this.endbossAlert && character.x > 2180) {
       this.moveLeft();
       this.tryStartWalkingAnimation();
@@ -251,6 +257,8 @@ class Endboss extends MovableObject {
    *
    */
   randomEndbossAttack() {
+    if (this.endbossDeath) return;
+
     if (Math.random() < 0.4) {
       this.performAttack();
     }
@@ -261,6 +269,8 @@ class Endboss extends MovableObject {
    *
    */
   performAttack() {
+    if (this.endbossDeath) return;
+
     this.isAttacking = true;
     this.endbossScream.volume = 0.02;
     this.endbossScream.play();
