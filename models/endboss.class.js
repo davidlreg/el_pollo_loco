@@ -24,6 +24,7 @@ class Endboss extends MovableObject {
   isAttacking = false;
   endbossAlertCounter = 0;
   endbossScream = new Audio("assets/audio/endboss-chicken-scream.mp3");
+  endbossDeathScream = new Audio("assets/audio/endboss-death-scream.mp3");
 
   IMAGES_ALERT = [
     "assets/img/4_enemie_boss_chicken/2_alert/G5.png",
@@ -138,6 +139,9 @@ class Endboss extends MovableObject {
 
     this.deathAnimationInterval = setInterval(() => {
       this.playAnimation(this.IMAGES_DEAD);
+      this.endbossDeathScream.volume = 0.1;
+      this.endbossDeathScream.loop = false;
+      this.endbossDeathScream.play();
     }, 200);
 
     this.speedY = 18;
