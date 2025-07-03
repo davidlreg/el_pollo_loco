@@ -289,6 +289,7 @@ document.addEventListener("DOMContentLoaded", function () {
     this.gameIsOver = false;
     init();
     document.getElementById("gameOverScreen").style.display = "none";
+    document.getElementById("gameWonScreen").style.display = "none";
     headline.style.display = "block";
     canvas.style.display = "block";
     bottomWrapper.style.display = "flex";
@@ -314,6 +315,7 @@ document.addEventListener("DOMContentLoaded", function () {
     document.querySelector(".bottomWrapper").style.display = "none";
     document.getElementById("headline").style.display = "none";
     document.getElementById("gameOverScreen").style.display = "none";
+    document.getElementById("gameWonScreen").style.display = "none";
     stopSounds();
     clearIntervals();
   }

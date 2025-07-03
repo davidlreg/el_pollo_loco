@@ -104,16 +104,16 @@ class Endboss extends MovableObject {
    *
    */
   hit() {
-    if (this.isHurt()) return;
+    if (this.endbossDeath || this.isHurt()) return;
     this.energy -= 20;
     this.lastHit = new Date().getTime();
-    console.log(this.energy);
 
     if (this.energy <= 0) {
       this.energy = 0;
       this.world.status_bar_endboss.updateHealthBar(this.energy);
       this.endbossDeath = true;
       this.die();
+      this.world.isGameOver(this.world.handleGameWon);
     }
 
     this.world.status_bar_endboss.updateHealthBar(this.energy);

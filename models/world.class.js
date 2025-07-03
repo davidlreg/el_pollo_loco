@@ -278,6 +278,7 @@ class World {
     if (this.character.isDead()) {
       this.handleGameOver();
     } else if (this.endboss.endbossDeath === true) {
+      this.gameIsWon = true;
       this.handleGameWon();
     }
   }
@@ -301,7 +302,13 @@ class World {
    *
    */
   handleGameWon() {
-    console.log("Congrats You Won!");
+    this.gameWonTimeout = setTimeout(() => {
+      this.stopAllGameLoops();
+      this.hideGameUI();
+      if (!this.gameIsWon) return;
+      this.showGameWonScreen();
+      this.stopBackgroundMusic();
+    }, 4000);
   }
 
   /**
@@ -320,6 +327,10 @@ class World {
    */
   showGameOverScreen() {
     document.getElementById("gameOverScreen").style.display = "block";
+  }
+
+  showGameWonScreen() {
+    document.getElementById("gameWonScreen").style.display = "block";
   }
 
   /**
