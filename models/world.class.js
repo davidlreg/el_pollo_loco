@@ -242,7 +242,7 @@ class World {
       mo.x *= -1;
     }
     mo.draw(this.ctx);
-    mo.drawHitbox(this.ctx);
+    // mo.drawHitbox(this.ctx);
     if (mo.otherDirection) {
       this.ctx.restore();
       mo.x *= -1;

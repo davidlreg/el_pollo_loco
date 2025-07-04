@@ -104,47 +104,47 @@ class MovableObject extends DrawableObject {
     }, 800);
   }
 
-  /**
-   * Draws the object's hitbox for debugging purposes.
-   *
-   * @param {CanvasRenderingContext2D} ctx - The rendering context
-   */
-  drawHitbox(ctx) {
-    const isRelevant =
-      this instanceof Chicken ||
-      this instanceof SmallChicken ||
-      this instanceof ThrowableObject ||
-      this instanceof Endboss;
+  // /**
+  //  * Draws the object's hitbox for debugging purposes.
+  //  *
+  //  * @param {CanvasRenderingContext2D} ctx - The rendering context
+  //  */
+  // drawHitbox(ctx) {
+  //   const isRelevant =
+  //     this instanceof Chicken ||
+  //     this instanceof SmallChicken ||
+  //     this instanceof ThrowableObject ||
+  //     this instanceof Endboss;
 
-    if (!isRelevant) return;
+  //   if (!isRelevant) return;
 
-    const thisLeft = this.x + this.offset.left;
-    const thisTop = this.y + this.offset.top;
-    const thisWidth = this.width - this.offset.left - this.offset.right;
-    const thisHeight = this.height - this.offset.top - this.offset.bottom;
+  //   const thisLeft = this.x + this.offset.left;
+  //   const thisTop = this.y + this.offset.top;
+  //   const thisWidth = this.width - this.offset.left - this.offset.right;
+  //   const thisHeight = this.height - this.offset.top - this.offset.bottom;
 
-    let hit = false;
+  //   let hit = false;
 
-    if (this.world) {
-      const allObjects = [
-        ...this.world.level.enemies,
-        ...this.world.throwable_objects,
-        this.world.character,
-        this.world.endboss,
-      ];
+  //   if (this.world) {
+  //     const allObjects = [
+  //       ...this.world.level.enemies,
+  //       ...this.world.throwable_objects,
+  //       this.world.character,
+  //       this.world.endboss,
+  //     ];
 
-      hit = allObjects.some((obj) => {
-        if (obj === this || typeof obj.isColliding !== "function") return false;
-        return this.isColliding(obj);
-      });
-    }
+  //     hit = allObjects.some((obj) => {
+  //       if (obj === this || typeof obj.isColliding !== "function") return false;
+  //       return this.isColliding(obj);
+  //     });
+  //   }
 
-    ctx.beginPath();
-    ctx.lineWidth = "3";
-    ctx.strokeStyle = hit ? "lime" : "red";
-    ctx.rect(thisLeft, thisTop, thisWidth, thisHeight);
-    ctx.stroke();
-  }
+  //   ctx.beginPath();
+  //   ctx.lineWidth = "3";
+  //   ctx.strokeStyle = hit ? "lime" : "red";
+  //   ctx.rect(thisLeft, thisTop, thisWidth, thisHeight);
+  //   ctx.stroke();
+  // }
 
   /**
    * Checks if this object is colliding with another movable object.

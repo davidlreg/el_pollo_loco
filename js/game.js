@@ -373,9 +373,17 @@ document.addEventListener("DOMContentLoaded", function () {
    * - Toggling fullscreen mode for the game canvas
    *
    */
-  document.getElementById("restart-btn").addEventListener("click", restartGame);
   document
-    .getElementById("backToStart-btn")
+    .getElementById("restart-btn-lost")
+    .addEventListener("click", restartGame);
+  document
+    .getElementById("restart-btn-won")
+    .addEventListener("click", restartGame);
+  document
+    .getElementById("backToStart-btnLost")
+    .addEventListener("click", backToStartScreen);
+  document
+    .getElementById("backToStart-btnWon")
     .addEventListener("click", backToStartScreen);
   startButton.addEventListener("click", startGame);
   howToPlayButton.addEventListener("click", showHtpDialog);
