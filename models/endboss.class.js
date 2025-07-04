@@ -114,8 +114,7 @@ class Endboss extends MovableObject {
     this.energy -= 20;
     this.lastHit = new Date().getTime();
 
-    this.isHurtAnimationActive = true;
-    this.currentAnimation = this.IMAGES_HURT;
+    this.playHurtAnimation();
 
     if (this.energy <= 0) {
       this.energy = 0;
@@ -293,6 +292,35 @@ class Endboss extends MovableObject {
       if (this.canPlayWalking()) {
         this.currentAnimation = this.IMAGES_WALKING;
         this.playAnimation(this.currentAnimation);
+      }
+    }, 200);
+  }
+
+  /**
+   * Plays the hurt animation for the endboss character.
+   * The animation loops twice and prevents overlapping by using a guard flag.
+   * Resets the flag once the animation is complete.
+   *
+   */
+  playHurtAnimation() {
+    if (this.isHurtAnimationActive) return;
+    this.isHurtAnimationActive = true;
+
+    let i = 0;
+
+    let loopCount = 0;
+    const animation = setInterval(() => {
+      this.img = this.imageCache[this.IMAGES_HURT[i]];
+      i++;
+
+      if (i >= this.IMAGES_HURT.length) {
+        i = 0;
+        loopCount++;
+      }
+
+      if (loopCount >= 2) {
+        clearInterval(animation);
+        this.isHurtAnimationActive = false;
       }
     }, 200);
   }
