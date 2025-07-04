@@ -15,6 +15,7 @@ class World {
   endbossActivated = false;
   endbossBarShouldBeVisible = true;
   gameOverTimeout = null;
+  victory_sound = new Audio("assets/audio/victory-sound.mp3");
 
   constructor(canvas, keyboard) {
     this.ctx = canvas.getContext("2d");
@@ -307,6 +308,8 @@ class World {
       this.hideGameUI();
       if (!this.gameIsWon) return;
       this.showGameWonScreen();
+      this.victory_sound.volume = 0.35;
+      this.victory_sound.play();
       this.stopBackgroundMusic();
     }, 4000);
   }
