@@ -11,6 +11,7 @@ class Character extends MovableObject {
   throwCooldown = 1000;
   intervalIds = [];
   sleepMode = false;
+  canMove = true;
   hasPlayedDeathSound = false;
   isFallingAfterDeath = false;
   lastInputTime = Date.now();
@@ -145,6 +146,7 @@ class Character extends MovableObject {
    * @param {number} direction - Movement direction (-1 for left, 1 for right).
    */
   moveCharacter(direction) {
+    if (!this.canMove) return;
     this.x += direction * this.speedX;
     this.otherDirection = direction < 0;
     if (!this.isCharacterAboveGround()) {
@@ -183,6 +185,7 @@ class Character extends MovableObject {
    *
    */
   characterThrowBottle() {
+    if (!this.canMove) return;
     let currentTime = new Date().getTime();
     if (currentTime - this.lastThrowTime >= this.throwCooldown) {
       this.world.status_bar_salsa.salsaBottles--;
@@ -314,6 +317,7 @@ class Character extends MovableObject {
         this.world.keyboard.moveRight ||
         this.world.keyboard.moveLeft
       ) {
+        if (!this.canMove) return;
         this.playAnimation(this.IMAGES_MOVE);
       }
     }, 175);
@@ -342,6 +346,7 @@ class Character extends MovableObject {
    */
   handleMovementInput() {
     const keyboard = this.world.keyboard;
+    if (!this.canMove) return;
     if (keyboard.moveRight && this.x < this.world.level.level_end_x) {
       this.moveCharacter(1);
       this.stopSnoringSound();

@@ -91,11 +91,15 @@ class Endboss extends MovableObject {
       if (this.shouldPlayAlertAnimation()) {
         this.playAnimation(this.IMAGES_ALERT);
         this.endbossAlertCounter++;
+
+        this.world.character.canMove = false;
       }
 
       if (this.endbossAlertCounter >= 8) {
         clearInterval(alertInterval);
         this.endbossAlert = true;
+
+        this.world.character.canMove = true;
       }
     }, 500);
   }
@@ -201,7 +205,7 @@ class Endboss extends MovableObject {
    * @returns {boolean}
    */
   shouldPlayAlertAnimation() {
-    return this.world.character.x > 2000 && this.endbossAlertCounter < 8;
+    return this.world.character.x > 2180 && this.endbossAlertCounter < 8;
   }
 
   /**
