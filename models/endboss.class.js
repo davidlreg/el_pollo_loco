@@ -22,6 +22,7 @@ class Endboss extends MovableObject {
   endbossAlert = false;
   walkingStarted = false;
   isAttacking = false;
+  isHurtAnimationActive = false;
   endbossAlertCounter = 0;
   endbossScream = new Audio("assets/audio/endboss-chicken-scream.mp3");
   endbossDeathScream = new Audio("assets/audio/endboss-death-scream.mp3");
@@ -106,8 +107,15 @@ class Endboss extends MovableObject {
    */
   hit() {
     if (this.endbossDeath || this.isHurt()) return;
+
+    this.endbossScream.volume = 0.02;
+    this.endbossScream.play();
+
     this.energy -= 20;
     this.lastHit = new Date().getTime();
+
+    this.isHurtAnimationActive = true;
+    this.currentAnimation = this.IMAGES_HURT;
 
     if (this.energy <= 0) {
       this.energy = 0;
@@ -253,7 +261,10 @@ class Endboss extends MovableObject {
    */
   moveEndboss(character) {
     if (this.endbossDeath) return;
-    if (character.x <= 2180) return;
+    if (this.endbossAlert !== true) {
+      if (character.x <= 2180) return;
+    }
+
     if (!this.endbossAlert) return;
 
     this.x -= this.speed;
