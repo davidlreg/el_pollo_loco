@@ -5,7 +5,6 @@ let allSounds = [];
 let keyboard = new KeyboardInputs();
 let muteButton = document.getElementById("mute-btn");
 let mobileMuteBtn = document.getElementById("mute-btn-mobile");
-let backgroundMusic = new Audio("assets/audio/mexican-background-music.mp3");
 const OriginalAudio = window.Audio;
 
 /**
@@ -30,7 +29,6 @@ window.Audio = function (...args) {
 function init() {
   canvas = document.getElementById("canvas");
   world = new World(canvas, keyboard);
-  world.backgroundMusic = backgroundMusic;
   initBackgroundMusic();
   addEventsForMobileButtons();
 }
@@ -40,8 +38,9 @@ function init() {
  *
  */
 function initBackgroundMusic() {
+  backgroundMusic = new Audio("assets/audio/mexican-background-music.mp3");
   backgroundMusic.loop = true;
-  backgroundMusic.volume = 0.0005;
+  backgroundMusic.volume = 0.002;
   if (!isMuted) {
     backgroundMusic.play();
   }
