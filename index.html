@@ -1,77 +1,130 @@
 <!DOCTYPE html>
 <html trasnlate="no" lang="en">
   <head>
+    <!-- === META & SEO === -->
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
     <meta name="google" content="notranslate" />
+    <!-- === TITLE & FAVICON === -->
     <title>El Pollo Loco</title>
     <link
       rel="icon"
       type="image/x-icon"
       href="assets/img/7_statusbars/3_icons/icon_salsa_bottle.png"
     />
+    <!-- === STYLESHEETS === -->
     <link rel="stylesheet" href="style.css" />
     <link
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=close"
     />
   </head>
-  <body>
-    <div id="startScreen" class="startScreen">
-      <h1 id="gameName">El Pollo Loco</h1>
-      <button id="start-btn" onclick="initLevelOne()">Start</button>
-      <button id="htp-btn">How to play?</button>
 
-      <div id="htpDialog" class="htpDialog">
-        <div class="topLine">
-          <h3>Pepe's Salsa Adventure :D</h3>
-          <a id="closeHtpDialog"
-            ><span class="material-symbols-outlined"> close </span></a
-          >
+  <body>
+    <!-- === GAME TITLE === -->
+    <h1 id="headline">El Pollo Loco</h1>
+
+    <!-- === MAIN GAME WRAPPER === -->
+    <div class="gameWrapper">
+      <!-- === START SCREEN === -->
+      <div id="startScreen" class="startScreen">
+        <h1 id="gameName">El Pollo Loco</h1>
+        <button id="start-btn">Start</button>
+        <button id="htp-btn">How to play?</button>
+
+        <!-- === HOW TO PLAY DIALOG === -->
+        <div id="htpDialog" class="htpDialog">
+          <div class="topLine">
+            <h3>Pepe's Salsa Adventure :D</h3>
+            <a id="closeHtpDialog"
+              ><span class="material-symbols-outlined"> close </span></a
+            >
+          </div>
+          <br />
+          <!-- === GAME STORY === -->
+          <p>
+            In this game, you control Pepe, a brave Mexican who must save his
+            homeland from an unusual threat: an army of evil chickens
+            terrorizing the desert.
+          </p>
+          <br />
+          <h4>The Story</h4>
+          <br />
+          <p>
+            A mysterious power has transformed the peaceful chickens of the
+            region into aggressive creatures. Under the leadership of the feared
+            chicken end boss "El Pollo Grande," they have begun to raid Mexican
+            villages. As the last hope, Pepe must travel through the vast,
+            dangerous desert and end the chicken plague once and for all. His
+            only weapon? His grandmother's traditional spicy salsa – the only
+            thing that can scare the chickens away!
+          </p>
+          <br />
+          <!-- === GAME CONTROLS DESCRIPTION === -->
+          <h4>Controls</h4>
+          <br />
+          <li>Press "A" to move left</li>
+          <li>Press "D" to move right</li>
+          <li>Press "Space" to jump and avoid obstacles</li>
+          <li>Press "B" to throw the collected Salsa bottles</li>
+          <br />
+          <p>
+            Fight your way through the desert landscape, defeat the chicken
+            enemies, and finally face the dreaded end boss to save Mexico!
+          </p>
         </div>
-        <br />
-        <p>
-          In this game, you control Pepe, a brave Mexican who must save his
-          homeland from an unusual threat: an army of evil chickens terrorizing
-          the desert.
-        </p>
-        <br />
-        <h4>The Story</h4>
-        <br />
-        <p>
-          A mysterious power has transformed the peaceful chickens of the region
-          into aggressive creatures. Under the leadership of the feared chicken
-          end boss "El Pollo Grande," they have begun to raid Mexican villages.
-          As the last hope, Pepe must travel through the vast, dangerous desert
-          and end the chicken plague once and for all. His only weapon? His
-          grandmother's traditional spicy salsa – the only thing that can scare
-          the chickens away!
-        </p>
-        <br />
-        <h4>Controls</h4>
-        <br />
-        <li>Press "A" to move left</li>
-        <li>Press "D" to move right</li>
-        <li>Press "Space" to jump and avoid obstacles</li>
-        <li>Press "B" to throw the collected Salsa bottles</li>
-        <br />
-        <p>
-          Fight your way through the desert landscape, defeat the chicken
-          enemies, and finally face the dreaded end boss to save Mexico!
-        </p>
+
+        <!-- === LEGAL LINKS === -->
+        <div class="legalInfo">
+          <a href="impressum.html"><button>Imprint</button></a>
+          <a href="privacy.html"><button>Privacy</button></a>
+        </div>
       </div>
 
-      <div class="legalInfo">
-        <a href="impressum.html"><button>Imprint</button></a>
-        <a href="privacy.html"><button>Privacy</button></a>
+      <!-- === GAME CANVAS === -->
+      <canvas id="canvas" width="720px" height="480px"></canvas>
+
+      <!-- === MOBILE CONTROLS (IN-GAME) === -->
+      <div class="mobileBtnWrapper" id="mobileBtnWrapper">
+        <div class="mobileControlls">
+          <button class="controllsBottle" id="mobile-left-btn">
+            <img
+              class="controllsPicture"
+              src="assets/img/custom_images/arrow_back.png"
+            />
+          </button>
+          <button class="controllsBottle" id="mobile-right-btn">
+            <img
+              class="controllsPicture"
+              src="assets/img/custom_images/arrow_forward.png"
+            />
+          </button>
+        </div>
+
+        <button class="mobileMuteBtn" id="mute-btn-mobile">🔊</button>
+
+        <div class="mobileControlls">
+          <button class="controllsBottle" id="mobile-jump-btn">
+            <img
+              class="controllsPicture"
+              src="assets/img/custom_images/space_bar.png"
+            />
+          </button>
+          <button class="controllsBottle" id="mobile-throw-btn">
+            <img
+              class="controllsPicture"
+              src="assets/img/6_salsa_bottle/salsa_bottle.png"
+            />
+          </button>
+        </div>
       </div>
     </div>
 
-    <h1 id="headline">El Pollo Loco</h1>
-
-    <canvas id="canvas" width="720px" height="480px"></canvas>
-
-    <div class="bottomWrapper">
+    <!-- === DESKTOP CONTROLS & BUTTONS === -->
+    <div class="bottomWrapper" id="bottomWrapper">
       <div class="controlls">
         <p class="controllsBottle">
           <img
@@ -111,40 +164,7 @@
       </div>
     </div>
 
-    <div class="mobileBtnWrapper">
-      <div class="mobileControlls">
-        <button class="controllsBottle" id="mobile-left-btn">
-          <img
-            class="controllsPicture"
-            src="assets/img/custom_images/arrow_back.png"
-          />
-        </button>
-        <button class="controllsBottle" id="mobile-right-btn">
-          <img
-            class="controllsPicture"
-            src="assets/img/custom_images/arrow_forward.png"
-          />
-        </button>
-      </div>
-
-      <button class="mobileMuteBtn" id="mute-btn-mobile">🔊</button>
-
-      <div class="mobileControlls">
-        <button class="controllsBottle" id="mobile-jump-btn">
-          <img
-            class="controllsPicture"
-            src="assets/img/custom_images/space_bar.png"
-          />
-        </button>
-        <button class="controllsBottle" id="mobile-throw-btn">
-          <img
-            class="controllsPicture"
-            src="assets/img/6_salsa_bottle/salsa_bottle.png"
-          />
-        </button>
-      </div>
-    </div>
-
+    <!-- === GAME OVER SCREEN === -->
     <div id="gameOverScreen" class="gameOverScreen">
       <div class="gameOverWrapper">
         <img
@@ -161,6 +181,7 @@
       </div>
     </div>
 
+    <!-- === GAME WON SCREEN === -->
     <div id="gameWonScreen" class="gameWonScreen">
       <div class="gameOverWrapper">
         <img
@@ -177,6 +198,20 @@
       </div>
     </div>
 
+    <!-- === ROTATE DEVICE SCREEN (Mobile Portrait Blocker) === -->
+    <div id="turnDeviceScreen" class="turnDeviceScreen">
+      <img
+        src="assets/img/custom_images/rotate-phone-image.webp"
+        alt="Rotate Device"
+      />
+      <h2>Please rotate your device</h2>
+      <p>
+        For the best gaming experience, play El Pollo Loco in landscape mode
+      </p>
+      <p>🔄 Rotate your device 90°</p>
+    </div>
+
+    <!-- === GAME SCRIPTS (Models, Levels, Logic) === -->
     <script src="./models/drawable-object.class.js"></script>
     <script src="./models/moveable-object.class.js"></script>
     <script src="./models/throwable-object.class.js"></script>
@@ -198,6 +233,7 @@
     <script src="./models/level.class.js"></script>
     <script src="./levels/level1.js"></script>
     <script src="./models/world.class.js"></script>
+    <script src="./js/mobile-logic.js"></script>
     <script src="./js/game.js"></script>
   </body>
 </html>
