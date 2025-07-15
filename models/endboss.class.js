@@ -91,14 +91,11 @@ class Endboss extends MovableObject {
       if (this.shouldPlayAlertAnimation()) {
         this.playAnimation(this.IMAGES_ALERT);
         this.endbossAlertCounter++;
-
         this.world.character.canMove = false;
       }
-
       if (this.endbossAlertCounter >= 8) {
         clearInterval(alertInterval);
         this.endbossAlert = true;
-
         this.world.character.canMove = true;
       }
     }, 500);
@@ -111,15 +108,11 @@ class Endboss extends MovableObject {
    */
   hit() {
     if (this.endbossDeath || this.isHurt()) return;
-
     this.endbossScream.volume = 0.02;
     this.endbossScream.play();
-
     this.energy -= 20;
     this.lastHit = new Date().getTime();
-
     this.playHurtAnimation();
-
     if (this.energy <= 0) {
       this.energy = 0;
       this.world.status_bar_endboss.updateHealthBar(this.energy);
@@ -127,7 +120,6 @@ class Endboss extends MovableObject {
       this.die();
       this.world.isGameOver(this.world.handleGameWon);
     }
-
     this.world.status_bar_endboss.updateHealthBar(this.energy);
   }
 
@@ -147,36 +139,45 @@ class Endboss extends MovableObject {
    */
   die() {
     this.endbossDeath = true;
-
     this.deathAnimationInterval = setInterval(() => {
       this.playAnimation(this.IMAGES_DEAD);
       this.endbossDeathScream.volume = 0.1;
       this.endbossDeathScream.loop = false;
       this.endbossDeathScream.play();
     }, 200);
-
     this.speedY = 18;
     this.startY = this.y;
     this.flyHeight = 150;
     this.gravity = 0.45;
     this.isFlyingUp = true;
-
     this.deathInterval = setInterval(() => {
       this.applyGravityToFlight();
     }, 40);
   }
 
   /**
-   * Applies gravity-based movement for the death flight animation.
-   * Moves the object upward with decreasing speed, then downward with accelerating speed.
-   * Clears intervals and hides the object once it falls below the ground threshold.
+   * Stops all intervals and hides the end boss
+   *
+   */
+  stopAllIntervalsAndHide() {
+    clearInterval(this.deathInterval);
+    clearInterval(this.deathAnimationInterval);
+    clearInterval(this.world.endbossMoveInterval);
+    clearInterval(this.world.endbossAttackInterval);
+    clearInterval(this.walkingInterval);
+    this.walkingInterval = null;
+    this.world.endbossBarShouldBeVisible = false;
+    this.visible = false;
+  }
+
+  /**
+   * Applies gravity to the end boss flight mechanics
    *
    */
   applyGravityToFlight() {
     if (this.isFlyingUp) {
       this.y -= this.speedY;
       this.speedY -= this.gravity;
-
       if (this.speedY <= 0 || this.y <= this.startY - this.flyHeight) {
         this.isFlyingUp = false;
         this.speedY = 0;
@@ -184,17 +185,8 @@ class Endboss extends MovableObject {
     } else {
       this.speedY += this.gravity;
       this.y += this.speedY;
-
       if (this.y > this.groundLevel + 500) {
-        clearInterval(this.deathInterval);
-        clearInterval(this.deathAnimationInterval);
-        clearInterval(this.world.endbossMoveInterval);
-        clearInterval(this.world.endbossAttackInterval);
-        clearInterval(this.walkingInterval);
-        this.walkingInterval = null;
-
-        this.world.endbossBarShouldBeVisible = false;
-        this.visible = false;
+        this.stopAllIntervalsAndHide();
       }
     }
   }
@@ -239,7 +231,6 @@ class Endboss extends MovableObject {
     this.jumpInterval = setInterval(() => {
       this.y -= this.jumpHeight;
       this.jumpHeight -= this.gravity;
-
       if (this.y >= this.groundLevel) {
         this.finishJump();
       }
@@ -267,9 +258,7 @@ class Endboss extends MovableObject {
     if (this.endbossAlert !== true) {
       if (character.x <= 2180) return;
     }
-
     if (!this.endbossAlert) return;
-
     this.x -= this.speed;
     if (this.endbossAlert == true) this.tryStartWalkingAnimation();
   }
@@ -291,7 +280,6 @@ class Endboss extends MovableObject {
    */
   startWalkingAnimation() {
     if (this.walkingInterval) return;
-
     this.walkingInterval = setInterval(() => {
       if (this.canPlayWalking()) {
         this.currentAnimation = this.IMAGES_WALKING;
@@ -309,19 +297,15 @@ class Endboss extends MovableObject {
   playHurtAnimation() {
     if (this.isHurtAnimationActive) return;
     this.isHurtAnimationActive = true;
-
     let i = 0;
-
     let loopCount = 0;
     const animation = setInterval(() => {
       this.img = this.imageCache[this.IMAGES_HURT[i]];
       i++;
-
       if (i >= this.IMAGES_HURT.length) {
         i = 0;
         loopCount++;
       }
-
       if (loopCount >= 2) {
         clearInterval(animation);
         this.isHurtAnimationActive = false;
@@ -345,7 +329,6 @@ class Endboss extends MovableObject {
   randomEndbossAttack() {
     if (this.endbossDeath) return;
     if (!this.endbossAlert) return;
-
     if (Math.random() < 0.4) {
       this.performAttack();
     }
@@ -357,7 +340,6 @@ class Endboss extends MovableObject {
    */
   performAttack() {
     if (this.endbossDeath) return;
-
     this.isAttacking = true;
     this.endbossScream.volume = 0.02;
     this.endbossScream.play();
