@@ -248,3 +248,16 @@
     max-height: 150px;
   }
 }
+
+@media (max-height: 380px) {
+  .startScreen h1 {
+    font-size: 36px;
+    margin-bottom: 14px;
+  }
+
+  .startScreen button {
+    width: 280px;
+    font-size: 28px;
+    padding: 8px 15px;
+  }
+}

@@ -33,7 +33,7 @@ function hasMobileUserAgent() {
  * @returns {boolean} True if device is mobile with touch
  */
 function isMobileDevice() {
-  const smallScreen = window.innerWidth <= 1024;
+  const smallScreen = window.innerWidth <= 1368;
   return hasTouch() && (hasMobileUserAgent() || smallScreen);
 }
 
