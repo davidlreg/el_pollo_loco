@@ -38,7 +38,7 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-image: url("assets/img/custom_images/background_image_general.jpg");
+  background-image: url("../assets/img/custom_images/background_image_general.jpg");
   background-size: cover;
   background-position: center;
   font-family: "zabars", Arial, Helvetica, sans-serif;
@@ -118,7 +118,7 @@ body {
 
   .legalWrapper {
     font-size: 12px;
-    padding: 8px;
+    padding: 18px;
   }
 
   .goBackArrow {

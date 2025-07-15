@@ -34,7 +34,7 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-image: url("assets/img/custom_images/background_image_general.jpg");
+  background-image: url("../assets/img/custom_images/background_image_general.jpg");
   background-size: cover;
   background-position: center;
   font-family: "zabars", Arial, Helvetica, sans-serif;
@@ -55,10 +55,10 @@ a {
 /* fonts */
 @font-face {
   font-family: "zabars";
-  src: url("assets/fonts/zabars.ttf");
-  src: url("assets/fonts/zabars.ttf") format("embedded-opentype"),
-    url("assets/fonts/zabars.ttf") format("woff"),
-    url("assets/fonts/zabars.ttf") format("truetype");
+  src: url("../assets/fonts/zabars.ttf");
+  src: url("../assets/fonts/zabars.ttf") format("embedded-opentype"),
+    url("../assets/fonts/zabars.ttf") format("woff"),
+    url("../assets/fonts/zabars.ttf") format("truetype");
 }
 
 /* Canvas and game styling */
