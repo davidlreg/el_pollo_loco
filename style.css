@@ -324,6 +324,7 @@ canvas {
 .legalInfo {
   display: flex;
   flex-direction: row;
+  padding-top: 20px;
 }
 
 .legalInfo > a > button {
@@ -341,22 +342,69 @@ canvas {
   opacity: 1;
   position: absolute;
   z-index: 1;
-  overflow-y: scroll;
   color: #ffffff;
   padding: 16px;
   display: none;
   border-radius: 10px;
+  overflow: hidden;
+  flex-direction: column;
+}
+
+.topLineHtp {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.9);
+  padding: 16px 0;
+  margin-bottom: 16px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.textWrapperHtp {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 8px;
+  line-height: 1.1;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.textWrapperHtp::-webkit-scrollbar {
+  display: none;
+}
+
+.htpDialog[style*="block"] {
+  display: flex !important;
+}
+
+.textWrapperHtp h4 {
+  color: #c0392b;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+.textWrapperHtp p {
+  margin-bottom: 16px;
+}
+
+.textWrapperHtp li {
+  margin-left: 20px;
+  margin-bottom: 8px;
 }
 
 .htpDialog > h4 {
   color: #c0392b;
 }
 
-.topLine > h3 {
+.topLineHtp > h3 {
   color: #c0392b;
 }
 
-.topLine > a {
+.topLine > a,
+.topLineHtp > a {
   cursor: pointer;
 }
 
@@ -403,32 +451,60 @@ canvas {
 }
 
 /* Impressum & Privacy Styling*/
+.impressumBody {
+  width: 100%;
+  height: 100%;
+}
+
 .legalWrapper {
   width: 100%;
+  height: 100vh;
   color: white;
-  background-color: rgba(0, 0, 0, 0.5);
-  overflow-y: scroll;
+  background-color: rgba(0, 0, 0, 0.85);
+  overflow-y: auto;
   font-size: 18px;
   font-family: Arial, Helvetica, sans-serif;
   padding: 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+  box-sizing: border-box;
+}
+
+.textWrapper {
+  width: 80%;
+  height: 100%;
+  overflow: scroll;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
 }
 
 .topLine {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  width: 80%;
+}
+
+.topLineHtp {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   width: 100%;
+  gap: 18px;
 }
 
 /* Hide scrollbar for Chrome, Safari and Opera */
 .htpDialog::-webkit-scrollbar,
-.legalWrapper::-webkit-scrollbar {
+.legalWrapper::-webkit-scrollbar,
+.textWrapper::-webkit-scrollbar {
   display: none;
 }
 
 /* Hide scrollbar for IE, Edge and Firefox */
 .htpDialog,
-.legalWrapper {
+.legalWrapper,
+.textWrapper {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
@@ -438,7 +514,6 @@ canvas {
   body {
     font-size: 24px;
     gap: 8px;
-    padding: 5px;
   }
 
   .gameWrapper {
