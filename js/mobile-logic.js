@@ -97,10 +97,6 @@ function checkOrientation() {
   const isPortrait = window.matchMedia("(orientation: portrait)").matches;
   const isMobile = isMobileDevice();
 
-  console.log(
-    `isPortrait: ${isPortrait}, isMobile: ${isMobile}, hasTouch: ${hasTouch()}`
-  );
-
   mobileResolution = isMobile;
   desktopResolution = !isMobile;
 
@@ -144,10 +140,6 @@ function checkOrientationAndStartGame() {
   orientationCheckActive = true;
   const isMobile = isMobileDevice();
   const isPortrait = window.matchMedia("(orientation: portrait)").matches;
-
-  console.log(
-    `Starting game check - isMobile: ${isMobile}, isPortrait: ${isPortrait}`
-  );
 
   if (!isMobile) {
     startDesktopGame();
