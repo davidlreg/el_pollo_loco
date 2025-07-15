@@ -1,12 +1,20 @@
 .gameOverScreen,
 .gameWonScreen {
   display: none;
-  width: 100%;
-  height: 100%;
   z-index: 10;
   position: fixed;
   justify-content: center;
   align-items: center;
+}
+
+.gameWonScreen {
+  width: 50%;
+  height: 100%;
+}
+
+.gameOverScreen {
+  width: 80%;
+  height: 100%;
 }
 
 .gameOverWrapper {
@@ -20,7 +28,7 @@
 
 .gameOverImg,
 .gameWonImg {
-  width: 80%;
+  width: 100%;
   background-size: cover;
 }
 

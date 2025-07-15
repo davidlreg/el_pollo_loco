@@ -317,6 +317,7 @@ class World {
     document.getElementById("canvas").style.display = "none";
     document.querySelector(".bottomWrapper").style.display = "none";
     document.getElementById("headline").style.display = "none";
+    document.getElementById("mobileBtnWrapper").style.display = "none";
   }
 
   /**
