@@ -38,7 +38,6 @@ class MovableObject extends DrawableObject {
    */
   moveLeft() {
     if (this.endbossDeath) return;
-
     setInterval(() => {
       this.x -= this.speed;
     }, 1000 / 60);
@@ -57,28 +56,59 @@ class MovableObject extends DrawableObject {
   }
 
   /**
-   * Applies gravity to the object, making it fall if not on the ground.
+   * Checks if object should apply gravity effects
+   *
+   * @returns {boolean} True if gravity should be applied
+   */
+  shouldApplyGravity() {
+    return (
+      this.isCharacterAboveGround() ||
+      this.speedY > 0 ||
+      this.isFallingAfterDeath
+    );
+  }
+
+  /**
+   * Updates object position and speed due to gravity
+   *
+   */
+  updatePositionAndSpeed() {
+    this.y -= this.speedY;
+    this.speedY -= this.acceleration;
+  }
+
+  /**
+   * Handles ground collision and stops falling
+   *
+   */
+  handleGroundCollision() {
+    if (this.y >= 165 && !this.isFallingAfterDeath) {
+      this.y = 165;
+      this.speedY = 0;
+    }
+  }
+
+  /**
+   * Handles character death fall completion
+   *
+   */
+  handleDeathFallCompletion() {
+    if (this instanceof Character && this.y > 600) {
+      this.speedY = 0;
+      this.isFallingAfterDeath = false;
+    }
+  }
+
+  /**
+   * Applies gravity to the object, making it fall if not on the ground
    *
    */
   applyGravity() {
     setInterval(() => {
-      if (
-        this.isCharacterAboveGround() ||
-        this.speedY > 0 ||
-        this.isFallingAfterDeath
-      ) {
-        this.y -= this.speedY;
-        this.speedY -= this.acceleration;
-
-        if (this.y >= 165 && !this.isFallingAfterDeath) {
-          this.y = 165;
-          this.speedY = 0;
-        }
-
-        if (this instanceof Character && this.y > 600) {
-          this.speedY = 0;
-          this.isFallingAfterDeath = false;
-        }
+      if (this.shouldApplyGravity()) {
+        this.updatePositionAndSpeed();
+        this.handleGroundCollision();
+        this.handleDeathFallCompletion();
       }
     }, 1000 / 60);
   }
@@ -104,105 +134,118 @@ class MovableObject extends DrawableObject {
     }, 800);
   }
 
-  // /**
-  //  * Draws the object's hitbox for debugging purposes.
-  //  *
-  //  * @param {CanvasRenderingContext2D} ctx - The rendering context
-  //  */
-  // drawHitbox(ctx) {
-  //   const isRelevant =
-  //     this instanceof Chicken ||
-  //     this instanceof SmallChicken ||
-  //     this instanceof ThrowableObject ||
-  //     this instanceof Endboss;
-
-  //   if (!isRelevant) return;
-
-  //   const thisLeft = this.x + this.offset.left;
-  //   const thisTop = this.y + this.offset.top;
-  //   const thisWidth = this.width - this.offset.left - this.offset.right;
-  //   const thisHeight = this.height - this.offset.top - this.offset.bottom;
-
-  //   let hit = false;
-
-  //   if (this.world) {
-  //     const allObjects = [
-  //       ...this.world.level.enemies,
-  //       ...this.world.throwable_objects,
-  //       this.world.character,
-  //       this.world.endboss,
-  //     ];
-
-  //     hit = allObjects.some((obj) => {
-  //       if (obj === this || typeof obj.isColliding !== "function") return false;
-  //       return this.isColliding(obj);
-  //     });
-  //   }
-
-  //   ctx.beginPath();
-  //   ctx.lineWidth = "3";
-  //   ctx.strokeStyle = hit ? "lime" : "red";
-  //   ctx.rect(thisLeft, thisTop, thisWidth, thisHeight);
-  //   ctx.stroke();
-  // }
+  /**
+   * Calculates collision bounds for an object
+   *
+   * @param {MovableObject} obj - Object to calculate bounds for
+   * @returns {Object} Object with left, right, top, bottom bounds
+   */
+  getCollisionBounds(obj) {
+    return {
+      left: obj.x + obj.offset.left,
+      right: obj.x + obj.width - obj.offset.right,
+      top: obj.y + obj.offset.top,
+      bottom: obj.y + obj.height - obj.offset.bottom,
+    };
+  }
 
   /**
-   * Checks if this object is colliding with another movable object.
+   * Checks if collision should be ignored between objects
+   *
+   * @param {MovableObject} mo - Other movable object
+   * @returns {boolean} True if collision should be ignored
+   */
+  shouldIgnoreCollision(mo) {
+    return (
+      (this instanceof ThrowableObject && mo instanceof Character) ||
+      (this instanceof Character && mo instanceof ThrowableObject)
+    );
+  }
+
+  /**
+   * Checks if two bounding boxes overlap
+   *
+   * @param {Object} bounds1 - First object bounds
+   * @param {Object} bounds2 - Second object bounds
+   * @returns {boolean} True if bounds overlap
+   */
+  boundsOverlap(bounds1, bounds2) {
+    return (
+      bounds1.right > bounds2.left &&
+      bounds1.left < bounds2.right &&
+      bounds1.bottom > bounds2.top &&
+      bounds1.top < bounds2.bottom
+    );
+  }
+
+  /**
+   * Checks if this object is colliding with another movable object
    *
    * @param {MovableObject} mo - Another movable object
    * @returns {boolean} True if colliding, otherwise false
    */
   isColliding(mo) {
-    const thisLeft = this.x + this.offset.left;
-    const thisRight = this.x + this.width - this.offset.right;
-    const thisTop = this.y + this.offset.top;
-    const thisBottom = this.y + this.height - this.offset.bottom;
-    const moLeft = mo.x + mo.offset.left;
-    const moRight = mo.x + mo.width - mo.offset.right;
-    const moTop = mo.y + mo.offset.top;
-    const moBottom = mo.y + mo.height - mo.offset.bottom;
-
-    if (
-      (this instanceof ThrowableObject && mo instanceof Character) ||
-      (this instanceof Character && mo instanceof ThrowableObject)
-    ) {
+    if (this.shouldIgnoreCollision(mo)) {
       return false;
     }
-
-    return (
-      thisRight > moLeft &&
-      thisLeft < moRight &&
-      thisBottom > moTop &&
-      thisTop < moBottom
-    );
+    const thisBounds = this.getCollisionBounds(this);
+    const moBounds = this.getCollisionBounds(mo);
+    return this.boundsOverlap(thisBounds, moBounds);
   }
 
   /**
-   * Reduces the object's energy by given damage amount when hit.
+   * Reduces energy by damage amount and ensures minimum value
    *
-   * @param {number} damage - Amount of energy to reduce
+   * @param {number} damage - Amount of damage to apply
    */
-  hit(damage = 20) {
-    if (this.isHurt()) {
-      return;
-    }
+  applyDamage(damage) {
     this.energy -= damage;
     if (this.energy < 0) this.energy = 0;
+  }
 
+  /**
+   * Plays hurt sound effect
+   *
+   */
+  playHurtSound() {
     let hurtSound = new Audio("assets/audio/character-pain.mp3");
     hurtSound.volume = 0.02;
     hurtSound.play();
+  }
 
-    this.lastHit = new Date().getTime();
-
+  /**
+   * Updates health bar if it exists
+   *
+   */
+  updateHealthDisplay() {
     if (this.statusBarHealth) {
       this.statusBarHealth.updateHealthBar(this.energy);
     }
+  }
 
+  /**
+   * Wakes up character from sleep mode if applicable
+   *
+   */
+  wakeUpCharacter() {
     if (this instanceof Character && this.sleepMode) {
       this.sleepMode = false;
       this.lastInputTime = new Date().getTime();
     }
+  }
+
+  /**
+   * Reduces the object's energy by given damage amount when hit
+   *
+   * @param {number} damage - Amount of energy to reduce
+   */
+  hit(damage = 20) {
+    if (this.isHurt()) return;
+    this.applyDamage(damage);
+    this.playHurtSound();
+    this.lastHit = new Date().getTime();
+    this.updateHealthDisplay();
+    this.wakeUpCharacter();
   }
 
   /**
