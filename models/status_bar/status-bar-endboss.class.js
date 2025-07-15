@@ -19,6 +19,11 @@ class StatusBarEndboss extends StatusBar {
     this.drawValue(ctx, this.endbossHealth);
   }
 
+  /**
+   * Updates the end boss health bar based on energy level
+   *
+   * @param {number} energy - Current energy value (0-100)
+   */
   updateHealthBar(energy) {
     if (energy >= 80) {
       this.endbossHealth = 4;
