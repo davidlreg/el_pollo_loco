@@ -189,20 +189,6 @@ function calculateLandscapeDimensions() {
 }
 
 /**
- * Calculates canvas dimensions for portrait mode
- *
- * @returns {Object} Object with width and height properties
- */
-function calculatePortraitDimensions() {
-  const newWidth = window.innerWidth;
-  const newHeight = Math.max(280, Math.min(480, (newWidth * 480) / 720));
-  return {
-    width: newWidth,
-    height: newHeight,
-  };
-}
-
-/**
  * Adjusts canvas size for mobile devices while maintaining aspect ratio
  *
  */
@@ -211,11 +197,11 @@ function adjustCanvasForMobile() {
   const isMobile = isMobileDevice();
   if (isMobile) {
     const isLandscape = window.matchMedia("(orientation: landscape)").matches;
-    const dimensions = isLandscape
-      ? calculateLandscapeDimensions()
-      : calculatePortraitDimensions();
-    canvas.width = dimensions.width;
-    canvas.height = dimensions.height;
+    if (isLandscape) {
+      const dimensions = calculateLandscapeDimensions();
+      canvas.width = dimensions.width;
+      canvas.height = dimensions.height;
+    }
   } else {
     canvas.width = 720;
     canvas.height = 480;
