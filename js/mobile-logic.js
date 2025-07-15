@@ -5,6 +5,7 @@ let desktopResolution = false;
 
 /**
  * Detects if the current device supports touch input
+ *
  * @returns {boolean} True if device has touch capabilities
  */
 function hasTouch() {
@@ -17,6 +18,7 @@ function hasTouch() {
 
 /**
  * Checks if the device has a mobile user agent
+ *
  * @returns {boolean} True if mobile user agent detected
  */
 function hasMobileUserAgent() {
@@ -27,6 +29,7 @@ function hasMobileUserAgent() {
 
 /**
  * Detects if the current device is a mobile touch device
+ *
  * @returns {boolean} True if device is mobile with touch
  */
 function isMobileDevice() {
@@ -36,13 +39,13 @@ function isMobileDevice() {
 
 /**
  * Updates UI visibility based on device type
+ *
  * @param {boolean} isMobile - Whether device is mobile
  */
 function updateUIVisibility(isMobile) {
   const mobileBtnWrapper = document.getElementById("mobileBtnWrapper");
   const headline = document.getElementById("headline");
   const bottomWrapper = document.getElementById("bottomWrapper");
-
   if (isMobile) {
     if (mobileBtnWrapper) mobileBtnWrapper.style.display = "flex";
     if (headline) headline.style.display = "none";
@@ -57,6 +60,7 @@ function updateUIVisibility(isMobile) {
 
 /**
  * Sets full screen overlay styles for turn device screen
+ *
  * @param {HTMLElement} element - The turn device screen element
  */
 function setFullScreenOverlay(element) {
@@ -71,13 +75,13 @@ function setFullScreenOverlay(element) {
 
 /**
  * Shows or hides the turn device notification
+ *
  * @param {boolean} isMobile - Whether device is mobile
  * @param {boolean} isPortrait - Whether device is in portrait mode
  * @param {boolean} screenTooSmall - Whether screen is too small
  */
 function handleTurnDeviceNotification(isMobile, isPortrait, screenTooSmall) {
   const turnDeviceScreen = document.getElementById("turnDeviceScreen");
-
   if (!gameHasStarted && isMobile && isPortrait && screenTooSmall) {
     if (turnDeviceScreen) setFullScreenOverlay(turnDeviceScreen);
   } else {
@@ -88,20 +92,17 @@ function handleTurnDeviceNotification(isMobile, isPortrait, screenTooSmall) {
 /**
  * Checks device orientation and manages UI accordingly
  * Only works when orientation checks are active
+ *
  */
 function checkOrientation() {
   if (!orientationCheckActive) return;
-
   const maxWidth = 830;
   const maxHeight = 830;
   const isPortrait = window.matchMedia("(orientation: portrait)").matches;
   const isMobile = isMobileDevice();
-
   mobileResolution = isMobile;
   desktopResolution = !isMobile;
-
   updateUIVisibility(isMobile);
-
   const screenTooSmall =
     window.innerWidth <= maxWidth || window.innerHeight <= maxHeight;
   handleTurnDeviceNotification(isMobile, isPortrait, screenTooSmall);
@@ -109,11 +110,11 @@ function checkOrientation() {
 
 /**
  * Starts the game for desktop devices
+ *
  */
 function startDesktopGame() {
   const turnDeviceScreen = document.getElementById("turnDeviceScreen");
   if (turnDeviceScreen) turnDeviceScreen.style.display = "none";
-
   if (typeof window.actuallyStartGame === "function") {
     window.actuallyStartGame();
   }
@@ -122,11 +123,11 @@ function startDesktopGame() {
 
 /**
  * Starts the game for mobile devices in landscape mode
+ *
  */
 function startMobileGame() {
   const turnDeviceScreen = document.getElementById("turnDeviceScreen");
   if (turnDeviceScreen) turnDeviceScreen.style.display = "none";
-
   if (typeof window.actuallyStartGame === "function") {
     window.actuallyStartGame();
   }
@@ -135,17 +136,16 @@ function startMobileGame() {
 
 /**
  * Initiates orientation check and starts game based on device type
+ *
  */
 function checkOrientationAndStartGame() {
   orientationCheckActive = true;
   const isMobile = isMobileDevice();
   const isPortrait = window.matchMedia("(orientation: portrait)").matches;
-
   if (!isMobile) {
     startDesktopGame();
     return;
   }
-
   if (isPortrait) {
     const turnDeviceScreen = document.getElementById("turnDeviceScreen");
     if (turnDeviceScreen) turnDeviceScreen.style.display = "flex";
@@ -157,32 +157,31 @@ function checkOrientationAndStartGame() {
 
 /**
  * Waits for device rotation to landscape mode before starting game
+ *
  */
 function waitForLandscapeBeforeStarting() {
   const listener = () => {
     const isPortrait = window.matchMedia("(orientation: portrait)").matches;
     const isMobile = isMobileDevice();
-
     if (isMobile && !isPortrait) {
       window.removeEventListener("resize", listener);
       window.removeEventListener("orientationchange", listener);
       startMobileGame();
     }
   };
-
   window.addEventListener("resize", listener);
   window.addEventListener("orientationchange", listener);
 }
 
 /**
  * Calculates canvas dimensions for landscape mode
+ *
  * @returns {Object} Object with width and height properties
  */
 function calculateLandscapeDimensions() {
   const availableHeight = window.innerHeight - 120;
   const newHeight = Math.max(320, Math.min(480, availableHeight));
   const newWidth = (newHeight * 720) / 480;
-
   return {
     width: Math.min(newWidth, window.innerWidth),
     height: (Math.min(newWidth, window.innerWidth) * 480) / 720,
@@ -191,12 +190,12 @@ function calculateLandscapeDimensions() {
 
 /**
  * Calculates canvas dimensions for portrait mode
+ *
  * @returns {Object} Object with width and height properties
  */
 function calculatePortraitDimensions() {
   const newWidth = window.innerWidth;
   const newHeight = Math.max(280, Math.min(480, (newWidth * 480) / 720));
-
   return {
     width: newWidth,
     height: newHeight,
@@ -205,17 +204,16 @@ function calculatePortraitDimensions() {
 
 /**
  * Adjusts canvas size for mobile devices while maintaining aspect ratio
+ *
  */
 function adjustCanvasForMobile() {
   const canvas = document.getElementById("canvas");
   const isMobile = isMobileDevice();
-
   if (isMobile) {
     const isLandscape = window.matchMedia("(orientation: landscape)").matches;
     const dimensions = isLandscape
       ? calculateLandscapeDimensions()
       : calculatePortraitDimensions();
-
     canvas.width = dimensions.width;
     canvas.height = dimensions.height;
   } else {
@@ -226,6 +224,7 @@ function adjustCanvasForMobile() {
 
 /**
  * Creates touch event handlers for a button
+ *
  * @param {string} action - The keyboard action to trigger
  * @returns {Object} Object containing event handler functions
  */
@@ -246,22 +245,19 @@ function createTouchHandlers(action) {
 
 /**
  * Adds touch event listeners to a single mobile control button
+ *
  * @param {Object} buttonConfig - Configuration object with id and action
  */
 function addButtonEventListeners(buttonConfig) {
   const element = document.getElementById(buttonConfig.id);
   if (!element) return;
-
   const handlers = createTouchHandlers(buttonConfig.action);
-
   element.removeEventListener("touchstart", element._touchStartHandler);
   element.removeEventListener("touchend", element._touchEndHandler);
   element.removeEventListener("touchcancel", element._touchCancelHandler);
-
   element._touchStartHandler = (e) => handlers.touchStart(e, element);
   element._touchEndHandler = (e) => handlers.touchEnd(e, element);
   element._touchCancelHandler = (e) => handlers.touchEnd(e, element);
-
   element.addEventListener("touchstart", element._touchStartHandler, {
     passive: false,
   });
@@ -275,6 +271,7 @@ function addButtonEventListeners(buttonConfig) {
 
 /**
  * Adds touch event listeners to all mobile control buttons
+ *
  */
 window.addEventsForMobileButtons = function () {
   const buttons = [
@@ -283,7 +280,6 @@ window.addEventsForMobileButtons = function () {
     { id: "mobile-jump-btn", action: "jump" },
     { id: "mobile-throw-btn", action: "throwBottle" },
   ];
-
   buttons.forEach(addButtonEventListeners);
 };
 
