@@ -4,7 +4,6 @@ class ThrowableObject extends MovableObject {
   world;
   hasSplashed = false;
   bottleBreakSound;
-
   offset = {
     top: 15,
     left: 15,
@@ -76,15 +75,11 @@ class ThrowableObject extends MovableObject {
    */
   startThrowMotion() {
     let hasBroken = false;
-
     let interval = setInterval(() => {
       this.updateThrowPosition();
-
-      // Kollisionen prüfen
       if (!hasBroken) {
         this.world.checkBottleEnemyCollisions();
       }
-
       if (this.hasHitGround()) {
         clearInterval(interval);
         this.triggerSplash(hasBroken);
@@ -120,7 +115,6 @@ class ThrowableObject extends MovableObject {
   triggerSplash(hasBroken) {
     this.y = 360;
     this.playSplashAnimation();
-
     if (!hasBroken) {
       this.playBreakSound();
     }
