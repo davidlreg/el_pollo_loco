@@ -3,7 +3,7 @@ class Endboss extends MovableObject {
   y = 135;
   width = 250;
   height = 300;
-  speed = 0.65;
+  speed = 1.2;
   world;
   offset = {
     top: 50,
@@ -96,7 +96,7 @@ class Endboss extends MovableObject {
         this.endbossAlert = true;
         this.world.character.canMove = true;
       }
-    }, 500);
+    }, 200);
   }
 
   /**
