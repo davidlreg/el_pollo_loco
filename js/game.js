@@ -9,6 +9,7 @@ const OriginalAudio = window.Audio;
 
 /**
  * Overrides the global Audio constructor to apply mute settings
+ *
  * @param {...any} args - Arguments for Audio constructor
  * @returns {HTMLAudioElement} Audio object with mute settings applied
  */
@@ -21,6 +22,7 @@ window.Audio = function (...args) {
 
 /**
  * Initializes the game canvas and world
+ *
  */
 function init() {
   canvas = document.getElementById("canvas");
@@ -31,6 +33,7 @@ function init() {
 
 /**
  * Sets up and plays background music
+ *
  */
 function initBackgroundMusic() {
   backgroundMusic = new Audio("assets/audio/mexican-background-music.mp3");
@@ -43,6 +46,7 @@ function initBackgroundMusic() {
 
 /**
  * Handles key press actions for game controls
+ *
  * @param {string} key - The pressed key
  */
 function handleKeyPress(key) {
@@ -54,6 +58,7 @@ function handleKeyPress(key) {
 
 /**
  * Handles key release actions for game controls
+ *
  * @param {string} key - The released key
  */
 function handleKeyRelease(key) {
@@ -65,6 +70,7 @@ function handleKeyRelease(key) {
 
 /**
  * Updates mute button text based on current state
+ *
  */
 function updateMuteButtonText() {
   if (muteButton) muteButton.innerText = isMuted ? "🔇 Unmute" : "🔊 Mute";
@@ -73,22 +79,22 @@ function updateMuteButtonText() {
 
 /**
  * Toggles global mute state and updates UI
+ *
  */
 function toggleMute() {
   isMuted = !isMuted;
   localStorage.setItem("isMuted", isMuted);
-
   if (isMuted) {
     muteAllSounds();
   } else {
     unmuteAllSounds();
   }
-
   updateMuteButtonText();
 }
 
 /**
  * Mutes and pauses all audio elements
+ *
  */
 function muteAllSounds() {
   allSounds.forEach((audio) => {
@@ -101,6 +107,7 @@ function muteAllSounds() {
 
 /**
  * Checks if audio is background music
+ *
  * @param {HTMLAudioElement} audio - Audio element to check
  * @returns {boolean} True if audio is background music
  */
@@ -113,6 +120,7 @@ function isBackgroundMusic(audio) {
 
 /**
  * Unmutes all audio elements and resumes background music
+ *
  */
 function unmuteAllSounds() {
   allSounds.forEach((audio) => {
@@ -127,6 +135,7 @@ function unmuteAllSounds() {
 
 /**
  * Gets all UI elements needed for game setup
+ *
  * @returns {Object} Object containing all UI elements
  */
 function getUIElements() {
@@ -144,6 +153,7 @@ function getUIElements() {
 
 /**
  * Sets up game control event listeners
+ *
  * @param {Object} elements - UI elements object
  */
 function setupGameControlListeners(elements) {
@@ -166,6 +176,7 @@ function setupGameControlListeners(elements) {
 
 /**
  * Sets up dialog and fullscreen event listeners
+ *
  * @param {Object} elements - UI elements object
  */
 function setupDialogAndFullscreenListeners(elements) {
@@ -182,10 +193,10 @@ function setupDialogAndFullscreenListeners(elements) {
 
 /**
  * Requests fullscreen mode for the canvas
+ *
  */
 function requestFullscreen() {
   let canvas = document.querySelector("canvas");
-
   if (canvas.requestFullscreen) canvas.requestFullscreen();
   else if (canvas.mozRequestFullScreen) canvas.mozRequestFullScreen();
   else if (canvas.webkitRequestFullscreen) canvas.webkitRequestFullscreen();
@@ -194,6 +205,7 @@ function requestFullscreen() {
 
 /**
  * Toggles fullscreen mode for the game canvas
+ *
  */
 function toggleFullscreen() {
   if (!document.fullscreenElement) {
@@ -205,6 +217,7 @@ function toggleFullscreen() {
 
 /**
  * Shows game UI elements after starting
+ *
  * @param {Object} elements - UI elements object
  */
 function showGameUI(elements) {
@@ -216,6 +229,7 @@ function showGameUI(elements) {
 
 /**
  * Starts the actual game and initializes level
+ *
  * @param {Object} elements - UI elements object
  */
 function startGameInternal(elements) {
@@ -227,6 +241,7 @@ function startGameInternal(elements) {
 
 /**
  * Sets up click outside listener for dialog
+ *
  * @param {Object} elements - UI elements object
  */
 function setupDialogOutsideListener(elements) {
@@ -239,6 +254,7 @@ function setupDialogOutsideListener(elements) {
 
 /**
  * Shows the how-to-play dialog
+ *
  * @param {Object} elements - UI elements object
  */
 function showHtpDialog(elements) {
@@ -248,6 +264,7 @@ function showHtpDialog(elements) {
 
 /**
  * Closes the how-to-play dialog
+ *
  * @param {Object} elements - UI elements object
  */
 function closeHtpDialog(elements) {
@@ -259,12 +276,12 @@ function closeHtpDialog(elements) {
 
 /**
  * Checks if click is outside dialog and closes it
+ *
  * @param {MouseEvent} event - Click event
  * @param {Object} elements - UI elements object
  */
 function closeDialogOutside(event, elements) {
   const { htpDialogWindow, howToPlayButton } = elements;
-
   if (
     htpDialogWindow.style.display === "block" &&
     !htpDialogWindow.contains(event.target) &&
@@ -276,6 +293,7 @@ function closeDialogOutside(event, elements) {
 
 /**
  * Stops character snoring sound if it exists
+ *
  */
 function stopCharacterSnoring() {
   if (world?.character?.characterSnoringSound) {
@@ -286,6 +304,7 @@ function stopCharacterSnoring() {
 
 /**
  * Shows game UI elements after restart
+ *
  * @param {Object} elements - UI elements object
  */
 function showGameUIAfterRestart(elements) {
@@ -298,24 +317,23 @@ function showGameUIAfterRestart(elements) {
 
 /**
  * Restarts the game and resets all states
+ *
  */
 function restartGame() {
   const elements = getUIElements();
-
-  gameHasStarted = false;
   clearIntervals();
   stopSounds();
   resetVariables();
   initLevelOne();
   this.gameIsOver = false;
   init();
-
   showGameUIAfterRestart(elements);
   stopCharacterSnoring();
 }
 
 /**
  * Hides all game UI elements
+ *
  */
 function hideGameUI() {
   document.getElementById("canvas").style.display = "none";
@@ -327,15 +345,13 @@ function hideGameUI() {
 
 /**
  * Returns to the start screen and resets game state
+ *
  */
 function backToStartScreen() {
-  gameHasStarted = false;
-
   if (world?.gameOverTimeout) {
     clearTimeout(world.gameOverTimeout);
     world.gameOverTimeout = null;
   }
-
   document.getElementById("startScreen").style.display = "flex";
   hideGameUI();
   stopSounds();
@@ -344,6 +360,7 @@ function backToStartScreen() {
 
 /**
  * Clears all game intervals
+ *
  */
 function clearIntervals() {
   if (world?.collisionCheckInterval) {
@@ -353,6 +370,7 @@ function clearIntervals() {
 
 /**
  * Stops and resets all audio elements
+ *
  */
 function stopSounds() {
   allSounds.forEach((audio) => {
@@ -361,17 +379,16 @@ function stopSounds() {
       audio.currentTime = 0;
     }
   });
-
   if (world?.character) {
     world.character.stopAllSounds();
   }
-
   backgroundMusic.pause();
   backgroundMusic.currentTime = 0;
 }
 
 /**
  * Resets game variables to initial state
+ *
  */
 function resetVariables() {
   keyboard = new KeyboardInputs();
@@ -392,13 +409,12 @@ window.addEventListener("keyup", (event) => {
 
 /**
  * Initializes the game when DOM is loaded
+ *
  */
 document.addEventListener("DOMContentLoaded", function () {
   const elements = getUIElements();
-
   updateMuteButtonText();
   setupGameControlListeners(elements);
   setupDialogAndFullscreenListeners(elements);
-
   window.actuallyStartGame = () => startGameInternal(elements);
 });
