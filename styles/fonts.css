@@ -1,0 +1,7 @@
+@font-face {
+  font-family: "zabars";
+  src: url("../assets/fonts/zabars.ttf");
+  src: url("../assets/fonts/zabars.ttf") format("embedded-opentype"),
+    url("../assets/fonts/zabars.ttf") format("woff"),
+    url("../assets/fonts/zabars.ttf") format("truetype");
+}

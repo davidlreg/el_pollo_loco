@@ -1,0 +1,41 @@
+@media only screen and (max-width: 768px) {
+  body {
+    font-size: 24px;
+    gap: 8px;
+  }
+
+  .legalInfo > a > button {
+    width: 100px;
+    font-size: 16px;
+  }
+
+  .legalWrapper {
+    font-size: 12px;
+    padding: 18px;
+  }
+
+  .goBackArrow {
+    right: 8px;
+  }
+}
+
+@media only screen and (orientation: landscape) and (max-height: 600px) {
+  body {
+    gap: 5px;
+    padding: 2px;
+  }
+}
+
+@media only screen and (max-width: 480px) and (orientation: portrait) {
+  body {
+    font-size: 20px;
+    gap: 5px;
+  }
+}
+
+@media only screen and (max-width: 480px) {
+  body {
+    font-size: 20px;
+    gap: 12px;
+  }
+}

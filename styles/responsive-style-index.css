@@ -1,0 +1,250 @@
+@media only screen and (max-width: 768px) {
+  body {
+    font-size: 24px;
+    gap: 8px;
+  }
+
+  .gameWrapper {
+    width: 100vw;
+    height: 100vh;
+    max-width: 100vw;
+    max-height: 100vh;
+  }
+
+  canvas {
+    width: 100vw !important;
+    height: calc(100vw * 2 / 3) !important;
+    min-height: 320px !important;
+    max-height: 480px !important;
+    border-radius: 0;
+    border: 2px solid #c0392b;
+  }
+
+  .mobileBtnWrapper {
+    bottom: 10px;
+    padding: 0px 15px;
+  }
+
+  .mobileControlls {
+    gap: 12px;
+  }
+
+  .mobileControlls > button {
+    width: 50px;
+    height: 50px;
+    padding: 8px;
+  }
+
+  .mobileControlls > button img {
+    width: 20px;
+    height: 20px;
+  }
+
+  .mobileMuteBtn {
+    width: 50px;
+    height: 50px;
+    padding: 8px;
+  }
+
+  .turnDeviceScreen {
+    padding: 30px 20px;
+  }
+
+  .turnDeviceScreen h2 {
+    font-size: 20px;
+  }
+
+  .turnDeviceScreen p {
+    font-size: 14px;
+  }
+
+  .turnDeviceScreen img {
+    max-width: 150px;
+    max-height: 150px;
+  }
+
+  .startScreen h1 {
+    font-size: 48px;
+    top: 32px;
+  }
+
+  .startScreen button {
+    width: 250px;
+    font-size: 28px;
+    padding: 12px 24px;
+  }
+
+  .goBackArrow {
+    right: 8px;
+  }
+}
+
+@media only screen and (orientation: landscape) and (max-height: 600px) {
+  body {
+    gap: 5px;
+    padding: 2px;
+  }
+
+  .gameWrapper {
+    width: 100vw;
+    height: 100vh;
+  }
+
+  canvas {
+    height: calc(100vh - 120px) !important;
+    width: calc((100vh - 120px) * 3 / 2) !important;
+    min-height: 320px !important;
+    max-width: 100vw !important;
+    border-radius: 0;
+    border: 2px solid #c0392b;
+  }
+
+  .mobileBtnWrapper {
+    bottom: 2px;
+    padding: 0px 10px;
+  }
+
+  .mobileControlls > button {
+    width: 40px;
+    height: 40px;
+    padding: 6px;
+  }
+
+  .mobileControlls > button img {
+    width: 16px;
+    height: 16px;
+  }
+
+  .mobileMuteBtn {
+    width: 40px;
+    height: 40px;
+    padding: 6px;
+  }
+}
+
+@media only screen and (max-width: 480px) and (orientation: portrait) {
+  body {
+    font-size: 20px;
+    gap: 5px;
+  }
+
+  canvas {
+    width: 100vw !important;
+    height: calc(100vw * 2 / 3) !important;
+    min-height: 300px !important;
+    max-height: 400px !important;
+  }
+
+  .mobileBtnWrapper {
+    bottom: 5px;
+    padding: 0px 10px;
+  }
+
+  .mobileControlls > button {
+    width: 45px;
+    height: 45px;
+  }
+
+  .mobileMuteBtn {
+    width: 45px;
+    height: 45px;
+  }
+
+  .startScreen h1 {
+    font-size: 36px;
+    top: 24px;
+  }
+
+  .startScreen button {
+    width: 200px;
+    font-size: 24px;
+    padding: 10px 20px;
+  }
+}
+
+@media (max-width: 630px) {
+  .htpDialog {
+    font-size: 28px;
+  }
+}
+
+@media only screen and (max-width: 480px) {
+  body {
+    font-size: 20px;
+    gap: 12px;
+  }
+
+  .gameWrapper {
+    width: 100vw;
+    height: 100vh;
+  }
+
+  canvas {
+    width: 100vw !important;
+    height: 65vh !important;
+  }
+
+  .mobileBtnWrapper {
+    bottom: 5px;
+    padding: 0px 10px;
+  }
+
+  .mobileControlls > button {
+    width: 45px;
+    height: 45px;
+  }
+
+  .mobileMuteBtn {
+    width: 45px;
+    height: 45px;
+  }
+
+  .startScreen h1 {
+    font-size: 36px;
+    top: 24px;
+  }
+
+  .startScreen button {
+    width: 200px;
+    font-size: 24px;
+    padding: 10px 20px;
+  }
+}
+
+@media only screen and (max-width: 320px) {
+  canvas {
+    width: 100vw !important;
+    height: calc(100vw * 2 / 3) !important;
+    min-height: 280px !important;
+    max-height: 350px !important;
+  }
+
+  .mobileControlls > button {
+    width: 40px;
+    height: 40px;
+  }
+
+  .mobileMuteBtn {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+@media (max-width: 768px) {
+  .turnDeviceScreen {
+    padding: 30px 20px;
+  }
+
+  .turnDeviceScreen h2 {
+    font-size: 20px;
+  }
+
+  .turnDeviceScreen p {
+    font-size: 14px;
+  }
+
+  .turnDeviceScreen img {
+    max-width: 150px;
+    max-height: 150px;
+  }
+}

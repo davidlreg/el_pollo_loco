@@ -1,0 +1,119 @@
+.mobileBtnWrapper {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 720px;
+  display: none;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0px 20px;
+  z-index: 10;
+}
+
+.mobileControlls {
+  display: flex;
+  gap: 16px;
+}
+
+.mobileControlls > button {
+  background-color: rgba(0, 0, 0, 0.3);
+  border: 3px solid #c0392b;
+  border-radius: 50%;
+  padding: 8px;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.mobileControlls > button:active {
+  transform: scale(0.95);
+  background-color: rgba(0, 0, 0, 0.9);
+}
+
+.mobileControlls > button img {
+  width: 24px;
+  height: 24px;
+}
+
+.mobileMuteBtn {
+  background-color: rgba(0, 0, 0, 0.3);
+  width: 50px;
+  height: 50px;
+  border: 3px solid #c0392b;
+  border-radius: 50%;
+  padding: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.mobileMuteBtn:active {
+  transform: scale(0.95);
+  background-color: rgba(0, 0, 0, 0.9);
+}
+
+#mute-btn:focus,
+#mute-btn-mobile:focus,
+#mobile-left-btn:focus,
+#mobile-right-btn:focus,
+#mobile-jump-btn:focus,
+#mobile-throw-btn:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.turnDeviceScreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.95);
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  color: white;
+  font-family: Arial, sans-serif;
+  text-align: center;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.turnDeviceScreen img {
+  max-width: 200px;
+  max-height: 200px;
+  margin-bottom: 20px;
+}
+
+.turnDeviceScreen h2 {
+  font-size: 24px;
+  margin-bottom: 15px;
+  color: #fff;
+}
+
+.turnDeviceScreen p {
+  font-size: 16px;
+  margin-bottom: 10px;
+  color: #ccc;
+  max-width: 300px;
+}
+
+.turnDeviceScreen img {
+  animation: rotate 2s linear infinite;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
