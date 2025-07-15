@@ -5,14 +5,12 @@ class Endboss extends MovableObject {
   height = 300;
   speed = 0.65;
   world;
-
   offset = {
     top: 50,
     left: 20,
     right: 20,
     bottom: 30,
   };
-
   gravity = 1.2;
   jumpStrength = 20;
   groundLevel = 135;

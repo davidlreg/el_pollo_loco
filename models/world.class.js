@@ -108,18 +108,17 @@ class World {
     });
   }
 
-  // /**
-  //  * Checks collisions between throwable bottles and enemies,
-  //  * triggers hits or deaths and splash animations.
-  //  *
-  //  */
+  /**
+   * Checks collisions between throwable bottles and enemies,
+   * triggers hits or deaths and splash animations.
+   *
+   */
   checkBottleEnemyCollisions() {
     this.throwable_objects.forEach((bottle) => {
       if (!bottle.hasSplashed && bottle.isColliding(this.endboss)) {
         this.endboss.hit();
         bottle.playSplashAnimation();
       }
-
       this.level.enemies.forEach((enemy) => {
         if (!enemy.isDead && !bottle.hasSplashed && bottle.isColliding(enemy)) {
           enemy.die();
@@ -161,7 +160,6 @@ class World {
    */
   draw() {
     if (this.gameIsOver) return;
-
     this.clearCanvas();
     this.ctx.translate(this.camera_x, 0);
     this.drawGameObjects();
@@ -197,11 +195,9 @@ class World {
       this.status_bar_health,
       this.status_bar_coins,
     ];
-
     if (this.endbossActivated && this.endbossBarShouldBeVisible) {
       bars.push(this.status_bar_endboss);
     }
-
     this.addStatusBarToMap(...bars);
   }
 
@@ -243,7 +239,6 @@ class World {
       mo.x *= -1;
     }
     mo.draw(this.ctx);
-    // mo.drawHitbox(this.ctx);
     if (mo.otherDirection) {
       this.ctx.restore();
       mo.x *= -1;
