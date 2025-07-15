@@ -268,12 +268,10 @@ class Character extends MovableObject {
     const id = setInterval(() => {
       const now = Date.now();
       const inactive = now - this.lastInputTime > 12000;
-
       if (inactive && !this.sleepMode) {
         this.sleepMode = true;
         this.playAnimation(this.IMAGES_LONG_IDLE);
       }
-
       if (this.anyKeyPressed()) {
         this.lastInputTime = now;
         if (this.sleepMode) {
