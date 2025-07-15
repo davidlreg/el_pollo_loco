@@ -325,6 +325,8 @@ class World {
    */
   showGameOverScreen() {
     document.getElementById("gameOverScreen").style.display = "block";
+    document.getElementById("headline").style.display = "none";
+    document.getElementById("mobileBtnWrapper").style.display = "none";
   }
 
   showGameWonScreen() {

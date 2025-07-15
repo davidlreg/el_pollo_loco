@@ -224,7 +224,8 @@ function showGameUI(elements) {
   elements.startScreen.style.display = "none";
   elements.headline.style.display = "block";
   elements.canvas.style.display = "block";
-  elements.bottomWrapper.style.display = "flex";
+  const isMobile = isMobileDevice();
+  updateUIVisibility(isMobile);
 }
 
 /**
@@ -312,7 +313,8 @@ function showGameUIAfterRestart(elements) {
   document.getElementById("gameWonScreen").style.display = "none";
   elements.headline.style.display = "block";
   elements.canvas.style.display = "block";
-  elements.bottomWrapper.style.display = "flex";
+  const isMobile = isMobileDevice();
+  updateUIVisibility(isMobile);
 }
 
 /**
