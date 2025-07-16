@@ -242,12 +242,16 @@ function adjustCanvasForMobile() {
 function createTouchHandlers(action) {
   return {
     touchStart: (event, element) => {
-      event.preventDefault();
+      if (event.cancelable) {
+        event.preventDefault();
+      }
       if (typeof keyboard !== "undefined") keyboard[action] = true;
       element.style.opacity = "0.7";
     },
     touchEnd: (event, element) => {
-      event.preventDefault();
+      if (event.cancelable) {
+        event.preventDefault();
+      }
       if (typeof keyboard !== "undefined") keyboard[action] = false;
       element.style.opacity = "1";
     },
@@ -274,6 +278,7 @@ function addButtonEventListeners(buttonConfig) {
   });
   element.addEventListener("touchend", element._touchEndHandler, {
     passive: false,
+    capture: true,
   });
   element.addEventListener("touchcancel", element._touchCancelHandler, {
     passive: false,
