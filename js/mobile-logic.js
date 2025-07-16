@@ -1,4 +1,4 @@
-let orientationCheckActive = false;
+let orientationCheckActive = true;
 let gameHasStarted = false;
 let mobileResolution = false;
 let desktopResolution = false;
@@ -82,7 +82,7 @@ function setFullScreenOverlay(element) {
  */
 function handleTurnDeviceNotification(isMobile, isPortrait, screenTooSmall) {
   const turnDeviceScreen = document.getElementById("turnDeviceScreen");
-  if (!gameHasStarted && isMobile && isPortrait && screenTooSmall) {
+  if (isMobile && isPortrait) {
     if (turnDeviceScreen) setFullScreenOverlay(turnDeviceScreen);
   } else {
     if (turnDeviceScreen) turnDeviceScreen.style.display = "none";
@@ -102,7 +102,9 @@ function checkOrientation() {
   const isMobile = isMobileDevice();
   mobileResolution = isMobile;
   desktopResolution = !isMobile;
-  updateUIVisibility(isMobile);
+  if (gameHasStarted) {
+    updateUIVisibility(isMobile);
+  }
   const screenTooSmall =
     window.innerWidth <= maxWidth || window.innerHeight <= maxHeight;
   handleTurnDeviceNotification(isMobile, isPortrait, screenTooSmall);
@@ -118,6 +120,7 @@ function startDesktopGame() {
   if (typeof window.actuallyStartGame === "function") {
     window.actuallyStartGame();
   }
+  gameHasStarted = true;
   checkOrientation();
 }
 
@@ -131,6 +134,7 @@ function startMobileGame() {
   if (typeof window.actuallyStartGame === "function") {
     window.actuallyStartGame();
   }
+  gameHasStarted = true;
   checkOrientation();
 }
 
@@ -139,7 +143,6 @@ function startMobileGame() {
  *
  */
 function checkOrientationAndStartGame() {
-  orientationCheckActive = true;
   const isMobile = isMobileDevice();
   const isPortrait = window.matchMedia("(orientation: portrait)").matches;
   if (!isMobile) {
@@ -189,12 +192,34 @@ function calculateLandscapeDimensions() {
 }
 
 /**
+ * Sets canvas dimensions based on calculated values
+ *
+ * @param {HTMLElement} canvas - Canvas element
+ * @param {Object} dimensions - Width and height values
+ */
+function setCanvasDimensions(canvas, dimensions) {
+  canvas.width = dimensions.width;
+  canvas.height = dimensions.height;
+}
+
+/**
+ * Triggers world canvas resize if available
+ *
+ */
+function triggerWorldResize() {
+  if (window.world && typeof window.world.handleCanvasResize === "function") {
+    window.world.handleCanvasResize();
+  }
+}
+
+/**
  * Adjusts canvas size for mobile devices while maintaining aspect ratio
  *
  */
 function adjustCanvasForMobile() {
   const canvas = document.getElementById("canvas");
   const isMobile = isMobileDevice();
+
   if (isMobile) {
     const isLandscape = window.matchMedia("(orientation: landscape)").matches;
     if (isLandscape) {
@@ -269,7 +294,6 @@ window.addEventsForMobileButtons = function () {
   buttons.forEach(addButtonEventListeners);
 };
 
-// Event listeners for orientation and resize changes
 window.addEventListener("orientationchange", () => {
   setTimeout(checkOrientation, 300);
 });
@@ -278,10 +302,6 @@ window.addEventListener("resize", () => {
   setTimeout(checkOrientation, 300);
 });
 
-window.addEventListener("orientationchange", () => {
-  setTimeout(adjustCanvasForMobile, 300);
-});
-
-window.addEventListener("resize", () => {
-  setTimeout(adjustCanvasForMobile, 100);
+document.addEventListener("DOMContentLoaded", () => {
+  checkOrientation();
 });

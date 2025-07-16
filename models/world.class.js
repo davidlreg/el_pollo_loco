@@ -43,6 +43,17 @@ class World {
     this.collisionCheckInterval = setInterval(() => this.checkCollisions(), 25);
   }
 
+  // /**
+  //  * Handles canvas resize after orientation changes
+  //  *
+  //  */
+  // handleCanvasResize() {
+  //   this.ctx = this.canvas.getContext("2d");
+  //   const maxCameraX = Math.max(0, (this.level?.level_end_x || 2400) - 720);
+  //   this.camera_x = Math.max(0, Math.min(this.camera_x, maxCameraX));
+  //   this.draw();
+  // }
+
   /**
    * Checks all relevant collisions and item collections in the game.
    *
@@ -161,9 +172,12 @@ class World {
   draw() {
     if (this.gameIsOver) return;
     this.clearCanvas();
+    const scaleX = this.canvas.width / 720;
+    const scaleY = this.canvas.height / 480;
+    this.ctx.save();
+    this.ctx.scale(scaleX, scaleY);
     this.ctx.translate(this.camera_x, 0);
     this.drawGameObjects();
-    this.ctx.translate(-this.camera_x, 0);
     this.ctx.restore();
     this.drawStatusBars();
     this.animationFrameId = requestAnimationFrame(() => this.draw());

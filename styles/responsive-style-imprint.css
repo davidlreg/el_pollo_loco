@@ -22,7 +22,6 @@
 @media only screen and (orientation: landscape) and (max-height: 600px) {
   body {
     gap: 5px;
-    padding: 2px;
   }
 }
 
