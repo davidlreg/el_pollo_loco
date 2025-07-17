@@ -48,7 +48,7 @@ class StatusBarEndboss extends StatusBar {
     }
     if (this.isIconLoaded()) {
       const iconX = this.x + -20;
-      const iconY = this.y + 5;
+      const iconY = this.y - 5;
       const iconSize = 80;
       ctx.drawImage(this.img, iconX, iconY, iconSize, iconSize);
     }
