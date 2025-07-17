@@ -9,6 +9,10 @@ class Character extends MovableObject {
   speedY = 0;
   lastThrowTime = 0;
   throwCooldown = 1000;
+  jumpAnimationIndex = 0;
+  isJumping = false;
+  jumpAnimationSpeed = 0.5;
+  frameCounter = 0;
   intervalIds = [];
   sleepMode = false;
   canMove = true;
@@ -181,6 +185,90 @@ class Character extends MovableObject {
   }
 
   /**
+   * Enhanced jump method that initializes jump animation properly.
+   *
+   */
+  jumpCharacter() {
+    if (this.isJumping == true) {
+      return false;
+    }
+    this.speedY = 16.5;
+    this.isJumping = true;
+    this.jumpAnimationIndex = 0;
+    this.frameCounter = 0;
+    this.jumpingSound.volume = 0.001;
+    this.jumpingSound.play();
+  }
+
+  /**
+   * Plays synchronized jump animation that completes with the jump physics.
+   *
+   */
+  playJumpAnimationTimeBased() {
+    const totalFrames = this.IMAGES_JUMPING.length;
+    const jumpProgress = this.calculateJumpProgress();
+    const frameIndex = Math.floor(jumpProgress * (totalFrames - 1));
+    const clampedIndex = Math.max(0, Math.min(frameIndex, totalFrames - 1));
+    const path = this.IMAGES_JUMPING[clampedIndex];
+    this.img = this.imageCache[path];
+    this.checkJumpCompletion();
+  }
+
+  /**
+   * Calculates the estimated jump duration in seconds.
+   *
+   * @returns {number} Jump duration in seconds
+   */
+  calculateJumpDuration() {
+    const initialSpeedY = 16.5;
+    const gravity = 1;
+    return (2 * initialSpeedY) / gravity / 60;
+  }
+
+  /**
+   * Calculates jump progress from start to completion.
+   *
+   * @returns {number} Progress value between 0 (start) and 1 (complete)
+   */
+  calculateJumpProgress() {
+    const initialSpeedY = 16.5;
+    const groundLevel = 165;
+    if (this.speedY > 0) {
+      return (initialSpeedY - this.speedY) / (initialSpeedY * 2);
+    } else {
+      const maxHeight = (initialSpeedY * initialSpeedY) / (2 * 1);
+      const currentHeight = Math.max(0, groundLevel - this.y);
+      return 0.5 + (0.5 * (maxHeight - currentHeight)) / maxHeight;
+    }
+  }
+
+  /**
+   * Checks if jump is complete and handles animation end.
+   *
+   */
+  checkJumpCompletion() {
+    const isOnGround = !this.isCharacterAboveGround() && this.speedY <= 0;
+    const animationComplete =
+      this.jumpAnimationIndex >= this.IMAGES_JUMPING.length - 1;
+    if (isOnGround && animationComplete) {
+      this.endJump();
+    } else if (isOnGround && !animationComplete) {
+      this.jumpAnimationIndex = this.IMAGES_JUMPING.length - 1;
+      this.endJump();
+    }
+  }
+
+  /**
+   * Ends the jump animation and resets jump state.
+   *
+   */
+  endJump() {
+    this.isJumping = false;
+    this.jumpAnimationIndex = 0;
+    this.frameCounter = 0;
+  }
+
+  /**
    * Throws a bottle if the cooldown has passed.
    *
    */
@@ -309,6 +397,8 @@ class Character extends MovableObject {
         this.characterDead();
       } else if (this.isHurt()) {
         this.playAnimation(this.IMAGES_HURT);
+      } else if (this.isJumping) {
+        this.playJumpAnimationTimeBased();
       } else if (this.isCharacterAboveGround()) {
         this.playAnimation(this.IMAGES_JUMPING);
       } else if (
@@ -354,7 +444,7 @@ class Character extends MovableObject {
       this.stopSnoringSound();
     }
     if (keyboard.jump && !this.isCharacterAboveGround()) {
-      this.jump();
+      this.jumpCharacter();
       this.stopSnoringSound();
     }
     if (keyboard.throwBottle && this.world.status_bar_salsa.salsaBottles > 0) {
