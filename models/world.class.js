@@ -159,36 +159,77 @@ class World {
 
   /**
    * Main game loop: clears canvas, translates camera, draws objects, and requests next frame.
-   *
    */
   draw() {
     if (this.gameIsOver) return;
+    this.setupCanvas();
+    this.drawWorldObjects();
+    this.drawUI();
+    this.drawThrowables();
+    this.drawCharacter();
+    this.ctx.restore();
+    this.updateClouds();
+    this.requestNextFrame();
+  }
+
+  /**
+   * Clears canvas and applies scaling and camera translation.
+   *
+   */
+  setupCanvas() {
     this.clearCanvas();
     const scaleX = this.canvas.width / 720;
     const scaleY = this.canvas.height / 480;
     this.ctx.save();
     this.ctx.scale(scaleX, scaleY);
     this.ctx.translate(this.camera_x, 0);
-    this.drawGameObjects();
-    this.ctx.restore();
-    this.drawStatusBars();
-    this.animationFrameId = requestAnimationFrame(() => this.draw());
   }
 
   /**
-   * Draws all game objects including background, enemies, character, and moves clouds.
+   * Draws all world objects including background, enemies, and collectibles.
    *
    */
-  drawGameObjects() {
+  drawWorldObjects() {
     this.addObjectsToMap(this.level.backgroundObjects);
     this.addObjectsToMap(this.level.clouds);
     this.addObjectsToMap(this.level.coins);
     this.addObjectsToMap(this.level.salsaBottles);
     this.addObjectsToMap(this.level.enemies);
     this.addToMap(this.endboss);
+  }
+
+  /**
+   * Draws UI elements that remain fixed on screen.
+   *
+   */
+  drawUI() {
+    this.ctx.translate(-this.camera_x, 0);
+    this.drawStatusBars();
+    this.ctx.translate(this.camera_x, 0);
+  }
+
+  /**
+   * Draws the main character.
+   *
+   */
+  drawCharacter() {
     this.addToMap(this.character);
-    this.drawThrowables();
+  }
+
+  /**
+   * Updates cloud positions by calling move() on each cloud.
+   *
+   */
+  updateClouds() {
     this.level.clouds.forEach((cloud) => cloud.move());
+  }
+
+  /**
+   * Requests the next animation frame to continue the game loop.
+   *
+   */
+  requestNextFrame() {
+    this.animationFrameId = requestAnimationFrame(() => this.draw());
   }
 
   /**

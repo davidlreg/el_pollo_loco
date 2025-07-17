@@ -1,12 +1,19 @@
 class StatusBarSalsa extends StatusBar {
-  IMAGE_SALSA_BOTTLE = [
-    "assets/img/7_statusbars/3_icons/icon_salsa_bottle.png",
+  IMAGES_STATUSBAR_SALSA_BOTTLES = [
+    "assets/img/7_statusbars/1_statusbar/3_statusbar_bottle/orange/0.png",
+    "assets/img/7_statusbars/1_statusbar/3_statusbar_bottle/orange/20.png",
+    "assets/img/7_statusbars/1_statusbar/3_statusbar_bottle/orange/40.png",
+    "assets/img/7_statusbars/1_statusbar/3_statusbar_bottle/orange/60.png",
+    "assets/img/7_statusbars/1_statusbar/3_statusbar_bottle/orange/80.png",
+    "assets/img/7_statusbars/1_statusbar/3_statusbar_bottle/orange/100.png",
   ];
 
   constructor() {
-    super().loadImage(this.IMAGE_SALSA_BOTTLE);
+    super().loadImages(this.IMAGES_STATUSBAR_SALSA_BOTTLES);
     this.x = 0;
-    this.y = 15;
+    this.y = 70;
+    this.width = 200;
+    this.height = 60;
   }
 
   /**
@@ -15,7 +22,40 @@ class StatusBarSalsa extends StatusBar {
    * @param {CanvasRenderingContext2D} ctx - The canvas rendering context.
    */
   draw(ctx) {
-    super.draw(ctx);
-    this.drawValue(ctx, this.salsaBottles);
+    const salsaBarImage = this.getCurrentSalsaImage();
+    if (salsaBarImage) {
+      ctx.drawImage(salsaBarImage, this.x, this.y, this.width, this.height);
+    }
+  }
+
+  /**
+   * Gets the current salsa bar image based on bottle count
+   *
+   */
+  getCurrentSalsaImage() {
+    const salsaIndex = this.getSalsaImageIndex();
+    const imagePath = this.IMAGES_STATUSBAR_SALSA_BOTTLES[salsaIndex];
+    return this.imageCache[imagePath] || null;
+  }
+
+  /**
+   * Calculates the correct image index based on salsa bottle count
+   *
+   */
+  getSalsaImageIndex() {
+    if (this.salsaBottles >= 9) return 5;
+    if (this.salsaBottles >= 7) return 4;
+    if (this.salsaBottles >= 5) return 3;
+    if (this.salsaBottles >= 3) return 2;
+    if (this.salsaBottles >= 1) return 1;
+    return 0;
+  }
+
+  /**
+   * Updates the salsa bar based on the collected salsa bottles.
+   *
+   */
+  updateSalsaBar(salsaBottles) {
+    this.salsaBottles = salsaBottles;
   }
 }
