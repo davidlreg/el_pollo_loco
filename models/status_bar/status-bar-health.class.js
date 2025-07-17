@@ -1,10 +1,20 @@
 class StatusBarHealth extends StatusBar {
-  IMAGE_HEALTH = ["assets/img/7_statusbars/3_icons/icon_health.png"];
+  IMAGES_STATUSBAR_HEALTH = [
+    "assets/img/7_statusbars/1_statusbar/2_statusbar_health/orange/0.png",
+    "assets/img/7_statusbars/1_statusbar/2_statusbar_health/orange/20.png",
+    "assets/img/7_statusbars/1_statusbar/2_statusbar_health/orange/40.png",
+    "assets/img/7_statusbars/1_statusbar/2_statusbar_health/orange/60.png",
+    "assets/img/7_statusbars/1_statusbar/2_statusbar_health/orange/80.png",
+    "assets/img/7_statusbars/1_statusbar/2_statusbar_health/orange/100.png",
+  ];
 
   constructor() {
-    super().loadImage(this.IMAGE_HEALTH);
-    this.x = 200;
+    super().loadImages(this.IMAGES_STATUSBAR_HEALTH);
+    this.x = 110;
     this.y = 15;
+    this.width = 200;
+    this.height = 60;
+    this.health = 5;
   }
 
   /**
@@ -13,8 +23,24 @@ class StatusBarHealth extends StatusBar {
    * @param {CanvasRenderingContext2D} ctx - The canvas rendering context.
    */
   draw(ctx) {
-    super.draw(ctx);
-    this.drawValue(ctx, this.health);
+    const healthBarImage = this.getCurrentHealthImage();
+    if (healthBarImage) {
+      ctx.drawImage(healthBarImage, this.x, this.y, this.width, this.height);
+    }
+  }
+
+  /**
+   * Gets the current health bar image based on health level
+   *
+   * @returns {HTMLImageElement|null} Health bar image or null if not found
+   */
+  getCurrentHealthImage() {
+    if (this.health === undefined || this.health === null) {
+      this.health = 5;
+    }
+    const healthIndex = Math.max(0, Math.min(5, this.health));
+    const imagePath = this.IMAGES_STATUSBAR_HEALTH[healthIndex];
+    return this.imageCache[imagePath] || null;
   }
 
   /**

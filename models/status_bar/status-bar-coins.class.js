@@ -3,11 +3,8 @@ class StatusBarCoins extends StatusBar {
 
   constructor() {
     super().loadImage(this.IMAGE_COIN);
-    // this.x = 200;
-    // this.y = 15;
-
-    this.x = 100;
-    this.y = 15;
+    this.x = 0;
+    this.y = 80;
   }
 
   /**
