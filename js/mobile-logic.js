@@ -38,7 +38,66 @@ function isMobileDevice() {
 }
 
 /**
- * Updates UI visibility based on device type
+ * Sets mobile button wrapper styles for small screens.
+ *
+ * @param {HTMLElement} wrapper - Mobile button wrapper element
+ */
+function setMobileButtonSmallScreenStyles(wrapper) {
+  wrapper.style.position = "fixed";
+  wrapper.style.zIndex = "10";
+  wrapper.style.bottom = "20px";
+  wrapper.style.left = "50%";
+  wrapper.style.transform = "translateX(-50%)";
+}
+
+/**
+ * Resets mobile button wrapper styles to default.
+ *
+ * @param {HTMLElement} wrapper - Mobile button wrapper element
+ */
+function resetMobileButtonStyles(wrapper) {
+  wrapper.style.position = "";
+  wrapper.style.zIndex = "";
+  wrapper.style.bottom = "";
+  wrapper.style.left = "";
+  wrapper.style.transform = "";
+}
+
+/**
+ * Configures UI elements for mobile display.
+ *
+ * @param {HTMLElement} mobileBtnWrapper - Mobile button wrapper
+ * @param {HTMLElement} headline - Headline element
+ * @param {HTMLElement} bottomWrapper - Bottom wrapper element
+ */
+function setupMobileUI(mobileBtnWrapper, headline, bottomWrapper) {
+  if (mobileBtnWrapper) {
+    mobileBtnWrapper.style.display = "flex";
+    const hasSmallScreen = hasSmallScreenResolution();
+    hasSmallScreen
+      ? setMobileButtonSmallScreenStyles(mobileBtnWrapper)
+      : resetMobileButtonStyles(mobileBtnWrapper);
+  }
+  if (headline) headline.style.display = "none";
+  if (bottomWrapper) bottomWrapper.style.display = "none";
+  window.addEventsForMobileButtons();
+}
+
+/**
+ * Configures UI elements for desktop display.
+ *
+ * @param {HTMLElement} mobileBtnWrapper - Mobile button wrapper
+ * @param {HTMLElement} headline - Headline element
+ * @param {HTMLElement} bottomWrapper - Bottom wrapper element
+ */
+function setupDesktopUI(mobileBtnWrapper, headline, bottomWrapper) {
+  if (mobileBtnWrapper) mobileBtnWrapper.style.display = "none";
+  if (headline) headline.style.display = "block";
+  if (bottomWrapper) bottomWrapper.style.display = "flex";
+}
+
+/**
+ * Updates UI visibility based on device type.
  *
  * @param {boolean} isMobile - Whether device is mobile
  */
@@ -46,16 +105,9 @@ function updateUIVisibility(isMobile) {
   const mobileBtnWrapper = document.getElementById("mobileBtnWrapper");
   const headline = document.getElementById("headline");
   const bottomWrapper = document.getElementById("bottomWrapper");
-  if (isMobile) {
-    if (mobileBtnWrapper) mobileBtnWrapper.style.display = "flex";
-    if (headline) headline.style.display = "none";
-    if (bottomWrapper) bottomWrapper.style.display = "none";
-    window.addEventsForMobileButtons();
-  } else {
-    if (mobileBtnWrapper) mobileBtnWrapper.style.display = "none";
-    if (headline) headline.style.display = "block";
-    if (bottomWrapper) bottomWrapper.style.display = "flex";
-  }
+  isMobile
+    ? setupMobileUI(mobileBtnWrapper, headline, bottomWrapper)
+    : setupDesktopUI(mobileBtnWrapper, headline, bottomWrapper);
 }
 
 /**
@@ -104,6 +156,7 @@ function checkOrientation() {
   desktopResolution = !isMobile;
   if (gameHasStarted) {
     updateUIVisibility(isMobile);
+    adjustCanvasForMobile();
   }
   const screenTooSmall =
     window.innerWidth <= maxWidth || window.innerHeight <= maxHeight;
@@ -121,7 +174,10 @@ function startDesktopGame() {
     window.actuallyStartGame();
   }
   gameHasStarted = true;
-  checkOrientation();
+  setTimeout(() => {
+    adjustCanvasForMobile();
+    checkOrientation();
+  }, 100);
 }
 
 /**
@@ -135,7 +191,69 @@ function startMobileGame() {
     window.actuallyStartGame();
   }
   gameHasStarted = true;
-  checkOrientation();
+  setTimeout(() => {
+    adjustCanvasForMobile();
+    checkOrientation();
+  }, 100);
+}
+
+/**
+ * Sets fullscreen CSS properties on an element with important priority.
+ *
+ * @param {HTMLElement} element - Element to apply styles to
+ */
+function setFullscreenStyles(element) {
+  element.style.setProperty("position", "fixed", "important");
+  element.style.setProperty("top", "0", "important");
+  element.style.setProperty("left", "0", "important");
+  element.style.setProperty("width", "100vw", "important");
+  element.style.setProperty("height", "100vh", "important");
+  element.style.setProperty("max-width", "none", "important");
+  element.style.setProperty("max-height", "none", "important");
+}
+
+/**
+ * Sets canvas-specific fullscreen styles.
+ *
+ * @param {HTMLElement} canvas - Canvas element
+ */
+function setCanvasFullscreenStyles(canvas) {
+  canvas.style.display = "block";
+  canvas.style.setProperty("z-index", "1", "important");
+  canvas.style.setProperty("border", "none", "important");
+  canvas.style.setProperty("border-radius", "0", "important");
+  canvas.style.setProperty("box-shadow", "none", "important");
+}
+
+/**
+ * Applies fullscreen styles to canvas and wrapper elements.
+ *
+ * @param {HTMLElement} canvas - Canvas element to make fullscreen
+ */
+function applyFullScreenCanvasStyles(canvas) {
+  setCanvasFullscreenStyles(canvas);
+  setFullscreenStyles(canvas);
+  const gameWrapper = canvas.closest(".gameWrapper");
+  if (gameWrapper) {
+    setFullscreenStyles(gameWrapper);
+  }
+}
+
+/**
+ * Removes fullscreen CSS class from UI elements.
+ *
+ * @param {HTMLElement} canvas - Canvas element
+ */
+function removeFullScreenCanvasStyles(canvas) {
+  canvas.classList.remove("fullscreen");
+  const gameWrapper = canvas.closest(".gameWrapper");
+  if (gameWrapper) {
+    gameWrapper.classList.remove("fullscreen");
+  }
+  const mobileBtnWrapper = document.getElementById("mobileBtnWrapper");
+  if (mobileBtnWrapper) {
+    mobileBtnWrapper.classList.remove("fullscreen");
+  }
 }
 
 /**
@@ -177,11 +295,28 @@ function waitForLandscapeBeforeStarting() {
 }
 
 /**
+ * Checks if device has a small screen resolution that needs full-screen canvas.
+ *
+ * @returns {boolean} True if screen width <= 932px or height <= 430px
+ */
+function hasSmallScreenResolution() {
+  return window.innerWidth <= 932 || window.innerHeight <= 430;
+}
+
+/**
  * Calculates canvas dimensions for landscape mode
  *
  * @returns {Object} Object with width and height properties
  */
 function calculateLandscapeDimensions() {
+  const isMobile = isMobileDevice();
+  const hasSmallScreen = hasSmallScreenResolution();
+  if (isMobile && hasSmallScreen) {
+    return {
+      width: window.innerWidth,
+      height: window.innerHeight,
+    };
+  }
   const availableHeight = window.innerHeight - 120;
   const newHeight = Math.max(320, Math.min(480, availableHeight));
   const newWidth = (newHeight * 720) / 480;
@@ -219,18 +354,37 @@ function triggerWorldResize() {
 function adjustCanvasForMobile() {
   const canvas = document.getElementById("canvas");
   const isMobile = isMobileDevice();
-
   if (isMobile) {
     const isLandscape = window.matchMedia("(orientation: landscape)").matches;
     if (isLandscape) {
       const dimensions = calculateLandscapeDimensions();
-      canvas.width = dimensions.width;
-      canvas.height = dimensions.height;
+      setCanvasDimensions(canvas, dimensions);
+      if (hasSmallScreenResolution()) {
+        applyFullScreenCanvasStyles(canvas);
+      } else {
+        removeFullScreenCanvasStyles(canvas);
+      }
     }
   } else {
     canvas.width = 720;
     canvas.height = 480;
+    removeFullScreenCanvasStyles(canvas);
   }
+}
+
+/**
+ * Removes full-screen styles from canvas.
+ *
+ * @param {HTMLElement} canvas - Canvas element
+ */
+function removeFullScreenCanvasStyles(canvas) {
+  canvas.style.position = "";
+  canvas.style.top = "";
+  canvas.style.left = "";
+  canvas.style.width = "";
+  canvas.style.height = "";
+  canvas.style.zIndex = "";
+  canvas.style.objectFit = "";
 }
 
 /**
