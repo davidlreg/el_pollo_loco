@@ -12,6 +12,8 @@ class World {
   status_bar_coins = new StatusBarCoins();
   status_bar_endboss = new StatusBarEndboss();
   throwable_objects = [];
+  gameIsWon = false;
+  gameIsOver = false;
   endbossActivated = false;
   endbossBarShouldBeVisible = true;
   gameOverTimeout = null;
@@ -43,17 +45,6 @@ class World {
     this.collisionCheckInterval = setInterval(() => this.checkCollisions(), 25);
   }
 
-  // /**
-  //  * Handles canvas resize after orientation changes
-  //  *
-  //  */
-  // handleCanvasResize() {
-  //   this.ctx = this.canvas.getContext("2d");
-  //   const maxCameraX = Math.max(0, (this.level?.level_end_x || 2400) - 720);
-  //   this.camera_x = Math.max(0, Math.min(this.camera_x, maxCameraX));
-  //   this.draw();
-  // }
-
   /**
    * Checks all relevant collisions and item collections in the game.
    *
@@ -72,6 +63,7 @@ class World {
    *
    */
   checkCharacterEnemyCollisions() {
+    if (this.character.isDead()) return;
     this.level.enemies.forEach((enemy) => {
       if (!enemy.isDead && this.character.isColliding(enemy)) {
         this.character.speedY < 0
@@ -346,6 +338,8 @@ class World {
 
   showGameWonScreen() {
     document.getElementById("gameWonScreen").style.display = "block";
+    document.getElementById("headline").style.display = "none";
+    document.getElementById("mobileBtnWrapper").style.display = "none";
   }
 
   /**

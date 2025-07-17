@@ -188,6 +188,15 @@ class MovableObject extends DrawableObject {
     if (this.shouldIgnoreCollision(mo)) {
       return false;
     }
+    if (this.world.gameIsOver || this.world.gameIsWon) {
+      return false;
+    }
+    if (this instanceof Character && this.isDead()) {
+      return false;
+    }
+    if (mo.isDead === true) {
+      return false;
+    }
     const thisBounds = this.getCollisionBounds(this);
     const moBounds = this.getCollisionBounds(mo);
     return this.boundsOverlap(thisBounds, moBounds);
